@@ -10,25 +10,28 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+// Classe représentant les projets
 @Entity
 @Table(name = "project")
 public class Project {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String nom;
     private String description;
     private LocalDate dateFin;
+    // Liste des tâches du projet
     @OneToMany(mappedBy = "project")
     private List<Task> tasks;
+    // Liste des utilisateurs participant avec leur rôle associé
     @OneToMany(mappedBy = "project")
     private List<ProjectUser> projectUsers;
 
-
-    public int getId() {
+    // Getters et setters
+    public Long getId() {
         return id;
     }
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
     public String getNom() {

@@ -1,19 +1,19 @@
 CREATE TABLE user_app (
-    id INT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(100),
     email VARCHAR(100),
     mdp VARCHAR(255)
 );
 
 CREATE TABLE project (
-    id INT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(100),
     description TEXT,
     date_fin DATE
 );
 
 CREATE TABLE task (
-    id INT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(100),
     description TEXT,
     date_echeance DATE,
@@ -26,7 +26,7 @@ CREATE TABLE task (
 );
 
 CREATE TABLE project_role (
-    id INT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
     project_id INT,
     role INT,
@@ -35,7 +35,7 @@ CREATE TABLE project_role (
 );
 
 CREATE TABLE task_assign (
-    id INT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
     task_id INT,
     project_id INT,

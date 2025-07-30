@@ -6,4 +6,5 @@ import com.pmt.model.Project;
 
 public interface ProjectService {
     List<Project> findAll();
+    Project create(Project project);
 }

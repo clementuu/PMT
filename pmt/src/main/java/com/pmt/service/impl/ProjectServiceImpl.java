@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.pmt.errors.ValidationException;
 import com.pmt.model.Project;
 import com.pmt.service.ProjectService;
 import com.pmt.store.ProjectStore;
@@ -23,4 +24,16 @@ public class ProjectServiceImpl implements ProjectService {
         return projects;
     }
 
+    @Override
+    public Project create(Project project) {
+        if(project.getNom() == null || project.getNom().isBlank()) {
+            throw new ValidationException("Le projet doit avoir un nom");
+        }
+
+        if(project.getDescription() == null || project.getDescription().isBlank()) {
+            throw new ValidationException("Le projet doit avoir une description");
+        }
+
+        return projectStore.save(project);
+    }
 }
