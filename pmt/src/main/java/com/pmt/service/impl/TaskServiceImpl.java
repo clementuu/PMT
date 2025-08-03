@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.pmt.errors.ValidationException;
 import com.pmt.model.Task;
 import com.pmt.service.TaskService;
 import com.pmt.store.TaskStore;
@@ -21,6 +22,15 @@ public class TaskServiceImpl implements TaskService {
         taskStore.findAll().forEach(tasks::add);
 
         return tasks;
+    }
+
+    @Override
+    public Task create(Task task) {
+        if(task.getNom() == null || task.getNom().isBlank()) {
+            throw new ValidationException("La tâche doit avoir un nom");
+        }
+
+        return taskStore.save(task);
     }
 
 }

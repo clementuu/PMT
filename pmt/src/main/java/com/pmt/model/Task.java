@@ -19,7 +19,7 @@ public class Task {
     private Long id;
     private String nom;
     private String description;
-    private int priorite;
+    private Priorite priorite;
     private LocalDate dateFin;
     private LocalDate dateEcheance;
     // Projet à laquelle la tâche est associée
@@ -46,10 +46,10 @@ public class Task {
     public void setDescription(String description) {
         this.description = description;
     }
-    public int getPriorite() {
+    public Priorite getPriorite() {
         return priorite;
     }
-    public void setPriorite(int priorite) {
+    public void setPriorite(Priorite priorite) {
         this.priorite = priorite;
     }
     public LocalDate getDateFin() {

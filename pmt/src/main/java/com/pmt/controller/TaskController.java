@@ -3,12 +3,17 @@ package com.pmt.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.pmt.errors.ValidationException;
 import com.pmt.model.Task;
 import com.pmt.service.TaskService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
@@ -20,5 +25,15 @@ public class TaskController {
     @GetMapping("")  
     public List<Task> getAll() {
         return taskService.findAll();
+    }
+
+    @PostMapping("")
+    public ResponseEntity<Task> createTask(@RequestBody Task task) {
+        try {
+            Task createdTask = taskService.create(task);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdTask);
+        } catch (ValidationException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 }
