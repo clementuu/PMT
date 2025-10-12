@@ -1,4 +1,4 @@
-FROM maven:4.0.0-eclipse-temurin-21
+FROM maven:latest
 
 WORKDIR /app
 

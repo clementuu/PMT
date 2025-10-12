@@ -3,6 +3,8 @@ package com.pmt.model;
 import java.time.LocalDate;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -19,13 +21,16 @@ public class Task {
     private Long id;
     private String nom;
     private String description;
-    private Priorite priorite;
     private LocalDate dateFin;
     private LocalDate dateEcheance;
     // Projet à laquelle la tâche est associée
     @ManyToOne
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;
+    @Enumerated(EnumType.ORDINAL)
+    private Priorite priorite;
+    @Enumerated(EnumType.ORDINAL)
+    private Status status;
 
     // Getters et setters
     public Long getId() {
@@ -64,6 +69,16 @@ public class Task {
     public void setDateEcheance(LocalDate dateEcheance) {
         this.dateEcheance = dateEcheance;
     }
-
-    
+    public Project getProject() {
+        return project;
+    }
+    public void setProject(Project project) {
+        this.project = project;
+    }
+    public Status getStatus() {
+        return status;
+    }
+    public void setStatus(Status status) {
+        this.status = status;
+    }    
 }

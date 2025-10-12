@@ -19,6 +19,7 @@ CREATE TABLE task (
     date_echeance DATE,
     date_fin DATE,
     priorite INT,
+    status INT,
     user_id INT,
     project_id INT,
     FOREIGN KEY (user_id) REFERENCES user_app(id),
