@@ -28,13 +28,17 @@
           name="password"
           [(ngModel)]="password"
           required
-          minlength="6"
+          minlength="4"
           #passwordField="ngModel"
           [class.is-invalid]="passwordField.invalid && (passwordField.dirty || passwordField.touched)">
         <div *ngIf="passwordField.invalid && (passwordField.dirty || passwordField.touched)" class="error-message">
           <div *ngIf="passwordField.errors?.['required']">Le mot de passe est requis.</div>
           <div *ngIf="passwordField.errors?.['minlength']">Le mot de passe doit contenir au moins 6 caractères.</div>
         </div>
+      </div>
+
+      <div *ngIf="loginError" class="login-error">
+        {{ loginError }}
       </div>
 
       <button type="submit" [disabled]="loginForm.invalid">Se connecter</button>

@@ -6,3 +6,11 @@ services:
     ports:
       - "8080:8080"
     restart: unless-stopped
+
+  front:
+    build:
+      context: ./ihm
+      dockerfile: Dockerfile
+    ports:
+      - "4200:4200"
+    restart: unless-stopped

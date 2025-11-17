@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { ApiService } from '../../services/api.service';
+import { LoginRequest } from '../../models/login-request.model';
 
 @Component({
   selector: 'app-login',
@@ -14,13 +16,32 @@ import { AuthService } from '../../services/auth.service';
 export class LoginComponent {
   email = '';
   password = '';
+  loginError: string | null = null;
 
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(
+    private router: Router, 
+    private authService: AuthService,
+    private apiService: ApiService
+  ) {}
 
   onSubmit() {
     if (this.email && this.password) {
-      this.authService.login(this.email);
-      this.router.navigate(['/dashboard']);
+      const loginRequest: LoginRequest = { email: this.email, mdp: this.password };
+      
+      this.apiService.postLogin(loginRequest).subscribe({
+        next: (isLoggedIn) => {
+          if (isLoggedIn) {
+            this.authService.login(this.email);
+            this.router.navigate(['/dashboard']);
+          } else {
+            this.loginError = 'Email ou mot de passe incorrect.';
+          }
+        },
+        error: (err) => {
+          this.loginError = "Une erreur s'est produite lors de la connexion.";
+          console.error(err);
+        }
+      });
     }
   }
 }

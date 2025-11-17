@@ -8,7 +8,7 @@ COPY pmt/ ./
 # Exposer le port de l'API
 EXPOSE 8080
 
-# Télécharger les dépendances une fois pour toutes (optionnel mais conseillé)
+# Télécharger les dépendances une fois pour toutes
 RUN mvn dependency:go-offline -B
 
 # Compiler et démarrer l'application à chaque lancement
