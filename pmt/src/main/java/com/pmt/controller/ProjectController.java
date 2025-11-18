@@ -12,6 +12,7 @@ import com.pmt.errors.ValidationException;
 import com.pmt.model.Project;
 import com.pmt.service.ProjectService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -25,6 +26,21 @@ public class ProjectController {
     @GetMapping("")
     public List<Project> getAll() {
         return projectService.findAll();
+    }
+
+    @GetMapping("/user/{userId}")
+    public List<Project> getProjectsByUserId(@PathVariable Long userId) {
+        return projectService.getProjectsByUserId(userId);
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<Project> getProject(@PathVariable Integer id) {
+        try {
+            Project projet = projectService.findById(id);
+            return ResponseEntity.status(HttpStatus.OK).body(projet);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 
     @PostMapping("")

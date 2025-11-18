@@ -10,7 +10,7 @@ INSERT INTO project (nom, description, date_fin) VALUES
 ('Application Mobile', 'Développement d’une appli iOS/Android.', '2025-12-15');
 
 -- Rôles dans les projets
-INSERT INTO project_role (user_id, project_id, role) VALUES
+INSERT INTO project_user (user_id, project_id, role) VALUES
 (1, 1, 0),
 (2, 1, 1),
 (2, 2, 2);

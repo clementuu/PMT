@@ -26,7 +26,7 @@ CREATE TABLE task (
     FOREIGN KEY (project_id) REFERENCES project(id)
 );
 
-CREATE TABLE project_role (
+CREATE TABLE project_user (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
     project_id INT,

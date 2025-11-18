@@ -3,6 +3,8 @@ package com.pmt.model;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,6 +24,7 @@ public class Project {
     private LocalDate dateFin;
     // Liste des tâches du projet
     @OneToMany(mappedBy = "project")
+    @JsonManagedReference
     private List<Task> tasks;
     // Liste des utilisateurs participant avec leur rôle associé
     @OneToMany(mappedBy = "project")

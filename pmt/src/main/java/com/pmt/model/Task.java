@@ -2,6 +2,8 @@ package com.pmt.model;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -26,6 +28,7 @@ public class Task {
     // Projet à laquelle la tâche est associée
     @ManyToOne
     @JoinColumn(name = "project_id", nullable = false)
+    @JsonBackReference
     private Project project;
     @Enumerated(EnumType.ORDINAL)
     private Priorite priorite;
