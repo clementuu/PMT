@@ -1,15 +1,15 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { ApiService } from '../../services/api.service';
-import { LoginRequest } from '../../models/login-request.model';
+import { LoginRequest } from '../../models/requests.model';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -29,9 +29,10 @@ export class LoginComponent {
       const loginRequest: LoginRequest = { email: this.email, mdp: this.password };
       
       this.apiService.postLogin(loginRequest).subscribe({
-        next: (isLoggedIn) => {
-          if (isLoggedIn) {
-            this.authService.login(this.email);
+        next: (response) => {
+          console.log(response);
+          if (response.success && response.user) {
+            this.authService.login(response.user);
             this.router.navigate(['/dashboard']);
           } else {
             this.loginError = 'Email ou mot de passe incorrect.';

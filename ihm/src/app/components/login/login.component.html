@@ -1,5 +1,5 @@
-<div class="login-container">
-  <div class="login-card">
+<div class="form-container">
+  <div class="form-card">
     <h2>Connexion</h2>
     <p>Veuillez entrer vos identifiants pour vous connecter</p>
     <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
@@ -37,11 +37,12 @@
         </div>
       </div>
 
-      <div *ngIf="loginError" class="login-error">
+      <div *ngIf="loginError" class="component-error">
         {{ loginError }}
       </div>
 
       <button type="submit" [disabled]="loginForm.invalid">Se connecter</button>
     </form>
+    <p>Pas encore de compte ? <a routerLink="/signin">S'inscrire</a></p>
   </div>
 </div>

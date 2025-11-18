@@ -1,40 +1,31 @@
 import { Injectable } from '@angular/core';
+import { User } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private _isLoggedIn = false;
-  private _userEmail = "";
+  private _user: User | null = null;
   
-  public get isLoggedIn() {
-    return this._isLoggedIn;
+  public get isLoggedIn(): boolean {
+    return !!this._user;
   }
 
-  public get userEmail() {
-    return this._userEmail;
+  public get user(): User | null {
+    return this._user;
   }
 
   constructor() { }
 
-  login(email: string) {
-    this._userEmail = email;
-    this._isLoggedIn = true;
+  login(user: User) {
+    this._user = user;
   }
 
   logout() {
-    this._isLoggedIn = false;
-  }
-
-  getUserEmail() {
-    return this.userEmail;
+    this._user = null;
   }
 
   isAuthenticated() {
-    return new Promise<boolean>((resolve) => {
-      setTimeout(() => {
-        resolve(this.isLoggedIn);
-      }, 1000)
-    })
+    return this.isLoggedIn;
   }
 }

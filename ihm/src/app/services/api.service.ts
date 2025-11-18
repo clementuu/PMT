@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { LoginRequest } from '../models/login-request.model';
+import { LoginRequest, LoginResponse } from '../models/requests.model';
 
 export interface ApiError {
   message: string;
@@ -18,8 +18,8 @@ export class ApiService {
 
   constructor(private httpClient: HttpClient) {}
 
-  postLogin(loginRequest: LoginRequest): Observable<boolean> {
-    return this.httpClient.post<boolean>(`${this.apiUrl}/user/login`, loginRequest)
+  postLogin(loginRequest: LoginRequest): Observable<LoginResponse> {
+    return this.httpClient.post<LoginResponse>(`${this.apiUrl}/user/login`, loginRequest)
       .pipe(
         catchError(this.catchError)
       );
