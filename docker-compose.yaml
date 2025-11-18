@@ -1,5 +1,5 @@
 services:
-  api:
+  pmt:
     build:
       context: .
       dockerfile: pmt/Dockerfile
@@ -7,7 +7,7 @@ services:
       - "8080:8080"
     restart: unless-stopped
 
-  front:
+  ihm:
     build:
       context: ./ihm
       dockerfile: Dockerfile
