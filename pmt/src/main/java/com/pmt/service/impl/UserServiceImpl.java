@@ -25,6 +25,13 @@ public class UserServiceImpl implements UserService {
         return users;
     }
 
+    @Override
+    public User findById(Integer id) {
+        User user = new User();
+        user = userStore.findById(id).get();
+        return user;
+    }
+
     // Crée un utilisateur en controlant la validité des champs
     @Override
     public User create(User user) {
