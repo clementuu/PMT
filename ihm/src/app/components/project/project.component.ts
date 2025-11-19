@@ -69,25 +69,54 @@ export class ProjectComponent implements OnInit {
     }
   }
 
+  goToTaskDetail(taskId: number): void {
+    this.router.navigate(['/task', taskId]);
+  }
+
   drop(event: CdkDragDrop<Task[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
+      // Get the task and its new status
       const task = event.previousContainer.data[event.previousIndex];
       const newStatus = event.container.id as 'TODO' | 'IN_PROGRESS' | 'DONE';
-      task.status = newStatus;
 
-      this.apiService.updateTask(task).subscribe(() => {
-        transferArrayItem(
-          event.previousContainer.data,
-          event.container.data,
-          event.previousIndex,
-          event.currentIndex,
-        );
-      }, (error) => {
-        // Revert status on error
-        task.status = event.previousContainer.id as 'TODO' | 'IN_PROGRESS' | 'DONE';
-        alert("Erreur lors de la mise à jour de la tâche.");
+      // Store original status for potential revert
+      const originalStatus = task.status;
+      task.status = newStatus; // Update task object locally
+
+      // Optimistic UI update
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex,
+      );
+
+      // Create a copy to ensure project ID is sent correctly to the backend
+      const taskToSend = {
+        ...task,
+        project: this.project! // Ensure project ID is sent
+      };
+
+      this.apiService.updateTask(taskToSend).subscribe({
+        next: () => {
+          // Success: UI is already updated optimistically
+        },
+        error: (error) => {
+          // Revert UI and status on error
+          console.error("Erreur lors de la mise à jour de la tâche :", error);
+          alert("Erreur lors de la mise à jour de la tâche.");
+
+          // Revert transferArrayItem
+          transferArrayItem(
+            event.container.data,
+            event.previousContainer.data,
+            event.currentIndex,
+            event.previousIndex,
+          );
+          task.status = originalStatus;
+        }
       });
     }
   }

@@ -56,6 +56,13 @@ export class ApiService {
       );
   }
 
+  getTask(id: number): Observable<Task>{
+    return this.httpClient.get<Task>(`${this.apiUrl}/task/${id}`)
+      .pipe(
+        catchError(this.catchError)
+      );
+  }
+
   createTask(task: Partial<Task>): Observable<Task> {
     return this.httpClient.post<Task>(`${this.apiUrl}/task`, task)
       .pipe(

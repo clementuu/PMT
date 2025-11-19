@@ -1,0 +1,22 @@
+.task-detail {
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.task-detail h2 {
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.task-detail p {
+    margin-bottom: 5px;
+    line-height: 1.5;
+}
+
+.task-detail strong {
+    color: #555;
+}

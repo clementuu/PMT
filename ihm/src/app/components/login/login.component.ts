@@ -30,7 +30,6 @@ export class LoginComponent {
       
       this.apiService.postLogin(loginRequest).subscribe({
         next: (response) => {
-          console.log(response);
           if (response.success && response.user) {
             this.authService.login(response.user);
             this.router.navigate(['/dashboard']);

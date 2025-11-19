@@ -6,6 +6,7 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { authGuard } from './guards/auth.guard';
 import { ProjectComponent } from './components/project/project.component';
+import { TaskComponent } from './components/task/task.component'; // New import for TaskComponent
 
 export const routes: Routes = [
   { 
@@ -28,6 +29,11 @@ export const routes: Routes = [
   {
     path: 'project/:id',
     component: ProjectComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'task/:id', // New route for task details using TaskComponent
+    component: TaskComponent,
     canActivate: [authGuard]
   },
   { path: '', redirectTo: '/home', pathMatch: 'full' },

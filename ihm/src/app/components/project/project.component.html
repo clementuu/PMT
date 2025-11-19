@@ -43,7 +43,7 @@
          [cdkDropListData]="todoTasks"
          (cdkDropListDropped)="drop($event)">
       <h2>À faire</h2>
-      <div *ngFor="let task of todoTasks" cdkDrag class="task-card">
+      <div *ngFor="let task of todoTasks" cdkDrag class="task-card" (click)="goToTaskDetail(task.id)">
         <h3>{{ task.nom }}</h3>
         <p>{{ task.description }}</p>
         <small>Échéance: {{ task.dateEcheance | date: 'dd/MM/yyyy' }}</small>
@@ -55,7 +55,7 @@
          [cdkDropListData]="inProgressTasks"
          (cdkDropListDropped)="drop($event)">
       <h2>En cours</h2>
-      <div *ngFor="let task of inProgressTasks" cdkDrag class="task-card">
+      <div *ngFor="let task of inProgressTasks" cdkDrag class="task-card" (click)="goToTaskDetail(task.id)">
         <h3>{{ task.nom }}</h3>
         <p>{{ task.description }}</p>
         <small>Échéance: {{ task.dateEcheance | date: 'dd/MM/yyyy' }}</small>
@@ -67,7 +67,7 @@
          [cdkDropListData]="doneTasks"
          (cdkDropListDropped)="drop($event)">
       <h2>Terminé</h2>
-      <div *ngFor="let task of doneTasks" cdkDrag class="task-card">
+      <div *ngFor="let task of doneTasks" cdkDrag class="task-card" (click)="goToTaskDetail(task.id)">
         <h3>{{ task.nom }}</h3>
         <p>{{ task.description }}</p>
         <small>Échéance: {{ task.dateEcheance | date: 'dd/MM/yyyy' }}</small>
