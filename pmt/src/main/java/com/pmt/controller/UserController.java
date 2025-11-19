@@ -11,6 +11,7 @@ import com.pmt.model.User;
 import com.pmt.service.UserService;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -47,12 +48,12 @@ public class UserController {
     }
 
     @PostMapping("")
-    public ResponseEntity<User> createUser(@RequestBody User user) {
+    public ResponseEntity<?> createUser(@RequestBody User user) {
         try {
             User createdUser = userService.create(user);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
         } catch (ValidationException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
         }
     }
 

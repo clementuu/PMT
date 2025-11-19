@@ -46,6 +46,14 @@ public class UserServiceImpl implements UserService {
         if (user.getMdp() == null || user.getMdp().isBlank()) {
             throw new ValidationException("Le mot de passe est obligatoire.");
         }
+
+        if (user.getMdp().length() < 4) {
+            throw new ValidationException("Le mot de passe doit contenir au moins 4 caractères.");
+        }
+
+        if (userStore.existsByEmail(user.getEmail())) {
+            throw new ValidationException("Cet email est déjà utilisé.");
+        }
     
         return userStore.save(user);
     }

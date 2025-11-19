@@ -9,4 +9,5 @@ import com.pmt.model.User;
 
 public interface UserStore extends CrudRepository<User, Integer> {
     Optional<User> findByEmail(String email);
+    boolean existsByEmail(String email);
 }
