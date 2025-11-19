@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 
 @RestController
@@ -48,6 +50,16 @@ public class ProjectController {
         try {
             Project createdProject = projectService.create(project);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdProject);
+        } catch (ValidationException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    @PutMapping("")
+    public ResponseEntity<Project> putProject(@RequestBody Project project) {
+        try {
+            Project updatedProject = projectService.create(project);
+            return ResponseEntity.status(HttpStatus.OK).body(updatedProject);
         } catch (ValidationException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
