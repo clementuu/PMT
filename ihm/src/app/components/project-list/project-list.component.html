@@ -9,7 +9,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let project of projects">
+      <tr *ngFor="let project of projects" (click)="goToProject(project.id)">
         <td>{{ project.nom }}</td>
         <td>{{ project.description }}</td>
         <td>{{ project.dateFin | date: 'dd/MM/yyyy' }}</td>

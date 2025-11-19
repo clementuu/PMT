@@ -5,6 +5,7 @@ import { HomeComponent } from './components/home/home.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { authGuard } from './guards/auth.guard';
+import { ProjectComponent } from './components/project/project.component';
 
 export const routes: Routes = [
   { 
@@ -22,6 +23,11 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     component: DashboardComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'project/:id',
+    component: ProjectComponent,
     canActivate: [authGuard]
   },
   { path: '', redirectTo: '/home', pathMatch: 'full' },

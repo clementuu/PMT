@@ -1,0 +1,69 @@
+<div *ngIf="project" class="project-container">
+  <!-- Project Details Section -->
+  <div class="project-header">
+    <div *ngIf="!isEditing">
+      <div class="flex">
+        <h1>{{ project.nom }}</h1>
+        <button id="edit-btn" type="button" (click)="startEditing()">Modifier</button>
+      </div>
+      <p>{{ project.description }}</p>
+      <small>Date de fin: {{ project.dateFin | date: 'dd/MM/yyyy' }}</small>
+    </div>
+
+    <form *ngIf="isEditing" [formGroup]="projectForm" (ngSubmit)="updateProject()">
+      <div class="input-group">
+        <label for="nom">Nom du projet:</label>
+        <input id="nom" formControlName="nom">
+      </div>
+      <div class="input-group">
+        <label for="description">Description:</label>
+        <textarea id="description" formControlName="description" rows="5"></textarea>
+      </div>
+      <div class="input-group">
+        <label for="dateFin">Date de fin:</label>
+        <input id="dateFin" type="date" formControlName="dateFin">
+      </div>
+      <div class="flex">
+        <button type="button" (click)="cancelEdit()">Annuler</button>
+        <button type="submit" [disabled]="projectForm.invalid">Enregistrer</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Task Actions -->
+  <div class="task-actions">
+    <button>Nouvelle tâche</button>
+  </div>
+
+  <!-- Task Board Section -->
+  <div class="task-board">
+    <div class="task-column">
+      <h2>À faire</h2>
+      <div *ngFor="let task of todoTasks" class="task-card">
+        <h3>{{ task.nom }}</h3>
+        <p>{{ task.description }}</p>
+        <small>Échéance: {{ task.dateEcheance | date: 'dd/MM/yyyy' }}</small>
+      </div>
+    </div>
+    <div class="task-column">
+      <h2>En cours</h2>
+      <div *ngFor="let task of inProgressTasks" class="task-card">
+        <h3>{{ task.nom }}</h3>
+        <p>{{ task.description }}</p>
+        <small>Échéance: {{ task.dateEcheance | date: 'dd/MM/yyyy' }}</small>
+      </div>
+    </div>
+    <div class="task-column">
+      <h2>Terminé</h2>
+      <div *ngFor="let task of doneTasks" class="task-card">
+        <h3>{{ task.nom }}</h3>
+        <p>{{ task.description }}</p>
+        <small>Échéance: {{ task.dateEcheance | date: 'dd/MM/yyyy' }}</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="!project">
+  <p>Chargement du projet...</p>
+</div>

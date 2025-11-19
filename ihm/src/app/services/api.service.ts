@@ -5,6 +5,7 @@ import { catchError } from 'rxjs/operators';
 import { LoginRequest, LoginResponse, SigninRequest } from '../models/requests.model';
 import { User } from '../models/user.model';
 import { Project } from '../models/project.model';
+import { Task } from '../models/task.model';
 
 export interface ApiError {
   message: string;
@@ -37,6 +38,27 @@ export class ApiService {
 
   getProjectsByUserId(userId: number): Observable<Project[]> {
     return this.httpClient.get<Project[]>(`${this.apiUrl}/project/user/${userId}`)
+      .pipe(
+        catchError(this.catchError)
+      );
+  }
+
+  getProjectById(id: number): Observable<Project> {
+    return this.httpClient.get<Project>(`${this.apiUrl}/project/${id}`)
+      .pipe(
+        catchError(this.catchError)
+      );
+  }
+
+  updateProject(project: Project): Observable<Project> {
+    return this.httpClient.put<Project>(`${this.apiUrl}/project`, project)
+      .pipe(
+        catchError(this.catchError)
+      );
+  }
+
+  createTask(task: Partial<Task>): Observable<Task> {
+    return this.httpClient.post<Task>(`${this.apiUrl}/task`, task)
       .pipe(
         catchError(this.catchError)
       );
