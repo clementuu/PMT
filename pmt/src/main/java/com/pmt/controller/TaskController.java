@@ -13,6 +13,7 @@ import com.pmt.model.Task;
 import com.pmt.service.TaskService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
@@ -32,6 +33,16 @@ public class TaskController {
         try {
             Task createdTask = taskService.create(task);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdTask);
+        } catch (ValidationException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    @PutMapping("")
+    public ResponseEntity<Task> putTask(@RequestBody Task task) {
+        try {
+            Task patchedTask = taskService.create(task);
+            return ResponseEntity.status(HttpStatus.OK).body(patchedTask);
         } catch (ValidationException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
