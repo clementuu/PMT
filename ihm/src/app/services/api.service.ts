@@ -4,6 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { LoginRequest, LoginResponse, SigninRequest } from '../models/requests.model';
 import { User } from '../models/user.model';
+import { Project } from '../models/project.model';
 
 export interface ApiError {
   message: string;
@@ -29,6 +30,13 @@ export class ApiService {
   postUser(signinRequest: SigninRequest): Observable<User> {
     console.log(signinRequest);
     return this.httpClient.post<User>(`${this.apiUrl}/user`, signinRequest)
+      .pipe(
+        catchError(this.catchError)
+      );
+  }
+
+  getProjectsByUserId(userId: number): Observable<Project[]> {
+    return this.httpClient.get<Project[]>(`${this.apiUrl}/project/user/${userId}`)
       .pipe(
         catchError(this.catchError)
       );

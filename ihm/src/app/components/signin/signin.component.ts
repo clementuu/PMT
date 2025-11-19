@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { ApiService } from '../../services/api.service';
-import { SigninRequest } from '../../models/requests.model';
+import { LoginRequest, SigninRequest } from '../../models/requests.model';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-signin',
@@ -21,37 +22,43 @@ export class SigninComponent {
 
   constructor(
     private router: Router,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private authService: AuthService
   ) {}
 
   onSubmit() {
     this.signinError = null;
 
-    if (this.password !== this.confirmPassword) {
-      this.signinError = 'Les mots de passe ne correspondent pas.';
-      return;
-    }
-    
-    if (this.nom && this.email && this.password) {
-      const signinRequest: SigninRequest = {
-        nom: this.nom,
-        email: this.email,
-        mdp: this.password
-      };
+    const signinRequest: SigninRequest = {
+      nom: this.nom,
+      email: this.email,
+      mdp: this.password
+    };
 
-      this.apiService.postUser(signinRequest).subscribe({
-        next: (user) => {
-          console.log(user);
-          // Successfully created user, navigate to login page
-          this.router.navigate(['/login']);
-        },
-        error: (err) => {
-          this.signinError = "Une erreur s'est produite lors de l'inscription.";
-          console.error(err);
-        }
-      });
-    } else {
-      this.signinError = 'Veuillez remplir tous les champs.';
-    }
+    this.apiService.postUser(signinRequest).subscribe({
+      next: (user) => {
+        const loginRequest: LoginRequest = {
+          email: this.email,
+          mdp: this.password
+        };
+        this.apiService.postLogin(loginRequest).subscribe({
+          next: (loginResponse) => {
+            if(loginResponse.user) { 
+              this.authService.login(loginResponse.user);
+              this.router.navigate(['/dashboard']);
+            }
+            this.router.navigate(['/login']);
+          },
+          error: (err) => {
+            this.signinError = "Une erreur s'est produite lors de la connexion automatique.";
+            console.error(err);
+          }
+        });
+      },
+      error: (err) => {
+        this.signinError = "Une erreur s'est produite lors de l'inscription.";
+        console.error(err);
+      }
+    });
   }
 }

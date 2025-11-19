@@ -1,0 +1,26 @@
+<div *ngIf="projects$ | async as projects; else loading">
+  <table *ngIf="projects.length > 0; else noProjects">
+    <thead>
+      <tr>
+        <th>Nom</th>
+        <th>Description</th>
+        <th>Date de fin</th>
+        <th>Nombre de tâches</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let project of projects">
+        <td>{{ project.nom }}</td>
+        <td>{{ project.description }}</td>
+        <td>{{ project.dateFin | date: 'dd/MM/yyyy' }}</td>
+        <td>{{ project.tasks.length }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <ng-template #noProjects>
+    <p>Aucun projet trouvé.</p>
+  </ng-template>
+</div>
+<ng-template #loading>
+  <p>Chargement des projets...</p>
+</ng-template>
