@@ -29,7 +29,6 @@ export class ApiService {
   }
 
   postUser(signinRequest: SigninRequest): Observable<User> {
-    console.log(signinRequest);
     return this.httpClient.post<User>(`${this.apiUrl}/user`, signinRequest)
       .pipe(
         catchError(this.catchError)
@@ -59,6 +58,13 @@ export class ApiService {
 
   createTask(task: Partial<Task>): Observable<Task> {
     return this.httpClient.post<Task>(`${this.apiUrl}/task`, task)
+      .pipe(
+        catchError(this.catchError)
+      );
+  }
+
+  updateTask(task: Task): Observable<Task> {
+    return this.httpClient.put<Task>(`${this.apiUrl}/task`, task)
       .pipe(
         catchError(this.catchError)
       );

@@ -5,11 +5,12 @@ import { Project } from '../../models/project.model';
 import { Task } from '../../models/task.model';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-project',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, DragDropModule],
   templateUrl: './project.component.html',
   styleUrls: ['./project.component.css']
 })
@@ -17,6 +18,10 @@ export class ProjectComponent implements OnInit {
   project: Project | null = null;
   projectForm: FormGroup;
   isEditing = false;
+
+  todoTasks: Task[] = [];
+  inProgressTasks: Task[] = [];
+  doneTasks: Task[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -37,6 +42,9 @@ export class ProjectComponent implements OnInit {
       this.apiService.getProjectById(+id).subscribe(project => {
         this.project = project;
         this.projectForm.patchValue(project);
+        this.todoTasks = project.tasks.filter(t => t.status === 'TODO');
+        this.inProgressTasks = project.tasks.filter(t => t.status === 'IN_PROGRESS');
+        this.doneTasks = project.tasks.filter(t => t.status === 'DONE');
       });
     }
   }
@@ -61,15 +69,26 @@ export class ProjectComponent implements OnInit {
     }
   }
 
-  get todoTasks(): Task[] {
-    return this.project?.tasks.filter(t => t.status === 'TODO') || [];
-  }
+  drop(event: CdkDragDrop<Task[]>) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      const task = event.previousContainer.data[event.previousIndex];
+      const newStatus = event.container.id as 'TODO' | 'IN_PROGRESS' | 'DONE';
+      task.status = newStatus;
 
-  get inProgressTasks(): Task[] {
-    return this.project?.tasks.filter(t => t.status === 'IN_PROGRESS') || [];
-  }
-
-  get doneTasks(): Task[] {
-    return this.project?.tasks.filter(t => t.status === 'DONE') || [];
+      this.apiService.updateTask(task).subscribe(() => {
+        transferArrayItem(
+          event.previousContainer.data,
+          event.container.data,
+          event.previousIndex,
+          event.currentIndex,
+        );
+      }, (error) => {
+        // Revert status on error
+        task.status = event.previousContainer.id as 'TODO' | 'IN_PROGRESS' | 'DONE';
+        alert("Erreur lors de la mise à jour de la tâche.");
+      });
+    }
   }
 }
