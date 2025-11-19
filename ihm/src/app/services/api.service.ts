@@ -27,6 +27,7 @@ export class ApiService {
   }
 
   postUser(signinRequest: SigninRequest): Observable<User> {
+    console.log(signinRequest);
     return this.httpClient.post<User>(`${this.apiUrl}/user`, signinRequest)
       .pipe(
         catchError(this.catchError)

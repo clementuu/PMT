@@ -5,7 +5,7 @@
     </div>
     <div class="nav-right">
       <ng-container *ngIf="authService.isLoggedIn">
-        <span class="welcome-message">Bienvenue <strong>{{ username }}</strong></span>
+        <span class="welcome-message">Bienvenue<br><strong>{{ username }}</strong></span>
         <button (click)="logout()" class="nav-button" type="button">Déconnexion</button>
       </ng-container>
     </div>

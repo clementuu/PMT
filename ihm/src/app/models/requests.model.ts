@@ -6,7 +6,7 @@ export interface LoginRequest {
 }
 
 export interface SigninRequest {
-  username: string;
+  nom: string;
   email: string;
   mdp: string;
 }

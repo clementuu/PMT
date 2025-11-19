@@ -34,13 +34,14 @@ export class SigninComponent {
     
     if (this.nom && this.email && this.password) {
       const signinRequest: SigninRequest = {
-        username: this.nom,
+        nom: this.nom,
         email: this.email,
         mdp: this.password
       };
 
       this.apiService.postUser(signinRequest).subscribe({
         next: (user) => {
+          console.log(user);
           // Successfully created user, navigate to login page
           this.router.navigate(['/login']);
         },
