@@ -5,6 +5,7 @@ import { Router, RouterModule } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 import { LoginRequest, SigninRequest } from '../../models/requests.model';
 import { AuthService } from '../../services/auth.service';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-signin',
@@ -35,28 +36,26 @@ export class SigninComponent {
       mdp: this.password
     };
 
-    this.apiService.postUser(signinRequest).subscribe({
-      next: (user) => {
+    this.apiService.postUser(signinRequest).pipe(
+      switchMap(user => {
         const loginRequest: LoginRequest = {
           email: this.email,
           mdp: this.password
         };
-        this.apiService.postLogin(loginRequest).subscribe({
-          next: (loginResponse) => {
-            if(loginResponse.user) { 
-              this.authService.login(loginResponse.user);
-              this.router.navigate(['/dashboard']);
-            }
-            this.router.navigate(['/login']);
-          },
-          error: (err) => {
-            this.signinError = "Une erreur s'est produite lors de la connexion automatique.";
-            console.error(err);
-          }
-        });
+        return this.apiService.postLogin(loginRequest);
+      })
+    ).subscribe({
+      next: loginResponse => {
+        if (loginResponse && loginResponse.user) {
+          this.authService.login(loginResponse.user);
+          this.router.navigate(['/dashboard']);
+        } else {
+          this.signinError = "La connexion a échoué: utilisateur non retourné.";
+          this.router.navigate(['/login']);
+        }
       },
-      error: (err) => {
-        this.signinError = "Une erreur s'est produite lors de l'inscription.";
+      error: err => {
+        this.signinError = "Une erreur s'est produite.";
         console.error(err);
       }
     });
