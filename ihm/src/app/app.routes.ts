@@ -8,6 +8,7 @@ import { authGuard } from './guards/auth.guard';
 import { ProjectComponent } from './components/project/project.component';
 import { TaskComponent } from './components/task/task.component'; // New import for TaskComponent
 import { ProjectNewComponent } from './components/project-new/project-new.component';
+import { UserProjectAddComponent } from './components/user-project-add/user-project-add.component';
 
 export const routes: Routes = [
   {

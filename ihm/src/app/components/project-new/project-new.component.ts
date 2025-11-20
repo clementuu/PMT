@@ -1,57 +1,52 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-  FormArray,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 import { Project } from '../../models/project.model';
 import { User } from '../../models/user.model';
 import { switchMap } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
+import { UserProjectAddComponent } from '../user-project-add/user-project-add.component';
+import { UserRole } from '../../models/userProject.model';
 
 @Component({
   selector: 'app-project-new',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, UserProjectAddComponent],
   templateUrl: './project-new.component.html',
   styleUrl: './project-new.component.css',
 })
 export class ProjectNewComponent implements OnInit {
   projectForm: FormGroup;
   allUsers: User[] = [];
-  availableRoles: string[] = ['ADMIN', 'MEMBER', 'OBSERVER']; // Example roles
-
+  availableRoles: string[] = ['ADMIN', 'MEMBER', 'OBSERVER'];
+  
+  participantsToSave: UserRole[] = [];
+  initialParticipantList: UserRole[] = [];
 
   constructor(
     private fb: FormBuilder,
-    private router: Router,
     private apiService: ApiService,
+    private router: Router,
     private authService: AuthService
   ) {
     this.projectForm = this.fb.group({
       nom: ['', Validators.required],
       description: ['', Validators.required],
       dateFin: [''],
-      participants: this.fb.array([], Validators.minLength(1)),
     });
   }
 
   ngOnInit(): void {
-    console.log(this.apiService);
-    console.log(this.authService);
     this.apiService.getAllUsers().subscribe({
       next: (users) => {
         this.allUsers = users;
         const currentUser = this.authService.user;
         if (currentUser) {
-          this.addParticipant(currentUser.id, 'ADMIN');
-        } else {
-          this.addParticipant();
+          this.initialParticipantList = [{ userId: currentUser.id, role: 'ADMIN' }];
+          // Also pre-fill the data to be saved, as the child component won't emit it again unless changed.
+          this.participantsToSave = this.initialParticipantList;
         }
       },
       error: (error) => {
@@ -60,30 +55,21 @@ export class ProjectNewComponent implements OnInit {
     });
   }
 
-  get participants(): FormArray {
-    return this.projectForm.get('participants') as FormArray;
-  }
-
-  addParticipant(userId: number | string = '', role = 'MEMBER'): void {
-    const participantForm = this.fb.group({
-      userId: [userId, Validators.required],
-      role: [role, Validators.required],
-    });
-    this.participants.push(participantForm);
-  }
-
-  removeParticipant(index: number): void {
-    this.participants.removeAt(index);
+  setParticipants(participants: UserRole[]): void {
+    this.participantsToSave = participants;
   }
 
   onSubmit(): void {
     if (this.projectForm.invalid) {
-      alert('Veuillez remplir tous les champs obligatoires.');
+      alert('Veuillez remplir les champs du projet.');
+      return;
+    }
+    if (this.participantsToSave.length === 0) {
+      alert('Veuillez ajouter au moins un participant.');
       return;
     }
 
-    const { nom, description, dateFin, participants } =
-      this.projectForm.value;
+    const { nom, description, dateFin } = this.projectForm.value;
 
     const newProject: Partial<Project> = {
       nom,
@@ -96,18 +82,11 @@ export class ProjectNewComponent implements OnInit {
       .pipe(
         switchMap((createdProject) => {
           console.log('Project created successfully:', createdProject);
-          if (participants && participants.length > 0) {
-            const usersProjectData = {
-              projectId: createdProject.id!,
-              users: participants.map((p: { userId: any; role: any; }) => ({
-                userId: p.userId,
-                role: p.role,
-              })),
-            };
-            return this.apiService.postUsersProject(usersProjectData);
-          } else {
-            return []; // No users to add, complete the stream.
-          }
+          const usersProjectData = {
+            projectId: createdProject.id!,
+            users: this.participantsToSave,
+          };
+          return this.apiService.postUsersProject(usersProjectData);
         })
       )
       .subscribe({
@@ -117,16 +96,8 @@ export class ProjectNewComponent implements OnInit {
         },
         error: (error) => {
           console.error('Error during project creation or user assignment:', error);
-          alert(
-            "Une erreur est survenue : " + (error.details?.error || error.message)
-          );
+          alert("Une erreur est survenue : " + (error.details?.error || error.message));
         },
-        complete: () => {
-          // If the pipe completes without users to add, navigate.
-          if (!participants || participants.length === 0) {
-            this.router.navigate(['/dashboard']);
-          }
-        }
       });
   }
 }

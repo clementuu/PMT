@@ -3,9 +3,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 import { Project } from '../../models/project.model';
 import { Task } from '../../models/task.model';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormArray } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { User } from '../../models/user.model';
 
 @Component({
   selector: 'app-project',
@@ -23,6 +24,10 @@ export class ProjectComponent implements OnInit {
   inProgressTasks: Task[] = [];
   doneTasks: Task[] = [];
 
+  addParticipantForm: FormGroup;
+  allUsers: User[] = [];
+  availableRoles: string[] = ['ADMIN', 'MEMBER', 'OBSERVER'];
+
   constructor(
     private route: ActivatedRoute,
     private apiService: ApiService,
@@ -33,6 +38,10 @@ export class ProjectComponent implements OnInit {
       nom: ['', Validators.required],
       description: ['', Validators.required],
       dateFin: ['']
+    });
+
+    this.addParticipantForm = this.fb.group({
+      participants: this.fb.array([])
     });
   }
 
@@ -46,9 +55,14 @@ export class ProjectComponent implements OnInit {
         this.inProgressTasks = project.tasks.filter(t => t.status === 'IN_PROGRESS');
         this.doneTasks = project.tasks.filter(t => t.status === 'DONE');
       });
+
+      this.apiService.getAllUsers().subscribe(users => {
+        this.allUsers = users;
+      });
     }
   }
 
+  // ===== Project Editing Methods =====
   startEditing(): void {
     this.isEditing = true;
     this.projectForm.patchValue(this.project as any);
@@ -69,6 +83,49 @@ export class ProjectComponent implements OnInit {
     }
   }
 
+  // ===== Participant Methods =====
+  get participants(): FormArray {
+    return this.addParticipantForm.get('participants') as FormArray;
+  }
+
+  addParticipant(): void {
+    const participantForm = this.fb.group({
+      userId: ['', Validators.required],
+      role: ['MEMBER', Validators.required],
+    });
+    this.participants.push(participantForm);
+  }
+
+  removeParticipant(index: number): void {
+    this.participants.removeAt(index);
+  }
+
+  onAddParticipants(): void {
+    if (this.addParticipantForm.invalid || this.participants.length === 0 || !this.project) {
+      return;
+    }
+
+    const payload = {
+      projectId: this.project.id,
+      users: this.addParticipantForm.value.participants,
+    };
+
+    this.apiService.postUsersProject(payload).subscribe({
+      next: () => {
+        alert('Participants ajoutés avec succès !');
+        this.addParticipantForm.reset();
+        this.participants.clear();
+        // Here you would typically refresh the project's participant list
+      },
+      error: (err) => {
+        console.error('Error adding participants:', err);
+        alert("Erreur lors de l'ajout des participants.");
+      }
+    });
+  }
+
+
+  // ===== Task Methods =====
   goToTaskDetail(taskId: number): void {
     this.router.navigate(['/task', taskId]);
   }
@@ -77,15 +134,11 @@ export class ProjectComponent implements OnInit {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
-      // Get the task and its new status
       const task = event.previousContainer.data[event.previousIndex];
       const newStatus = event.container.id as 'TODO' | 'IN_PROGRESS' | 'DONE';
-
-      // Store original status for potential revert
       const originalStatus = task.status;
-      task.status = newStatus; // Update task object locally
+      task.status = newStatus;
 
-      // Optimistic UI update
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
@@ -93,29 +146,20 @@ export class ProjectComponent implements OnInit {
         event.currentIndex,
       );
 
-      // Create a copy to ensure project ID is sent correctly to the backend
-      const taskToSend = {
-        ...task,
-        project: this.project! // Ensure project ID is sent
-      };
+      const taskToSend = { ...task, project: this.project! };
 
       this.apiService.updateTask(taskToSend).subscribe({
-        next: () => {
-          // Success: UI is already updated optimistically
-        },
+        next: () => {},
         error: (error) => {
-          // Revert UI and status on error
           console.error("Erreur lors de la mise à jour de la tâche :", error);
           alert("Erreur lors de la mise à jour de la tâche.");
-
-          // Revert transferArrayItem
+          task.status = originalStatus;
           transferArrayItem(
             event.container.data,
             event.previousContainer.data,
             event.currentIndex,
             event.previousIndex,
           );
-          task.status = originalStatus;
         }
       });
     }

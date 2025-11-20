@@ -100,3 +100,36 @@ p {
 body {
   margin: 0;
 }
+
+.participants {
+  margin: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.participant-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto; /* User | Role | Action */
+  gap: 10px 15px; /* row-gap | column-gap */
+  align-items: center;
+}
+
+.grid-header {
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: #555;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.grid-rows-container {
+  display: contents; /* The container itself disappears, its children become grid items */
+}
+
+.grid-row {
+  display: contents; /* The container itself disappears, its children become grid items */
+}
+
+.grid-row .form-control, .grid-row .btn {
+  margin-bottom: 5px; /* Add a little space between rows */
+}

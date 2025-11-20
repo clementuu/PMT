@@ -34,36 +34,3 @@ p {
 .auth-buttons {
   margin-top: 2.5rem;
 }
-
-.btn {
-  display: inline-block;
-  padding: 0.8rem 1.8rem;
-  border-radius: 5px;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 1.1rem;
-  transition: background-color 0.2s, color 0.2s;
-  margin: 0 0.5rem;
-}
-
-.btn-primary {
-  background-color: #007bff;
-  color: white;
-  border: 1px solid #007bff;
-}
-
-.btn-primary:hover {
-  background-color: #0056b3;
-  border-color: #0056b3;
-}
-
-.btn-secondary {
-  background-color: #6c757d;
-  color: white;
-  border: 1px solid #6c757d;
-}
-
-.btn-secondary:hover {
-  background-color: #5a6268;
-  border-color: #545b62;
-}

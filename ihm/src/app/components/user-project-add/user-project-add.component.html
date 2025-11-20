@@ -1,0 +1,38 @@
+<div class="participant-adder-container" [formGroup]="addParticipantForm">
+  <div class="participant-grid">
+    <!-- Grid Header -->
+    <div class="grid-header">Utilisateur</div>
+    <div class="grid-header">Rôle</div>
+    <div class="grid-header"><br></div> <!-- Action column header -->
+
+    <!-- Grid Rows -->
+    <div formArrayName="participants" class="grid-rows-container">
+      @for (participant of participants.controls; track i; let i = $index) {
+        <div [formGroupName]="i" class="grid-row">
+          <select title="user" formControlName="userId" class="form-control">
+            <option value="" disabled>-- Sélectionner un utilisateur --</option>
+            @for (user of allUsers; track user.id) {
+              <option [value]="user.id">{{ user.nom }} ({{ user.email }})</option>
+            }
+          </select>
+
+          <select title="role" formControlName="role" class="form-control">
+            @for (role of availableRoles; track role) {
+              <option [value]="role">{{ role }}</option>
+            }
+          </select>
+
+          <button title="retirer" type="button" (click)="removeParticipant(i)" class="btn btn-danger btn-sm">
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="actions-footer">
+    <button type="button" (click)="addParticipant()" class="btn btn-secondary">
+      <i class="bi bi-plus"></i> Ajouter une ligne
+    </button>
+  </div>
+</div>

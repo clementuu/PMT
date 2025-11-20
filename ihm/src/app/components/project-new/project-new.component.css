@@ -51,33 +51,6 @@ textarea.form-control {
   margin-top: 5px;
 }
 
-.participant-row {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.participant-row {
-  margin-bottom: 15px;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  margin-bottom: 0;
-  flex-grow: 1;
-}
-
-.btn-retirer {
-  background-color: #dc3545;
-  max-width: fit-content;
-  max-height: fit-content;
-  align-items: center;
-  justify-content: center;
-}
-
-.participant-row {
-  flex-shrink: 0;
-}
-
 hr {
   margin-top: 20px;
   margin-bottom: 20px;

@@ -6,7 +6,7 @@
           <div class="flex">
             <h1>{{ project.nom }}</h1>
             <div class="flex">
-              <button class="btn btn-secondary me-2" type="button" (click)="startEditing()"><i class="bi bi-pencil-square"></i> Modifier</button>
+              <button class="btn btn-secondary me-1" type="button" (click)="startEditing()"><i class="bi bi-pencil-square"></i> Modifier</button>
               <button class="btn btn-danger" title="supprimer" type="button"><i class="bi bi-trash"></i></button>
             </div>
           </div>
@@ -32,10 +32,11 @@
           </div>
         </form>
       }
-      </div>
+    </div>
 
-    <!-- Task Actions -->
-    <div class="task-actions">
+    <!-- Task Section -->
+    <div class="flex mt-3 mb-2">
+      <h3></h3>
       <button class="btn btn-primary" type="button"><i class="bi bi-plus"></i> Nouvelle tâche</button>
     </div>
 
@@ -83,6 +84,68 @@
           </div>
         }
       </div>
+    </div>
+
+    <!-- Participants Section -->
+    <div class="participants-section mt-3">
+      <div class="flex">
+        <h3>Participants</h3>
+      </div>
+      <!-- Note: Displaying existing participants will require fetching this data. -->
+      <p>L'affichage de la liste des participants actuels sera bientôt disponible.</p>
+      <!-- Example of how a list might look -->
+      <!--
+      <ul class="list-group">
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <div>
+            <strong>User Name</strong> (user@example.com)
+            <span class="badge bg-secondary ms-2">ADMIN</span>
+          </div>
+          <button class="btn btn-danger btn-sm"><i class="bi bi-trash"></i></button>
+        </li>
+      </ul>
+      -->
+
+      <hr>
+
+      <form [formGroup]="addParticipantForm" (ngSubmit)="onAddParticipants()">
+        <div class="participant-grid">
+          <!-- Grid Header -->
+          <div class="grid-header">Utilisateur</div>
+          <div class="grid-header">Rôle</div>
+          <div class="grid-header"><br></div> <!-- Action column header -->
+
+          <!-- Grid Rows -->
+          <div formArrayName="participants" class="grid-rows-container">
+            @for (participant of participants.controls; track i; let i = $index) {
+              <div [formGroupName]="i" class="grid-row">
+                <select title="user" formControlName="userId" class="form-control">
+                  <option value="" disabled>-- Sélectionner un utilisateur --</option>
+                  @for (user of allUsers; track user.id) {
+                    <option [value]="user.id">{{ user.nom }} ({{ user.email }})</option>
+                  }
+                </select>
+              
+                <select title="role" formControlName="role" class="form-control">
+                  @for (role of availableRoles; track role) {
+                    <option [value]="role">{{ role }}</option>
+                  }
+                </select>
+              
+                <button title="retirer" type="button" (click)="removeParticipant(i)" class="btn btn-danger btn-sm">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+            }
+            </div>
+          <div class="actions-footer">
+            <button type="button" (click)="addParticipant()" class="btn btn-secondary me-1">
+              <i class="bi bi-plus"></i> Ajouter une ligne
+            </button>
+            <button type="submit" class="btn btn-primary" [disabled]="participants.length === 0">Enregistrer</button>
+          </div>
+        </div>
+      </form>
     </div>
   </div>
 } @else {
