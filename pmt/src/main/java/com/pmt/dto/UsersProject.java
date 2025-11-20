@@ -4,7 +4,7 @@ import com.pmt.model.Role;
 
 import java.util.List;
 
-public class AddUsersProject {
+public class UsersProject {
     private Long projectId;
     private List<UserRoleDTO> users; // List of userId and role
 

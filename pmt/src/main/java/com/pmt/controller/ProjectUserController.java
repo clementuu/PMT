@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.pmt.dto.AddUsersProject;
+import com.pmt.dto.UsersProject;
 import com.pmt.model.Project;
 import com.pmt.model.ProjectUser;
 import com.pmt.service.ProjectUserService;
@@ -35,12 +35,22 @@ public class ProjectUserController {
     }
 
     @PostMapping("")
-    public ResponseEntity<?> addUsersToProject(@RequestBody AddUsersProject request) {
+    public ResponseEntity<?> addUsersToProject(@RequestBody UsersProject request) {
         try {
             List<ProjectUser> newProjectUsers = projectUserService.addUsersToProject(request);
             return ResponseEntity.status(HttpStatus.OK).body(newProjectUsers);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @GetMapping("/list/{projectId}")
+    public ResponseEntity<UsersProject> getUsersByProjectId(@PathVariable Long projectId) {
+        try {
+            UsersProject projectUsers = projectUserService.getUsersByProjectId(projectId);
+            return ResponseEntity.status(HttpStatus.OK).body(projectUsers);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 }

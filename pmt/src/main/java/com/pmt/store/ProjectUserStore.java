@@ -14,9 +14,6 @@ public interface ProjectUserStore extends CrudRepository<ProjectUser, Long> {
     @Query("SELECT pu.project FROM ProjectUser pu WHERE pu.user.id = :userId")
 
     List<Project> findAllProjectByUserId(@Param("userId") Long userId);
-
-
-
     boolean existsByProjectIdAndUserId(Long projectId, Long userId); // New method
-
+    List<ProjectUser> findByProjectId(Long projectId);
 }
