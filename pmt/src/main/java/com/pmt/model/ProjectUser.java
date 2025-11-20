@@ -24,7 +24,7 @@ public class ProjectUser {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
     // Role de l'utilisateur pour ce projet (admin, membre ou observateur)
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     private Role role;
 
     // Getters et setters

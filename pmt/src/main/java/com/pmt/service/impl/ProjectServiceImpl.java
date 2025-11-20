@@ -25,7 +25,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Project findById(Integer id) {
+    public Project findById(Long id) {
         return projectStore.findById(id).get();
     }
 
@@ -40,10 +40,5 @@ public class ProjectServiceImpl implements ProjectService {
         }
 
         return projectStore.save(project);
-    }
-
-    @Override
-    public List<Project> getProjectsByUserId(Long userId) {
-        return projectStore.findAllByUserId(userId);
     }
 }

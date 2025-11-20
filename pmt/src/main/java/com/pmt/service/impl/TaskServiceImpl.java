@@ -21,7 +21,7 @@ public class TaskServiceImpl implements TaskService {
     @Autowired
     TaskStore taskStore;
     @Autowired
-    ProjectStore projectStore; // Inject ProjectStore
+    ProjectStore projectStore;
 
     @Override
     public List<Task> findAll() {
@@ -45,7 +45,7 @@ public class TaskServiceImpl implements TaskService {
             throw new ValidationException("La tâche doit être associée à un projet.");
         }
         // récupère le projet
-        Optional<Project> projectOptional = projectStore.findById(task.getProject().getId().intValue());
+        Optional<Project> projectOptional = projectStore.findById(task.getProject().getId());
         if (projectOptional.isEmpty()) {
             throw new ValidationException("Le projet spécifié n'existe pas.");
         }
@@ -87,7 +87,7 @@ public class TaskServiceImpl implements TaskService {
 
         // récupère le projet
         if (task.getProject() != null && task.getProject().getId() != null) {
-            Optional<Project> projectOptional = projectStore.findById(task.getProject().getId().intValue());
+            Optional<Project> projectOptional = projectStore.findById(task.getProject().getId());
             if (projectOptional.isEmpty()) {
                 throw new ValidationException("Le projet spécifié pour la mise à jour n'existe pas.");
             }

@@ -1,6 +1,7 @@
 package com.pmt.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,13 +29,8 @@ public class ProjectController {
         return projectService.findAll();
     }
 
-    @GetMapping("/user/{userId}")
-    public List<Project> getProjectsByUserId(@PathVariable Long userId) {
-        return projectService.getProjectsByUserId(userId);
-    }
-
     @GetMapping("{id}")
-    public ResponseEntity<Project> getProject(@PathVariable Integer id) {
+    public ResponseEntity<Project> getProject(@PathVariable Long id) {
         try {
             Project projet = projectService.findById(id);
             return ResponseEntity.status(HttpStatus.OK).body(projet);
@@ -44,12 +40,12 @@ public class ProjectController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Project> createProject(@RequestBody Project project) {
+    public ResponseEntity<?> createProject(@RequestBody Project project) {
         try {
             Project createdProject = projectService.create(project);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdProject);
         } catch (ValidationException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
         }
     }
 
