@@ -15,4 +15,7 @@ export class DashboardComponent {
 
   constructor(private authService: AuthService, private router: Router) {}
 
+  goToNewProject() {
+    this.router.navigate(['/new-project']);
+  }
 }

@@ -1,5 +1,7 @@
-<div *ngIf="projects$ | async as projects; else loading">
-  <table *ngIf="projects.length > 0; else noProjects">
+@if (projects$ | async; as projects) {
+  <div>
+  @if (projects.length > 0) {
+    <table>
     <thead>
       <tr>
         <th>Nom</th>
@@ -9,18 +11,24 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let project of projects" (click)="goToProject(project.id)">
-        <td>{{ project.nom }}</td>
-        <td>{{ project.description }}</td>
-        <td>{{ project.dateFin | date: 'dd/MM/yyyy' }}</td>
-        <td>{{ project.tasks.length }}</td>
-      </tr>
+      @for (project of projects; track project.id) {
+        <tr (click)="goToProject(project.id)">
+          <td>{{ project.nom }}</td>
+          <td>{{ project.description }}</td>
+          <td>{{ project.dateFin | date: 'dd/MM/yyyy' }}</td>
+          <td>{{ project.tasks.length }}</td>
+        </tr>
+      }
     </tbody>
-  </table>
-  <ng-template #noProjects>
-    <p>Aucun projet trouvé.</p>
-  </ng-template>
+    </table>
+  } @else {
+    <div>
+      <p>Aucun projet trouvé.</p>
+    </div>
+  }
 </div>
-<ng-template #loading>
-  <p>Chargement des projets...</p>
-</ng-template>
+} @else {
+  <div>
+    <p>Chargement des projets...</p>
+  </div>
+}

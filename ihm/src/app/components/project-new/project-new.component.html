@@ -1,0 +1,51 @@
+<div class="container">
+  <h2>Créer un Nouveau Projet</h2>
+  <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="nom">Nom du Projet:</label>
+      <input type="text" id="nom" formControlName="nom" class="form-control" />
+      <div
+        *ngIf="
+          projectForm.get('nom')?.invalid &&
+          (projectForm.get('nom')?.dirty || projectForm.get('nom')?.touched)
+        "
+        class="error-message"
+      >
+        Le nom du projet est requis.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="description">Description:</label>
+      <textarea
+        id="description"
+        formControlName="description"
+        class="form-control"
+      ></textarea>
+      <div
+        *ngIf="
+          projectForm.get('description')?.invalid &&
+          (projectForm.get('description')?.dirty ||
+            projectForm.get('description')?.touched)
+        "
+        class="error-message"
+      >
+        La description du projet est requise.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="dateFin">Date de Fin (optionnel):</label>
+      <input
+        type="date"
+        id="dateFin"
+        formControlName="dateFin"
+        class="form-control"
+      />
+    </div>
+
+    <button type="submit" [disabled]="!projectForm.valid" class="btn btn-primary">
+      Créer le Projet
+    </button>
+  </form>
+</div>

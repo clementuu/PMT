@@ -78,19 +78,27 @@ button {
   border-radius: 5px;
   background-color: #007bff;
   color: white;
-  font-size: 1.1rem;
+  font-size: 1em;
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
 button:disabled {
-  background-color: #a0cfff;
+  background-color: #cccccc;
   cursor: not-allowed;
 }
 
-button:not(:disabled):hover {
+button:hover:not(:disabled) {
   background-color: #0056b3;
+}
+
+button[type="button"] {
+  background-color: #6c757d;
+}
+
+button[type="button"]:hover:not(:disabled) {
+  background-color: #5a6268;
 }
 
 /* Messages d'erreur */
@@ -114,6 +122,11 @@ button:not(:disabled):hover {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.fit {
+  max-width: fit-content;
+  max-height: fit-content;
 }
 
 body {

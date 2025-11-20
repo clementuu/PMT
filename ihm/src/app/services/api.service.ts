@@ -77,6 +77,13 @@ export class ApiService {
       );
   }
 
+  createProject(project: Partial<Project>): Observable<Project> {
+    return this.httpClient.post<Project>(`${this.apiUrl}/project`, project)
+      .pipe(
+        catchError(this.catchError)
+      );
+  }
+
   catchError(error: HttpErrorResponse) {
     const apiError: ApiError = {
       message: error.message || "Une erreur inconnue s'est produite",

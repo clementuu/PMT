@@ -4,7 +4,7 @@
     <div *ngIf="!isEditing">
       <div class="flex">
         <h1>{{ project.nom }}</h1>
-        <button id="edit-btn" type="button" (click)="startEditing()">Modifier</button>
+        <button class="fit" type="button" (click)="startEditing()">Modifier</button>
       </div>
       <p>{{ project.description }}</p>
       <small>Date de fin: {{ project.dateFin | date: 'dd/MM/yyyy' }}</small>

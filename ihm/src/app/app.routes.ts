@@ -7,15 +7,16 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { authGuard } from './guards/auth.guard';
 import { ProjectComponent } from './components/project/project.component';
 import { TaskComponent } from './components/task/task.component'; // New import for TaskComponent
+import { ProjectNewComponent } from './components/project-new/project-new.component';
 
 export const routes: Routes = [
-  { 
-    path: 'login', 
-    component: LoginComponent 
+  {
+    path: 'login',
+    component: LoginComponent
   },
-  { 
-    path: 'signin', 
-    component: SigninComponent 
+  {
+    path: 'signin',
+    component: SigninComponent
   },
   {
     path: 'home',
@@ -29,6 +30,11 @@ export const routes: Routes = [
   {
     path: 'project/:id',
     component: ProjectComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'new-project', // New route for creating a project
+    component: ProjectNewComponent,
     canActivate: [authGuard]
   },
   {
@@ -46,3 +52,4 @@ export const routes: Routes = [
     redirectTo: '/not-found'
   }
 ];
+

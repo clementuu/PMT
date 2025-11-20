@@ -1,6 +1,9 @@
 <div class="dashboard-container">
   <main class="dashboard-content">
-    <p>Bienvenue sur votre tableau de bord !</p>
+    <div class="flex">
+      <h1>Dashboard</h1>
+      <button class="btn btn-primary fit" type="button" (click)="goToNewProject()"><i class="bi bi-plus-circle"></i> Nouveau projet</button>
+    </div>
     <app-project-list></app-project-list>
   </main>
 </div>
