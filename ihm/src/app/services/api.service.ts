@@ -6,6 +6,7 @@ import { LoginRequest, LoginResponse, SigninRequest } from '../models/requests.m
 import { User } from '../models/user.model';
 import { Project } from '../models/project.model';
 import { Task } from '../models/task.model';
+import { UserProject, UsersProject } from '../models/userProject.model';
 
 export interface ApiError {
   message: string;
@@ -30,6 +31,13 @@ export class ApiService {
 
   postUser(signinRequest: SigninRequest): Observable<User> {
     return this.httpClient.post<User>(`${this.apiUrl}/user`, signinRequest)
+      .pipe(
+        catchError(this.catchError)
+      );
+  }
+
+  getAllUsers(): Observable<User[]> {
+    return this.httpClient.get<User[]>(`${this.apiUrl}/user`)
       .pipe(
         catchError(this.catchError)
       );
@@ -79,6 +87,13 @@ export class ApiService {
 
   createProject(project: Partial<Project>): Observable<Project> {
     return this.httpClient.post<Project>(`${this.apiUrl}/project`, project)
+      .pipe(
+        catchError(this.catchError)
+      );
+  }
+
+  postUsersProject(data: UsersProject): Observable<UserProject[]> {
+    return this.httpClient.post<UserProject[]>(`${this.apiUrl}/project/user`, data)
       .pipe(
         catchError(this.catchError)
       );

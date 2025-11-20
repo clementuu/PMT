@@ -58,7 +58,7 @@
           Les mots de passe ne correspondent pas.
         </div>
       </div>
-      <button type="submit" [disabled]="signinForm.invalid || passwordField.value !== confirmPasswordField.value">S'inscrire</button>
+      <button class="btn btn-primary mb-3" type="submit" [disabled]="signinForm.invalid || passwordField.value !== confirmPasswordField.value">S'inscrire</button>
       <div *ngIf="signinError" class="error-message">
         {{ signinError }}
       </div>

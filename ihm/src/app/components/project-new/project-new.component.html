@@ -1,18 +1,14 @@
 <div class="container">
-  <h2>Créer un Nouveau Projet</h2>
+  <h2>Nouveau Projet</h2>
   <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
     <div class="form-group">
       <label for="nom">Nom du Projet:</label>
       <input type="text" id="nom" formControlName="nom" class="form-control" />
-      <div
-        *ngIf="
-          projectForm.get('nom')?.invalid &&
-          (projectForm.get('nom')?.dirty || projectForm.get('nom')?.touched)
-        "
-        class="error-message"
-      >
-        Le nom du projet est requis.
-      </div>
+      @if (projectForm.get('nom')?.invalid && (projectForm.get('nom')?.dirty || projectForm.get('nom')?.touched)) {
+        <div class="error-message">
+          Le nom du projet est requis.
+        </div>
+      }
     </div>
 
     <div class="form-group">
@@ -22,16 +18,14 @@
         formControlName="description"
         class="form-control"
       ></textarea>
-      <div
-        *ngIf="
-          projectForm.get('description')?.invalid &&
-          (projectForm.get('description')?.dirty ||
-            projectForm.get('description')?.touched)
-        "
-        class="error-message"
-      >
-        La description du projet est requise.
-      </div>
+      @if (
+        projectForm.get('description')?.invalid &&
+        (projectForm.get('description')?.dirty || projectForm.get('description')?.touched)
+        ) {
+          <div class="error-message">
+            La description du projet est requise.
+          </div>
+        }
     </div>
 
     <div class="form-group">
@@ -44,8 +38,65 @@
       />
     </div>
 
-    <button type="submit" [disabled]="!projectForm.valid" class="btn btn-primary">
-      Créer le Projet
-    </button>
+    <div class="flex">
+      <h3>Membres</h3>
+      <button
+        type="button"
+        (click)="addParticipant()"
+        class="btn btn-secondary mb-2"
+      >
+        <i class="bi bi-plus"></i> Ajouter un participant
+      </button>
+    </div>
+
+    <div formArrayName="participants">
+      @for (participant of participants.controls; track i; let i = $index) {
+        <div
+          [formGroupName]="i"
+          class="participant-row"
+        >
+          <div class="form-group">
+            <label>Utilisateur:</label>
+            <select title="user" formControlName="userId" class="form-control">
+              <option value="" disabled>-- Sélectionner --</option>
+              <option *ngFor="let user of allUsers" [value]="user.id">
+                {{ user.nom }} ({{ user.email }})
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Rôle:</label>
+            <select title="role" formControlName="role" class="form-control">
+              <option *ngFor="let role of availableRoles" [value]="role">
+                {{ role }}
+              </option>
+            </select>
+          </div>
+
+          <button
+            title="retirer"
+            type="button"
+            (click)="removeParticipant(i)"
+            class="btn btn-danger fit"
+          >
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+      }
+    </div>
+
+    <hr />
+
+    <div class="text-center">
+      <button
+        type="submit"
+        [disabled]="projectForm.invalid"
+        class="btn btn-primary"
+      >
+        Créer le Projet
+      </button>
+    </div>
+    
   </form>
 </div>

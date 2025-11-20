@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.pmt.dto.AddUsersProject;
+import com.pmt.errors.ValidationException;
 import com.pmt.model.Project;
 import com.pmt.model.ProjectUser;
 import com.pmt.model.User;
@@ -32,12 +33,12 @@ public class ProjectUserServiceImpl implements ProjectUserService {
     @Override
     public List<ProjectUser> addUsersToProject(AddUsersProject request) {
         Project project = projectStore.findById(request.getProjectId())
-                .orElseThrow(() -> new RuntimeException("Project not found with ID: " + request.getProjectId()));
+                .orElseThrow(() -> new ValidationException("Project not found with ID: " + request.getProjectId()));
 
         List<ProjectUser> addedProjectUsers = new ArrayList<>();
         for (AddUsersProject.UserRoleDTO userRoleDTO : request.getUsers()) {
             User user = userStore.findById(userRoleDTO.getUserId())
-                    .orElseThrow(() -> new RuntimeException("User not found with ID: " + userRoleDTO.getUserId()));
+                    .orElseThrow(() -> new ValidationException("User not found with ID: " + userRoleDTO.getUserId()));
 
             if (!projectUserStore.existsByProjectIdAndUserId(project.getId(), user.getId())) {
                 ProjectUser newProjectUser = new ProjectUser();

@@ -1,81 +1,92 @@
-<div *ngIf="project" class="project-container">
-  <!-- Project Details Section -->
-  <div class="project-header">
-    <div *ngIf="!isEditing">
-      <div class="flex">
-        <h1>{{ project.nom }}</h1>
-        <button class="fit" type="button" (click)="startEditing()">Modifier</button>
+@if (project) {
+  <div class="project-container">
+    <!-- Project Details Section -->
+    <div class="project-header">
+      @if (!isEditing) {
+          <div class="flex">
+            <h1>{{ project.nom }}</h1>
+            <div class="flex">
+              <button class="btn btn-secondary me-2" type="button" (click)="startEditing()"><i class="bi bi-pencil-square"></i> Modifier</button>
+              <button class="btn btn-danger" title="supprimer" type="button"><i class="bi bi-trash"></i></button>
+            </div>
+          </div>
+          <p>{{ project.description }}</p>
+          <small>Date de fin: {{ project.dateFin | date: 'dd/MM/yyyy' }}</small>
+      } @else if (isEditing) {
+        <form [formGroup]="projectForm" (ngSubmit)="updateProject()">
+          <div class="input-group">
+            <label for="nom">Nom du projet:</label>
+            <input id="nom" formControlName="nom">
+          </div>
+          <div class="input-group">
+            <label for="description">Description:</label>
+            <textarea id="description" formControlName="description" rows="5"></textarea>
+          </div>
+          <div class="input-group">
+            <label for="dateFin">Date de fin:</label>
+            <input id="dateFin" type="date" formControlName="dateFin">
+          </div>
+          <div class="flex">
+            <button type="button" (click)="cancelEdit()">Annuler</button>
+            <button type="submit" [disabled]="projectForm.invalid">Enregistrer</button>
+          </div>
+        </form>
+      }
       </div>
-      <p>{{ project.description }}</p>
-      <small>Date de fin: {{ project.dateFin | date: 'dd/MM/yyyy' }}</small>
+
+    <!-- Task Actions -->
+    <div class="task-actions">
+      <button class="btn btn-primary" type="button"><i class="bi bi-plus"></i> Nouvelle tâche</button>
     </div>
 
-    <form *ngIf="isEditing" [formGroup]="projectForm" (ngSubmit)="updateProject()">
-      <div class="input-group">
-        <label for="nom">Nom du projet:</label>
-        <input id="nom" formControlName="nom">
+    <!-- Task Board Section -->
+    <div class="task-board" cdkDropListGroup>
+      <div class="task-column"
+           id="TODO"
+           cdkDropList
+           [cdkDropListData]="todoTasks"
+           (cdkDropListDropped)="drop($event)">
+        <h2>À faire</h2>
+        @for (task of todoTasks ; track task.id) {
+          <div cdkDrag class="task-card" (click)="goToTaskDetail(task.id)">
+            <h3>{{ task.nom }}</h3>
+            <p>{{ task.description }}</p>
+            <small>Échéance: {{ task.dateEcheance | date: 'dd/MM/yyyy' }}</small>
+          </div>
+        }
       </div>
-      <div class="input-group">
-        <label for="description">Description:</label>
-        <textarea id="description" formControlName="description" rows="5"></textarea>
+      <div class="task-column"
+           id="IN_PROGRESS"
+           cdkDropList
+           [cdkDropListData]="inProgressTasks"
+           (cdkDropListDropped)="drop($event)">
+        <h2>En cours</h2>
+        @for (task of inProgressTasks ; track task.id) {
+          <div cdkDrag class="task-card" (click)="goToTaskDetail(task.id)">
+            <h3>{{ task.nom }}</h3>
+            <p>{{ task.description }}</p>
+            <small>Échéance: {{ task.dateEcheance | date: 'dd/MM/yyyy' }}</small>
+          </div>
+        }
       </div>
-      <div class="input-group">
-        <label for="dateFin">Date de fin:</label>
-        <input id="dateFin" type="date" formControlName="dateFin">
+      <div class="task-column"
+           id="DONE"
+           cdkDropList
+           [cdkDropListData]="doneTasks"
+           (cdkDropListDropped)="drop($event)">
+        <h2>Terminé</h2>
+        @for (task of doneTasks ; track task.id) {
+          <div cdkDrag class="task-card" (click)="goToTaskDetail(task.id)">
+            <h3>{{ task.nom }}</h3>
+            <p>{{ task.description }}</p>
+            <small>Échéance: {{ task.dateEcheance | date: 'dd/MM/yyyy' }}</small>
+          </div>
+        }
       </div>
-      <div class="flex">
-        <button type="button" (click)="cancelEdit()">Annuler</button>
-        <button type="submit" [disabled]="projectForm.invalid">Enregistrer</button>
-      </div>
-    </form>
+    </div>
   </div>
-
-  <!-- Task Actions -->
-  <div class="task-actions">
-    <button>Nouvelle tâche</button>
+} @else {
+  <div>
+    <p>Chargement du projet...</p>
   </div>
-
-  <!-- Task Board Section -->
-  <div class="task-board" cdkDropListGroup>
-    <div class="task-column"
-         id="TODO"
-         cdkDropList
-         [cdkDropListData]="todoTasks"
-         (cdkDropListDropped)="drop($event)">
-      <h2>À faire</h2>
-      <div *ngFor="let task of todoTasks" cdkDrag class="task-card" (click)="goToTaskDetail(task.id)">
-        <h3>{{ task.nom }}</h3>
-        <p>{{ task.description }}</p>
-        <small>Échéance: {{ task.dateEcheance | date: 'dd/MM/yyyy' }}</small>
-      </div>
-    </div>
-    <div class="task-column"
-         id="IN_PROGRESS"
-         cdkDropList
-         [cdkDropListData]="inProgressTasks"
-         (cdkDropListDropped)="drop($event)">
-      <h2>En cours</h2>
-      <div *ngFor="let task of inProgressTasks" cdkDrag class="task-card" (click)="goToTaskDetail(task.id)">
-        <h3>{{ task.nom }}</h3>
-        <p>{{ task.description }}</p>
-        <small>Échéance: {{ task.dateEcheance | date: 'dd/MM/yyyy' }}</small>
-      </div>
-    </div>
-    <div class="task-column"
-         id="DONE"
-         cdkDropList
-         [cdkDropListData]="doneTasks"
-         (cdkDropListDropped)="drop($event)">
-      <h2>Terminé</h2>
-      <div *ngFor="let task of doneTasks" cdkDrag class="task-card" (click)="goToTaskDetail(task.id)">
-        <h3>{{ task.nom }}</h3>
-        <p>{{ task.description }}</p>
-        <small>Échéance: {{ task.dateEcheance | date: 'dd/MM/yyyy' }}</small>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div *ngIf="!project">
-  <p>Chargement du projet...</p>
-</div>
+}

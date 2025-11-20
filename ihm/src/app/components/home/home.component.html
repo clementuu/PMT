@@ -1,14 +1,16 @@
-<div *ngIf="!isLoading">
+@if (!isLoading) {
   <div class="home-container">
     <div class="home-content">
       <h2>Bienvenue sur PMT - Project Management Tool</h2>
       <p>Votre solution collaborative pour la gestion de projets de développement logiciel.</p>
       <p>Planifiez, suivez et gérez vos tâches avec facilité.</p>
 
-      <div *ngIf="!authService.isLoggedIn" class="auth-buttons">
+      @if (!authService.isLoggedIn) {
+        <div class="auth-buttons">
         <a routerLink="/login" class="btn btn-primary">Connexion</a>
         <a routerLink="/signin" class="btn btn-secondary">Inscription</a>
       </div>
+      }
     </div>
   </div>
-</div>
+}
