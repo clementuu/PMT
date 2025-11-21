@@ -1,11 +1,11 @@
 package com.pmt.store;
 
 import org.springframework.data.repository.CrudRepository;
-
-import com.pmt.model.Task;
 import org.springframework.transaction.annotation.Transactional;
 
-public interface TaskStore extends CrudRepository<Task, Long> {
+import com.pmt.model.TaskAssign;
+
+public interface TaskAssignStore extends CrudRepository<TaskAssign, Long> {
     @Transactional
     void deleteByProjectId(Long projectId);
 }

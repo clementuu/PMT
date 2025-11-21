@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.pmt.errors.ValidationException;
 import com.pmt.model.Project;
 import com.pmt.service.ProjectService;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -54,6 +56,16 @@ public class ProjectController {
         try {
             Project updatedProject = projectService.create(project);
             return ResponseEntity.status(HttpStatus.OK).body(updatedProject);
+        } catch (ValidationException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> deleteProject(@PathVariable Long id) {
+        try {
+            projectService.deleteProject(id);
+            return ResponseEntity.status(HttpStatus.OK).build();
         } catch (ValidationException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }

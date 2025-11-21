@@ -31,7 +31,7 @@ public class TaskServiceImpl implements TaskService {
         return tasks;
     }
 
-    public Task findById(Integer id) {
+    public Task findById(Long id) {
         return taskStore.findById(id).get();
     }
 
@@ -59,7 +59,7 @@ public class TaskServiceImpl implements TaskService {
         if (task.getId() == null) {
             throw new ValidationException("L'ID de la tâche est requis pour la mise à jour.");
         }
-        Optional<Task> existingTaskOptional = taskStore.findById(task.getId().intValue());
+        Optional<Task> existingTaskOptional = taskStore.findById(task.getId());
         if (existingTaskOptional.isEmpty()) {
             throw new EntityNotFoundException("La tâche avec l'ID " + task.getId() + " n'existe pas.");
         }

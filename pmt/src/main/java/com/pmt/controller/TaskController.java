@@ -34,7 +34,7 @@ public class TaskController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Task> getTaskById(@PathVariable Integer id) {
+    public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
         try {
             Task task = taskService.findById(id);
             return ResponseEntity.status(HttpStatus.OK).body(task);
@@ -43,7 +43,6 @@ public class TaskController {
         }
     }
     
-
     @PostMapping("")
     public ResponseEntity<Task> createTask(@RequestBody Task task) {
         try {

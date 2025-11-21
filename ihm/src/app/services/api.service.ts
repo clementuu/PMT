@@ -43,6 +43,13 @@ export class ApiService {
       );
   }
 
+  createProject(project: Partial<Project>): Observable<Project> {
+    return this.httpClient.post<Project>(`${this.apiUrl}/project`, project)
+      .pipe(
+        catchError(this.catchError)
+      );
+  }
+
   getProjectsByUserId(userId: number): Observable<Project[]> {
     return this.httpClient.get<Project[]>(`${this.apiUrl}/project/user/${userId}`)
       .pipe(
@@ -64,6 +71,12 @@ export class ApiService {
       );
   }
 
+  deleteProject(id: number): Observable<void> {
+    return this.httpClient.delete<void>(`${this.apiUrl}/project/${id}`).pipe(
+      catchError(this.catchError)
+    );
+  }
+
   getTask(id: number): Observable<Task>{
     return this.httpClient.get<Task>(`${this.apiUrl}/task/${id}`)
       .pipe(
@@ -80,13 +93,6 @@ export class ApiService {
 
   updateTask(task: Task): Observable<Task> {
     return this.httpClient.put<Task>(`${this.apiUrl}/task`, task)
-      .pipe(
-        catchError(this.catchError)
-      );
-  }
-
-  createProject(project: Partial<Project>): Observable<Project> {
-    return this.httpClient.post<Project>(`${this.apiUrl}/project`, project)
       .pipe(
         catchError(this.catchError)
       );

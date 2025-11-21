@@ -1,9 +1,11 @@
-<div *ngIf="task" class="task-detail">
-    <h2>{{ task.nom }}</h2>
-    <p><strong>Description:</strong> {{ task.description }}</p>
-    <p><strong>Statut:</strong> {{ task.status }}</p>
-    <p><strong>Priorité:</strong> {{ task.priorite }}</p>
-    <p><strong>Date d'échéance:</strong> {{ task.dateEcheance | date:'shortDate' }}</p>
-    <p *ngIf="task.dateFin"><strong>Date de fin:</strong> {{ task.dateFin | date:'shortDate' }}</p>
-    <p><strong>Projet ID:</strong> {{ task.project }}</p>
-</div>
+@if (task) {
+    <div class="task-detail">
+        <h2>{{ task.nom }}</h2>
+        <p><strong>Description:</strong> {{ task.description }}</p>
+        <p><strong>Statut:</strong> {{ task.status }}</p>
+        <p><strong>Priorité:</strong> {{ task.priorite }}</p>
+        <p><strong>Date d'échéance:</strong> {{ task.dateEcheance | date:'shortDate' }}</p>
+        <p><strong>Date de fin:</strong> {{ task.dateFin | date:'shortDate' }}</p>
+        <p><strong>Projet ID:</strong> {{ task.project }}</p>
+    </div>
+} 

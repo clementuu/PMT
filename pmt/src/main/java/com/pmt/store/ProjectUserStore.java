@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.pmt.model.Project;
 import com.pmt.model.ProjectUser;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface ProjectUserStore extends CrudRepository<ProjectUser, Long> {
 
@@ -16,4 +17,6 @@ public interface ProjectUserStore extends CrudRepository<ProjectUser, Long> {
     List<Project> findAllProjectByUserId(@Param("userId") Long userId);
     boolean existsByProjectIdAndUserId(Long projectId, Long userId); // New method
     List<ProjectUser> findByProjectId(Long projectId);
+    @Transactional
+    void deleteByProjectId(Long projectId);
 }

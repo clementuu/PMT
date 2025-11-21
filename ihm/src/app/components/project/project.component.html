@@ -7,7 +7,7 @@
             <h1>{{ project.nom }}</h1>
             <div class="flex">
               <button class="btn btn-secondary me-1" type="button" (click)="startEditing()"><i class="bi bi-pencil-square"></i> Modifier</button>
-              <button class="btn btn-danger" title="supprimer" type="button"><i class="bi bi-trash"></i></button>
+              <button class="btn btn-danger" title="supprimer" type="button" (click)="deleteProject()"><i class="bi bi-trash"></i></button>
             </div>
           </div>
           <p>{{ project.description }}</p>
@@ -26,9 +26,9 @@
             <label for="dateFin">Date de fin:</label>
             <input id="dateFin" type="date" formControlName="dateFin">
           </div>
-          <div class="flex">
-            <button type="button" (click)="cancelEdit()">Annuler</button>
-            <button type="submit" [disabled]="projectForm.invalid">Enregistrer</button>
+          <div class="text-center">
+            <button class="btn btn-secondary me-1" type="button" (click)="cancelEdit()">Annuler</button>
+            <button class="btn btn-primary" type="submit" [disabled]="projectForm.invalid">Enregistrer</button>
           </div>
         </form>
       }
@@ -93,18 +93,6 @@
       </div>
       <!-- Note: Displaying existing participants will require fetching this data. -->
       <p>L'affichage de la liste des participants actuels sera bientôt disponible.</p>
-      <!-- Example of how a list might look -->
-      <!--
-      <ul class="list-group">
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-          <div>
-            <strong>User Name</strong> (user@example.com)
-            <span class="badge bg-secondary ms-2">ADMIN</span>
-          </div>
-          <button class="btn btn-danger btn-sm"><i class="bi bi-trash"></i></button>
-        </li>
-      </ul>
-      -->
 
       <hr>
 

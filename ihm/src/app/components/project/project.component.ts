@@ -124,8 +124,22 @@ export class ProjectComponent implements OnInit {
     });
   }
 
+  deleteProject() {
+    if (this.project == null ) {
+      return;
+    }
+    this.apiService.deleteProject(this.project.id).subscribe({
+      next: () => {
+        alert("Projet supprimé !");
+        this.router.navigate(['/dashboard']);
+      },
+      error: (err) => {
+        console.error('Error removing project:', err);
+        alert("Erreur lors de la suppression du projet.");
+      }
+    })
+  }
 
-  // ===== Task Methods =====
   goToTaskDetail(taskId: number): void {
     this.router.navigate(['/task', taskId]);
   }

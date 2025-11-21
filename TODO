@@ -1,0 +1,4 @@
+- affichage, modification, suppression des taches
+- affichage, modification et suppression des participants au projet
+- suppression d'un projet
+- gestion limité en fonction du role des utilisateurs

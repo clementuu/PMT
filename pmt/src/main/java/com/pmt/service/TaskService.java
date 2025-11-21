@@ -6,7 +6,7 @@ import com.pmt.model.Task;
 
 public interface TaskService {
     List<Task> findAll();
-    Task findById(Integer id);
+    Task findById(Long id);
     Task create(Task task);
     Task update(Task task);
 }

@@ -5,9 +5,13 @@
       <div class="input-group">
         <label for="nom">Nom:</label>
         <input type="text" id="nom" [(ngModel)]="nom" name="nom" required #nomField="ngModel">
-        <div *ngIf="nomField.invalid && (nomField.dirty || nomField.touched)" class="error-message">
-          <div *ngIf="nomField.errors?.['required']">Le nom est requis.</div>
-        </div>
+        @if (nomField.invalid && (nomField.dirty || nomField.touched)) {
+          <div class="error-message">
+          @if (nomField.errors?.['required']) {
+            <div>Le nom est requis.</div>
+          }
+          </div>
+        }
       </div>
       <div class="input-group">
         <label for="email">Email:</label>
@@ -20,10 +24,16 @@
           email
           #emailField="ngModel"
           [class.is-invalid]="emailField.invalid && (emailField.dirty || emailField.touched)">
-        <div *ngIf="emailField.invalid && (emailField.dirty || emailField.touched)" class="error-message">
-          <div *ngIf="emailField.errors?.['required']">L'adresse email est requise.</div>
-          <div *ngIf="emailField.errors?.['email']">Veuillez entrer une adresse email valide.</div>
-        </div>
+        @if (emailField.invalid && (emailField.dirty || emailField.touched)) {
+          <div class="error-message">
+            @if (emailField.errors?.['required']) {
+              <div>L'adresse email est requise.</div>
+            } @else if (emailField.errors?.['email']) {
+              <div>Veuillez entrer une adresse email valide.</div>
+            }
+          </div>
+        }
+  
       </div>
       <div class="input-group" ngModelGroup="passwordGroup" #passwordGroup="ngModelGroup">
         <label for="password">Mot de passe:</label>
@@ -36,10 +46,15 @@
           minlength="4"
           #passwordField="ngModel"
           [class.is-invalid]="passwordField.invalid && (passwordField.dirty || passwordField.touched)">
-        <div *ngIf="passwordField.invalid && (passwordField.dirty || passwordField.touched)" class="error-message">
-          <div *ngIf="passwordField.errors?.['required']">Le mot de passe est requis.</div>
-          <div *ngIf="passwordField.errors?.['minlength']">Le mot de passe doit contenir au moins 6 caractères.</div>
-        </div>
+        @if (passwordField.invalid && (passwordField.dirty || passwordField.touched)) {
+          <div class="error-message">
+            @if (passwordField.errors?.['required']) {
+              <div>Le mot de passe est requis.</div>
+            } @else if (passwordField.errors?.['minlength']) {
+              <div>Le mot de passe doit contenir au moins 6 caractères.</div>
+            }
+          </div>
+        }
       </div>
       <div class="input-group">
         <label for="confirmPassword">Confirmer le mot de passe:</label>
@@ -51,17 +66,22 @@
           required
           #confirmPasswordField="ngModel"
           [class.is-invalid]="confirmPasswordField.invalid && (confirmPasswordField.dirty || confirmPasswordField.touched)">
-        <div *ngIf="confirmPasswordField.invalid && (confirmPasswordField.dirty || confirmPasswordField.touched)" class="error-message">
-          <div *ngIf="confirmPasswordField.errors?.['required']">La confirmation du mot de passe est requise.</div>
-        </div>
-        <div *ngIf="passwordField.value !== confirmPasswordField.value && confirmPasswordField.dirty && confirmPasswordField.touched" class="error-message">
-          Les mots de passe ne correspondent pas.
-        </div>
+        @if (confirmPasswordField.invalid && (confirmPasswordField.dirty || confirmPasswordField.touched)) {
+          <div class="error-message">
+            @if (confirmPasswordField.errors?.['required']) {
+              <div>La confirmation du mot de passe est requise.</div>
+            } @else if (passwordField.value !== confirmPasswordField.value && confirmPasswordField.dirty && confirmPasswordField.touched) {
+              <div>Les mots de passe ne correspondent pas.</div>
+            }
+          </div>
+        }
       </div>
       <button class="btn btn-primary mb-3" type="submit" [disabled]="signinForm.invalid || passwordField.value !== confirmPasswordField.value">S'inscrire</button>
-      <div *ngIf="signinError" class="error-message">
-        {{ signinError }}
-      </div>
+      @if (signinError) {
+        <div class="error-message">
+          {{ signinError }}
+        </div>
+      }
     </form>
     <p>Déjà inscrit ? <a routerLink="/login">Se connecter</a></p>
   </div>

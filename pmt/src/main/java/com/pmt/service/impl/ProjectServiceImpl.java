@@ -5,16 +5,26 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.pmt.errors.ValidationException;
 import com.pmt.model.Project;
 import com.pmt.service.ProjectService;
 import com.pmt.store.ProjectStore;
+import com.pmt.store.TaskStore;
+import com.pmt.store.ProjectUserStore;
+import com.pmt.store.TaskAssignStore;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
     @Autowired
     ProjectStore projectStore;
+    @Autowired
+    TaskStore taskStore;
+    @Autowired
+    TaskAssignStore taskAssignStore;
+    @Autowired
+    ProjectUserStore projectUserStore;
 
     @Override
     public List<Project> findAll() {
@@ -40,5 +50,17 @@ public class ProjectServiceImpl implements ProjectService {
         }
 
         return projectStore.save(project);
+    }
+
+    @Override
+    @Transactional
+    public void deleteProject(Long id) {
+        if (id == null) {
+            throw new ValidationException("l'id ne peut pas être null");
+        }
+        taskAssignStore.deleteByProjectId(id);
+        taskStore.deleteByProjectId(id);
+        projectUserStore.deleteByProjectId(id);
+        projectStore.deleteById(id);
     }
 }
