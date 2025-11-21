@@ -39,7 +39,7 @@ export class TaskComponent implements OnInit {
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
       if (id) {
-        this.apiService.getTask(parseInt(id, 10)).subscribe({
+        this.apiService.getTask(+id).subscribe({
           next: (task: Task) => {
             this.task = task;
           },
@@ -97,7 +97,6 @@ export class TaskComponent implements OnInit {
     this.apiService.deleteTask(this.task.id).subscribe({
       next: () => {
         alert("Tâche supprimé !");
-        console.log(`/project/${this.task?.projectId}`);
         this.router.navigate([`/project/${this.task?.projectId}`]);
       },
       error: (err) => {

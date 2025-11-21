@@ -3,15 +3,18 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 import { Project } from '../../models/project.model';
 import { Task } from '../../models/task.model';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormArray } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { User } from '../../models/user.model';
+import { UserProjectAddComponent } from '../user-project-add/user-project-add.component';
+import { UserRole, UsersProject } from '../../models/userProject.model';
+
 
 @Component({
   selector: 'app-project',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, DragDropModule],
+  imports: [CommonModule, ReactiveFormsModule, DragDropModule, UserProjectAddComponent],
   templateUrl: './project.component.html',
   styleUrls: ['./project.component.css']
 })
@@ -24,9 +27,10 @@ export class ProjectComponent implements OnInit {
   inProgressTasks: Task[] = [];
   doneTasks: Task[] = [];
 
-  addParticipantForm: FormGroup;
   allUsers: User[] = [];
+  allMembers: UserRole[] = [];
   availableRoles: string[] = ['ADMIN', 'MEMBER', 'OBSERVER'];
+
 
   constructor(
     private route: ActivatedRoute,
@@ -38,10 +42,6 @@ export class ProjectComponent implements OnInit {
       nom: ['', Validators.required],
       description: ['', Validators.required],
       dateFin: ['']
-    });
-
-    this.addParticipantForm = this.fb.group({
-      participants: this.fb.array([])
     });
   }
 
@@ -59,6 +59,13 @@ export class ProjectComponent implements OnInit {
       this.apiService.getAllUsers().subscribe(users => {
         this.allUsers = users;
       });
+
+      this.apiService.getUsersProject(+id).subscribe(usersProject => {
+        this.allMembers = usersProject.users.map(up => ({
+          userId: up.userId,
+          role: up.role
+        }));
+      })
     }
   }
 
@@ -83,39 +90,25 @@ export class ProjectComponent implements OnInit {
     }
   }
 
-  // ===== Participant Methods =====
-  get participants(): FormArray {
-    return this.addParticipantForm.get('participants') as FormArray;
-  }
-
-  addParticipant(): void {
-    const participantForm = this.fb.group({
-      userId: ['', Validators.required],
-      role: ['MEMBER', Validators.required],
-    });
-    this.participants.push(participantForm);
-  }
-
-  removeParticipant(index: number): void {
-    this.participants.removeAt(index);
-  }
-
-  onAddParticipants(): void {
-    if (this.addParticipantForm.invalid || this.participants.length === 0 || !this.project) {
+  onParticipantsSaved(participants: any[]): void {
+    if (!this.project) {
       return;
     }
 
-    const payload = {
+    const payload: UsersProject = {
       projectId: this.project.id,
-      users: this.addParticipantForm.value.participants,
+      users: participants,
     };
 
     this.apiService.postUsersProject(payload).subscribe({
       next: () => {
         alert('Participants ajoutés avec succès !');
-        this.addParticipantForm.reset();
-        this.participants.clear();
-        // Here you would typically refresh the project's participant list
+        // Refresh project data to show new participants
+        if (this.project?.id) {
+            this.apiService.getProjectById(this.project.id).subscribe(project => {
+                this.project = project;
+            });
+        }
       },
       error: (err) => {
         console.error('Error adding participants:', err);
@@ -167,7 +160,7 @@ export class ProjectComponent implements OnInit {
         event.currentIndex,
       );
 
-      const taskToSend = { ...task, project: this.project! };
+      const taskToSend = { ...task, projectId: this.project!.id }; // Use projectId instead of project object
 
       this.apiService.updateTask(taskToSend).subscribe({
         next: () => {},

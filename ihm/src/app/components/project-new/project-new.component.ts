@@ -81,7 +81,6 @@ export class ProjectNewComponent implements OnInit {
       .createProject(newProject)
       .pipe(
         switchMap((createdProject) => {
-          console.log('Project created successfully:', createdProject);
           const usersProjectData = {
             projectId: createdProject.id!,
             users: this.participantsToSave,
@@ -91,7 +90,6 @@ export class ProjectNewComponent implements OnInit {
       )
       .subscribe({
         next: () => {
-          console.log('Users added to project successfully.');
           this.router.navigate(['/dashboard']);
         },
         error: (error) => {

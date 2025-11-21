@@ -46,7 +46,7 @@ export class TaskNewComponent implements OnInit {
     if (this.taskForm.valid) {
       const taskData: Partial<Task> = {
         ...this.taskForm.value,
-        project: { id: this.projectId },
+        projectId: this.projectId,
         status: 'TODO'
       };
 

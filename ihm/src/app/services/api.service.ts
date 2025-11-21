@@ -104,8 +104,15 @@ export class ApiService {
     );
   }
 
-  postUsersProject(data: UsersProject): Observable<UserProject[]> {
-    return this.httpClient.post<UserProject[]>(`${this.apiUrl}/project/user`, data)
+  postUsersProject(data: UsersProject): Observable<UsersProject> {
+    return this.httpClient.post<UsersProject>(`${this.apiUrl}/project/user`, data)
+      .pipe(
+        catchError(this.catchError)
+      );
+  }
+
+  getUsersProject(projectId: number): Observable<UsersProject> {
+    return this.httpClient.get<UsersProject>(`${this.apiUrl}/project/user/list/${projectId}`)
       .pipe(
         catchError(this.catchError)
       );

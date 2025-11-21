@@ -4,7 +4,7 @@ export interface Task {
     description: string;
     dateFin: Date;
     dateEcheance: Date;
-    projectId?: number;
+    projectId: number;
     priorite: 'LOW' | 'MEDIUM' | 'HIGH';
     status: 'TODO' | 'IN_PROGRESS' | 'DONE';
 }

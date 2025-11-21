@@ -1,6 +1,7 @@
 package com.pmt.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,42 +28,42 @@ public class TaskController {
     TaskService taskService;
 
     @GetMapping("")  
-    public ResponseEntity<List<TaskDTO>> getAll() {
+    public ResponseEntity<?> getAll() {
         try {
             List<TaskDTO> tasks = taskService.findAll();
             return ResponseEntity.status(HttpStatus.OK).body(tasks);
         } catch (ValidationException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
         }
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<TaskDTO> getTaskById(@PathVariable Long id) {
+    public ResponseEntity<?> getTaskById(@PathVariable Long id) {
         try {
             TaskDTO task = taskService.findById(id);
             return ResponseEntity.status(HttpStatus.OK).body(task);
         } catch (ValidationException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
         }
     }
     
     @PostMapping("")
-    public ResponseEntity<Task> createTask(@RequestBody TaskDTO dto) {
+    public ResponseEntity<?> createTask(@RequestBody TaskDTO dto) {
         try {
             Task createdTask = taskService.create(dto);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdTask);
         } catch (ValidationException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
         }
     }
 
     @PutMapping("")
-    public ResponseEntity<Task> putTask(@RequestBody Task task) {
+    public ResponseEntity<?> putTask(@RequestBody Task task) {
         try {
             Task patchedTask = taskService.update(task);
             return ResponseEntity.status(HttpStatus.OK).body(patchedTask);
         } catch (ValidationException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
         }
     }
 
@@ -72,7 +73,7 @@ public class TaskController {
             taskService.deleteById(id);
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (ValidationException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
         }
     }
 }
