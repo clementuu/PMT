@@ -17,9 +17,6 @@ public class TaskAssign {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-    @ManyToOne
-    @JoinColumn(name = "project_id", nullable = false)
-    private Project project;
     
     // Getters et setters
     public Long getId() {
@@ -39,11 +36,5 @@ public class TaskAssign {
     }
     public void setUser(User user) {
         this.user = user;
-    }
-    public Project getProject() {
-        return project;
-    }
-    public void setProject(Project project) {
-        this.project = project;
     }
 }

@@ -20,9 +20,7 @@ CREATE TABLE task (
     date_fin DATE,
     priorite INT,
     status INT,
-    user_id INT,
     project_id INT,
-    FOREIGN KEY (user_id) REFERENCES user_app(id),
     FOREIGN KEY (project_id) REFERENCES project(id)
 );
 
@@ -39,8 +37,6 @@ CREATE TABLE task_assign (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
     task_id INT,
-    project_id INT,
     FOREIGN KEY (user_id) REFERENCES user_app(id),
-    FOREIGN KEY (task_id) REFERENCES task(id),
-    FOREIGN KEY (project_id) REFERENCES project(id)
+    FOREIGN KEY (task_id) REFERENCES task(id)
 );

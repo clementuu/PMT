@@ -16,11 +16,11 @@ INSERT INTO project_user (user_id, project_id, role) VALUES
 (2, 2, 2);
 
 -- Tâches
-INSERT INTO task (nom, description, date_echeance, date_fin, priorite, status, user_id, project_id) VALUES
-('Design maquette', 'Réaliser les maquettes du site', '2025-08-01', '2025-08-03', 1, 1, 1, 1),
-('API backend', 'Développement de l’API REST', '2025-10-01', NULL, 2, 2, 2, 2);
+INSERT INTO task (nom, description, date_echeance, date_fin, priorite, status, project_id) VALUES
+('Design maquette', 'Réaliser les maquettes du site', '2025-08-01', '2025-08-03', 1, 1, 1),
+('API backend', 'Développement de l’API REST', '2025-10-01', NULL, 2, 2, 2);
 
 -- Assignations de tâches
-INSERT INTO task_assign (user_id, task_id, project_id) VALUES
-(1, 1, 1),
-(2, 2, 2);
+INSERT INTO task_assign (user_id, task_id) VALUES
+(1, 1),
+(2, 2);

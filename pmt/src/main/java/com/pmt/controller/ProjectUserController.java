@@ -38,7 +38,7 @@ public class ProjectUserController {
     public ResponseEntity<?> addUsersToProject(@RequestBody UsersProject request) {
         try {
             List<ProjectUser> newProjectUsers = projectUserService.addUsersToProject(request);
-            return ResponseEntity.status(HttpStatus.OK).body(newProjectUsers);
+            return ResponseEntity.status(HttpStatus.CREATED).body(newProjectUsers);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
         }

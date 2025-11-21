@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.pmt.errors.ValidationException;
 import com.pmt.model.Project;
+import com.pmt.model.Task;
 import com.pmt.service.ProjectService;
 import com.pmt.store.ProjectStore;
 import com.pmt.store.TaskStore;
@@ -58,9 +59,21 @@ public class ProjectServiceImpl implements ProjectService {
         if (id == null) {
             throw new ValidationException("l'id ne peut pas être null");
         }
-        taskAssignStore.deleteByProjectId(id);
+        // Récupérer toutes les tâches du projet
+        List<Task> tasks = taskStore.findByProjectId(id);
+        
+        // Supprimer les assignations liées à chaque tâche
+        for (Task task : tasks) {
+            taskAssignStore.deleteByTaskId(task.getId());
+        }
+
+        // Supprimer les tâches du projet
         taskStore.deleteByProjectId(id);
+
+        // Supprimer les utilisateurs liés au projet
         projectUserStore.deleteByProjectId(id);
+
+        // Supprimer le projet lui-même
         projectStore.deleteById(id);
     }
 }
