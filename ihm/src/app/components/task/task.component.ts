@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule, formatDate } from '@angular/common';
 import { Task } from '../../models/task.model';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -25,7 +25,7 @@ export class TaskComponent implements OnInit {
   private apiService = inject(ApiService);
   private fb = inject(FormBuilder);
 
-  constructor() {
+  constructor(private router: Router) {
     this.taskForm = this.fb.group({
       nom: ['', Validators.required],
       description: ['', Validators.required],
@@ -82,7 +82,28 @@ export class TaskComponent implements OnInit {
         this.task = updatedTask;
         this.isEditing = false;
       },
-      error: (err) => console.error('Error updating task:', err)
+      error: (err) => {
+        console.error('Error updating task:', err);
+        alert("Erreur lors de la mise à jour de la tâche !");
+      }
     });
+  }
+
+  deleteTask(): void {
+    if (this.task == null) {
+      return;
+    }
+
+    this.apiService.deleteTask(this.task.id).subscribe({
+      next: () => {
+        alert("Tâche supprimé !");
+        console.log(`/project/${this.task?.projectId}`);
+        this.router.navigate([`/project/${this.task?.projectId}`]);
+      },
+      error: (err) => {
+        console.error('Error deleting task:', err);
+        alert("Erreur lors de la suppression de la tâche !");
+      }
+    })
   }
 }

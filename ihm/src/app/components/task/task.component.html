@@ -3,13 +3,20 @@
         @if (!isEditing) {
             <div class="flex">
                 <h2>{{ task.nom }}</h2>
-                <button class="btn btn-secondary" (click)="startEditing()"><i class="bi bi-pencil-square"></i> Modifier</button>
+                <div class="flex">
+                    <button class="btn btn-secondary me-1" type="button" (click)="startEditing()"><i class="bi bi-pencil-square"></i> Modifier</button>
+                    <button class="btn btn-danger" type="button" title="supprimer" (click)="deleteTask()"><i class="bi bi-trash"></i></button>
+                </div>
             </div>
             <p><strong>Description:</strong> {{ task.description }}</p>
             <p><strong>Statut:</strong> {{ task.status }}</p>
             <p><strong>Priorité:</strong> {{ task.priorite }}</p>
             <p><strong>Date d'échéance:</strong> {{ task.dateEcheance | date:'dd/MM/yyyy' }}</p>
             <p><strong>Date de fin:</strong> {{ task.dateFin | date:'dd/MM/yyyy' }}</p>
+
+            <div class="text-center mt-3">
+                <button class="btn btn-primary" [routerLink]="['/project', task.projectId]">Retour au projet</button>
+            </div>
         } @else {
             <form [formGroup]="taskForm" (ngSubmit)="updateTask()">
                 <div class="form-group">

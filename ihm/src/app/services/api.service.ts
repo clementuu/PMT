@@ -98,6 +98,12 @@ export class ApiService {
       );
   }
 
+  deleteTask(id: number): Observable<void> {
+    return this.httpClient.delete<void>(`${this.apiUrl}/task/${id}`).pipe(
+      catchError(this.catchError)
+    );
+  }
+
   postUsersProject(data: UsersProject): Observable<UserProject[]> {
     return this.httpClient.post<UserProject[]>(`${this.apiUrl}/project/user`, data)
       .pipe(

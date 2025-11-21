@@ -1,39 +1,21 @@
-package com.pmt.model;
+package com.pmt.dto;
 
 import java.time.LocalDate;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.pmt.model.Priorite;
+import com.pmt.model.Status;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-
-// Classe représentant les tâches
-@Entity
-@Table(name = "task")
-public class Task {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class TaskDTO {
     private Long id;
     private String nom;
     private String description;
     private LocalDate dateFin;
     private LocalDate dateEcheance;
-    // Projet à laquelle la tâche est associée
-    @ManyToOne
-    @JoinColumn(name = "project_id", nullable = false)
-    @JsonBackReference
-    private Project project;
-    @Enumerated(EnumType.ORDINAL)
+    private Long projectId;
     private Priorite priorite;
-    @Enumerated(EnumType.ORDINAL)
     private Status status;
+
+    public TaskDTO() {};
 
     // Getters et setters
     public Long getId() {
@@ -54,12 +36,6 @@ public class Task {
     public void setDescription(String description) {
         this.description = description;
     }
-    public Priorite getPriorite() {
-        return priorite;
-    }
-    public void setPriorite(Priorite priorite) {
-        this.priorite = priorite;
-    }
     public LocalDate getDateFin() {
         return dateFin;
     }
@@ -72,11 +48,17 @@ public class Task {
     public void setDateEcheance(LocalDate dateEcheance) {
         this.dateEcheance = dateEcheance;
     }
-    public Project getProject() {
-        return project;
+    public Long getProjectId() {
+        return projectId;
     }
-    public void setProject(Project project) {
-        this.project = project;
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
+    }
+    public Priorite getPriorite() {
+        return priorite;
+    }
+    public void setPriorite(Priorite priorite) {
+        this.priorite = priorite;
     }
     public Status getStatus() {
         return status;

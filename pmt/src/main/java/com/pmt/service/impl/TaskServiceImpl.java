@@ -7,11 +7,13 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.pmt.dto.TaskDTO;
 import com.pmt.errors.ValidationException;
 import com.pmt.model.Project;
 import com.pmt.model.Task;
 import com.pmt.service.TaskService;
 import com.pmt.store.ProjectStore;
+import com.pmt.store.TaskAssignStore;
 import com.pmt.store.TaskStore;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -22,33 +24,74 @@ public class TaskServiceImpl implements TaskService {
     TaskStore taskStore;
     @Autowired
     ProjectStore projectStore;
+    @Autowired
+    TaskAssignStore taskAssignStore;
 
     @Override
-    public List<Task> findAll() {
+    public List<TaskDTO> findAll() {
         List<Task> tasks = new ArrayList<Task>();
         taskStore.findAll().forEach(tasks::add);
 
-        return tasks;
+        List<TaskDTO> dtos = new ArrayList<TaskDTO>();
+
+        for (Task task : tasks) {
+            TaskDTO dto = new TaskDTO();
+
+            dto.setId(task.getId());
+            dto.setNom(task.getNom());
+            dto.setDescription(task.getDescription());
+            dto.setDateEcheance(task.getDateEcheance());
+            dto.setDateFin(task.getDateFin());
+            dto.setPriorite(task.getPriorite());
+            dto.setStatus(task.getStatus());
+            dto.setProjectId(task.getProject().getId());
+
+            dtos.add(dto);
+        }
+
+        return dtos;
     }
 
-    public Task findById(Long id) {
-        return taskStore.findById(id).get();
+    public TaskDTO findById(Long id) {
+        Task task = taskStore.findById(id).get();
+
+        TaskDTO dto = new TaskDTO();
+
+        dto.setId(task.getId());
+        dto.setNom(task.getNom());
+        dto.setDescription(task.getDescription());
+        dto.setDateEcheance(task.getDateEcheance());
+        dto.setDateFin(task.getDateFin());
+        dto.setPriorite(task.getPriorite());
+        dto.setStatus(task.getStatus());
+        dto.setProjectId(task.getProject().getId());
+
+        return dto;
     }
 
     @Override
-    public Task create(Task task) {
-        if(task.getNom() == null || task.getNom().isBlank()) {
+    public Task create(TaskDTO dto) {
+        if(dto.getNom() == null || dto.getNom().isBlank()) {
             throw new ValidationException("La tâche doit avoir un nom");
         }
         // controle les tache sans projet
-        if (task.getProject() == null || task.getProject().getId() == null) {
+        if (dto.getProjectId() == null) {
             throw new ValidationException("La tâche doit être associée à un projet.");
         }
         // récupère le projet
-        Optional<Project> projectOptional = projectStore.findById(task.getProject().getId());
+        Optional<Project> projectOptional = projectStore.findById(dto.getProjectId());
         if (projectOptional.isEmpty()) {
             throw new ValidationException("Le projet spécifié n'existe pas.");
         }
+
+        Task task = new Task();
+
+        task.setNom(dto.getNom());
+        task.setDescription(dto.getDescription());
+        task.setDateEcheance(dto.getDateEcheance());
+        task.setDateFin(dto.getDateFin());
+        task.setPriorite(dto.getPriorite());
+        task.setStatus(dto.getStatus());
         task.setProject(projectOptional.get());
 
         return taskStore.save(task);
@@ -97,5 +140,14 @@ public class TaskServiceImpl implements TaskService {
         }
 
         return taskStore.save(existingTask);
+    }
+
+    @Override
+    public void deleteById(Long taskId) {
+        if(taskId == null) {
+            throw new ValidationException("l'id ne peut pas être null");
+        }
+        taskAssignStore.deleteByTaskId(taskId);
+        taskStore.deleteById(taskId);
     }
 }
