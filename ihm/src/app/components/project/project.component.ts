@@ -144,6 +144,13 @@ export class ProjectComponent implements OnInit {
     this.router.navigate(['/task', taskId]);
   }
 
+  goToNewTask(): void {
+    if (this.project == null) {
+      return;
+    }
+    this.router.navigate([`/project/${this.project.id}/new-task`]);
+  }
+
   drop(event: CdkDragDrop<Task[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);

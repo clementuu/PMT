@@ -9,6 +9,7 @@ import { ProjectComponent } from './components/project/project.component';
 import { TaskComponent } from './components/task/task.component'; // New import for TaskComponent
 import { ProjectNewComponent } from './components/project-new/project-new.component';
 import { UserProjectAddComponent } from './components/user-project-add/user-project-add.component';
+import { TaskNewComponent } from './components/task-new/task-new.component';
 
 export const routes: Routes = [
   {
@@ -34,6 +35,11 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
+    path: 'project/:id/new-task',
+    component: TaskNewComponent,
+    canActivate: [authGuard]
+  },
+  {
     path: 'new-project', // New route for creating a project
     component: ProjectNewComponent,
     canActivate: [authGuard]
@@ -53,4 +59,3 @@ export const routes: Routes = [
     redirectTo: '/not-found'
   }
 ];
-
