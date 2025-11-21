@@ -26,7 +26,7 @@ export class TaskNewComponent implements OnInit {
     this.taskForm = this.fb.group({
       nom: ['', Validators.required],
       description: ['', Validators.required],
-      dateEcheance: ['', Validators.required],
+      dateEcheance: [''],
       priorite: ['MEDIUM', Validators.required]
     });
   }
