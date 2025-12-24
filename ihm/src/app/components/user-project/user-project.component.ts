@@ -1,9 +1,10 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule, AbstractControl } from '@angular/forms';
+import { Component, Input, OnChanges, OnInit, SimpleChanges, inject } from '@angular/core';
+import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { User } from '../../models/user.model';
 import { UserRole, UsersProject } from '../../models/userProject.model';
 import { ApiService } from '../../services/api.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-user-project',
@@ -12,13 +13,14 @@ import { ApiService } from '../../services/api.service';
   templateUrl: './user-project.component.html',
   styleUrls: ['./user-project.component.css']
 })
-export class UserProjectComponent implements OnChanges {
+export class UserProjectComponent implements OnChanges, OnInit {
   @Input() allUsers: User[] = [];
   @Input() availableRoles: string[] = ['ADMIN', 'MEMBER', 'OBSERVER'];
   @Input() projectId: number = 0;
   @Input() editing: boolean = false;
 
   addParticipantForm: FormGroup;
+  private authService = inject(AuthService);
 
   roleDisplayNames: { [key: string]: string } = {
     'ADMIN': 'Administrateur',
@@ -26,10 +28,23 @@ export class UserProjectComponent implements OnChanges {
     'OBSERVER': 'Observateur',
   };
 
-  constructor(private fb: FormBuilder, private apiService: ApiService) {
+  constructor(
+    private fb: FormBuilder, 
+    private apiService: ApiService
+  ) {
     this.addParticipantForm = this.fb.group({
       participants: this.fb.array([])
     });
+  }
+
+  ngOnInit(): void {
+    // If in creation mode, pre-fill with the current user as ADMIN.
+    if (!this.editing) {
+      const currentUser = this.authService.user;
+      if (currentUser) {
+        this.addParticipant({ userId: currentUser.id, role: 'ADMIN' });
+      }
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -47,7 +62,7 @@ export class UserProjectComponent implements OnChanges {
         usersProject.users.forEach(p => this.addParticipant(p));
       });
     } else {
-      // If not editing (i.e., new project), ensure the form is empty.
+      // If not editing (i.e., new project), ensure the form is empty before ngOnInit runs.
       this.participants.clear();
     }
   }
@@ -56,7 +71,7 @@ export class UserProjectComponent implements OnChanges {
     return this.addParticipantForm.get('participants') as FormArray;
   }
 
-  addParticipant(participant: UserRole | null = null): void {
+  addParticipant(participant: Partial<UserRole> | null = null): void {
     const participantForm = this.fb.group({
       id: [participant?.id],
       userId: [participant?.userId || '', Validators.required],
