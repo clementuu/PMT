@@ -1,3 +1,8 @@
-- ajout, modification et suppression des participants au projet
+- ajout, modification des participants au projet
 - assignation et suppression d'assignation au taches
 - gestion limité en fonction du role des utilisateurs
+
+- historique des modifications
+- tests
+
+- CI/CD
