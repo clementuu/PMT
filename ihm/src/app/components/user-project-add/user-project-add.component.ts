@@ -50,6 +50,7 @@ export class UserProjectAddComponent implements OnChanges {
 
   addParticipant(participant: UserRole | null = null): void {
     const participantForm = this.fb.group({
+      id: [participant?.id],
       userId: [participant?.userId || '', Validators.required],
       role: [participant?.role || 'MEMBER', Validators.required]
     });
@@ -69,6 +70,8 @@ export class UserProjectAddComponent implements OnChanges {
 
   onSubmit(): void {
     if (this.addParticipantForm.valid && this.participants.length > 0) {
+      console.log(this.participants);
+      console.log(this.addParticipantForm.value.participants);
       this.save.emit(this.addParticipantForm.value.participants);
     }
   }

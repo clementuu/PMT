@@ -42,6 +42,7 @@ public class ProjectUserServiceImpl implements ProjectUserService {
                 .orElseThrow(() -> new ValidationException("User not found with ID: " + userRoleDTO.getUserId()));
 
             ProjectUser newProjectUser = new ProjectUser();
+            newProjectUser.setId(userRoleDTO.getId());
             newProjectUser.setProject(project);
             newProjectUser.setUser(user);
             newProjectUser.setRole(userRoleDTO.getRole());
@@ -67,6 +68,7 @@ public class ProjectUserServiceImpl implements ProjectUserService {
         List<UsersProject.UserRoleDTO> userRoleDTOs = projectUsers.stream()
                 .map(pu -> {
                     UsersProject.UserRoleDTO dto = new UsersProject.UserRoleDTO();
+                    dto.setId(pu.getId());
                     dto.setUserId(pu.getUser().getId());
                     dto.setRole(pu.getRole());
                     return dto;

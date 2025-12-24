@@ -44,7 +44,7 @@ export class ProjectNewComponent implements OnInit {
         this.allUsers = users;
         const currentUser = this.authService.user;
         if (currentUser) {
-          this.initialParticipantList = [{ id: 0, userId: currentUser.id, role: 'ADMIN' }];
+          this.initialParticipantList = [{ id: NaN, userId: currentUser.id, role: 'ADMIN' }];
           this.participantsToSave = this.initialParticipantList;
         }
       },
