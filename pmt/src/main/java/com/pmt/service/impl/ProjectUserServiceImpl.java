@@ -39,17 +39,13 @@ public class ProjectUserServiceImpl implements ProjectUserService {
         List<ProjectUser> addedProjectUsers = new ArrayList<>();
         for (UsersProject.UserRoleDTO userRoleDTO : request.getUsers()) {
             User user = userStore.findById(userRoleDTO.getUserId())
-                    .orElseThrow(() -> new ValidationException("User not found with ID: " + userRoleDTO.getUserId()));
+                .orElseThrow(() -> new ValidationException("User not found with ID: " + userRoleDTO.getUserId()));
 
-            if (!projectUserStore.existsByProjectIdAndUserId(project.getId(), user.getId())) {
-                ProjectUser newProjectUser = new ProjectUser();
-                newProjectUser.setProject(project);
-                newProjectUser.setUser(user);
-                newProjectUser.setRole(userRoleDTO.getRole());
-                addedProjectUsers.add(projectUserStore.save(newProjectUser));
-            } else {
-                System.out.println("User " + user.getId() + " is already part of project " + project.getId());
-            }
+            ProjectUser newProjectUser = new ProjectUser();
+            newProjectUser.setProject(project);
+            newProjectUser.setUser(user);
+            newProjectUser.setRole(userRoleDTO.getRole());
+            addedProjectUsers.add(projectUserStore.save(newProjectUser));
         }
         return addedProjectUsers;
     }

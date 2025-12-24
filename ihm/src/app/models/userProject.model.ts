@@ -1,4 +1,5 @@
 export interface UserRole {
+    id: number,
     userId: number,
     role: string
 }

@@ -62,6 +62,7 @@ export class ProjectComponent implements OnInit {
 
       this.apiService.getUsersProject(+id).subscribe(usersProject => {
         this.allMembers = usersProject.users.map(up => ({
+          id: up.id,
           userId: up.userId,
           role: up.role
         }));

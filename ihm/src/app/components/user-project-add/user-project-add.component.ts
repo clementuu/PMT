@@ -17,6 +17,7 @@ export class UserProjectAddComponent implements OnChanges {
   @Input() availableRoles: string[] = ['ADMIN', 'MEMBER', 'OBSERVER'];
   @Input() initialData: UserRole[] = [];
   @Input() projectId: number = 0;
+  @Input() editing: boolean = false;
   @Output() save = new EventEmitter<any[]>();
 
   addParticipantForm: FormGroup;
@@ -34,6 +35,9 @@ export class UserProjectAddComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if (changes['editing']) {
+      this.editing = changes['editing'].currentValue;
+    }
     if (changes['initialData'] && this.initialData && this.initialData.length > 0) {
       this.participants.clear();
       this.initialData.forEach(p => this.addParticipant(p));
@@ -66,8 +70,6 @@ export class UserProjectAddComponent implements OnChanges {
   onSubmit(): void {
     if (this.addParticipantForm.valid && this.participants.length > 0) {
       this.save.emit(this.addParticipantForm.value.participants);
-      this.participants.clear();
-      this.addParticipant();
     }
   }
 

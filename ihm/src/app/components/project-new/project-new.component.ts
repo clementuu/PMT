@@ -44,8 +44,7 @@ export class ProjectNewComponent implements OnInit {
         this.allUsers = users;
         const currentUser = this.authService.user;
         if (currentUser) {
-          this.initialParticipantList = [{ userId: currentUser.id, role: 'ADMIN' }];
-          // Also pre-fill the data to be saved, as the child component won't emit it again unless changed.
+          this.initialParticipantList = [{ id: 0, userId: currentUser.id, role: 'ADMIN' }];
           this.participantsToSave = this.initialParticipantList;
         }
       },
