@@ -9,8 +9,8 @@
                 </div>
             </div>
             <p><strong>Description:</strong> {{ task.description }}</p>
-            <p><strong>Statut:</strong> {{ task.status }}</p>
-            <p><strong>Priorité:</strong> {{ task.priorite }}</p>
+            <p><strong>Statut:</strong> {{ getStatusDisplayName(task.status) }}</p>
+            <p><strong>Priorité:</strong> {{ getPriorityDisplayName(task.priorite) }}</p>
             <p><strong>Date d'échéance:</strong> {{ task.dateEcheance | date:'dd/MM/yyyy' }}</p>
             <p><strong>Date de fin:</strong> {{ task.dateFin | date:'dd/MM/yyyy' }}</p>
 
@@ -35,7 +35,7 @@
                     <label for="priorite">Priorité</label>
                     <select id="priorite" formControlName="priorite" class="form-control">
                         @for (p of priorities; track p) {
-                            <option [value]="p">{{ p }}</option>
+                            <option [value]="p">{{ getPriorityDisplayName(p) }}</option>
                         }
                     </select>
                 </div>
@@ -43,7 +43,7 @@
                     <label for="status">Statut</label>
                     <select id="status" formControlName="status" class="form-control">
                         @for (s of statuses; track s) {
-                            <option [value]="s">{{ s }}</option>
+                            <option [value]="s">{{ getStatusDisplayName(s) }}</option>
                         }
                     </select>
                 </div>

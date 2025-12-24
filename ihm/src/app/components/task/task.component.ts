@@ -17,9 +17,22 @@ export class TaskComponent implements OnInit {
   isEditing = false;
   taskForm: FormGroup;
 
-  // Enum-like objects for dropdowns
+  // Enums
   priorities: Task['priorite'][] = ['LOW', 'MEDIUM', 'HIGH'];
   statuses: Task['status'][] = ['TODO', 'IN_PROGRESS', 'DONE'];
+
+  // Mappings pour l'affichage
+  priorityDisplayNames: { [key: string]: string } = {
+    'LOW': 'Faible',
+    'MEDIUM': 'Moyenne',
+    'HIGH': 'Importante'
+  };
+
+  statusDisplayNames: { [key: string]: string } = {
+    'TODO': 'À faire',
+    'IN_PROGRESS': 'En cours',
+    'DONE': 'Terminé'
+  };
 
   private route = inject(ActivatedRoute);
   private apiService = inject(ApiService);
@@ -105,4 +118,15 @@ export class TaskComponent implements OnInit {
       }
     })
   }
+
+  // Method to get the display name for priority
+  getPriorityDisplayName(priority: string): string {
+    return this.priorityDisplayNames[priority] || priority;
+  }
+
+  // Method to get the display name for status
+  getStatusDisplayName(status: string): string {
+    return this.statusDisplayNames[status] || status;
+  }
 }
+

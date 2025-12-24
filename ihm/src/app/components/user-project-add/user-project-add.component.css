@@ -7,8 +7,8 @@
 
 .participant-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr auto; /* User | Role | Action */
-  gap: 10px 15px; /* row-gap | column-gap */
+  grid-template-columns: 1fr 1fr auto;
+  gap: 10px 15px;
   align-items: center;
 }
 
@@ -21,24 +21,23 @@
 }
 
 .grid-rows-container {
-  display: contents; /* The container itself disappears, its children become grid items */
+  display: contents;
 }
 
 .grid-row {
-  display: contents; /* The container itself disappears, its children become grid items */
+  display: contents;
 }
 
 .grid-row .form-control, .grid-row .btn {
-  margin-bottom: 5px; /* Add a little space between rows */
+  margin-bottom: 5px;
 }
 
 .grid-row .btn-danger {
-  justify-self: center; /* Center button in its grid cell */
+  justify-self: center;
 }
 
 .actions-footer {
   display: flex;
-  justify-content: space-between;
   margin-top: 1rem;
   padding-top: 1rem;
   border-top: 1px solid #e0e0e0;

@@ -21,6 +21,12 @@ export class UserProjectAddComponent implements OnChanges {
 
   addParticipantForm: FormGroup;
 
+  roleDisplayNames: { [key: string]: string } = {
+    'ADMIN': 'Administrateur',
+    'MEMBER': 'Membre',
+    'OBSERVER': 'Observateur',
+  };
+
   constructor(private fb: FormBuilder, private apiService: ApiService) {
     this.addParticipantForm = this.fb.group({
       participants: this.fb.array([])
@@ -63,5 +69,10 @@ export class UserProjectAddComponent implements OnChanges {
       this.participants.clear();
       this.addParticipant();
     }
+  }
+
+  // Method to get the display name for a role
+  getRoleDisplayName(role: string): string {
+    return this.roleDisplayNames[role] || role;
   }
 }
