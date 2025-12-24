@@ -118,6 +118,13 @@ export class ApiService {
       );
   }
 
+  deleteUserProject(projectId: number, userId: number): Observable<void> {
+    return this.httpClient.delete<void>(`${this.apiUrl}/project/user/${projectId}/${userId}`)
+      .pipe(
+        catchError(this.catchError)
+      );
+  }
+
   catchError(error: HttpErrorResponse) {
     const apiError: ApiError = {
       message: error.message || "Une erreur inconnue s'est produite",

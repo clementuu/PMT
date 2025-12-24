@@ -19,4 +19,6 @@ public interface ProjectUserStore extends CrudRepository<ProjectUser, Long> {
     List<ProjectUser> findByProjectId(Long projectId);
     @Transactional
     void deleteByProjectId(Long projectId);
+    @Transactional
+    void deleteByUserIdAndProjectId(Long userId, Long projectId);
 }

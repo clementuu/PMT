@@ -80,5 +80,9 @@ public class ProjectUserServiceImpl implements ProjectUserService {
         usersProjectDTO.setUsers(userRoleDTOs);
         return usersProjectDTO;
     }
+
+    public void deleteByUserIdAndProjectId(Long userId, Long projectId) {
+        projectUserStore.deleteByUserIdAndProjectId(userId, projectId);
+    }
 }
 

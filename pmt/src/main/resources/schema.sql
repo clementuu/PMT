@@ -40,3 +40,14 @@ CREATE TABLE task_assign (
     FOREIGN KEY (user_id) REFERENCES user_app(id),
     FOREIGN KEY (task_id) REFERENCES task(id)
 );
+
+CREATE TABLE historique (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    task_id INT DEFAULT NULL,
+    project_id INT DEFAULT NULL,
+    date_m DATETIME,
+    type_m VARCHAR,
+    modif TEXT,
+    FOREIGN KEY (user_id) REFERENCES user_app(id)
+);

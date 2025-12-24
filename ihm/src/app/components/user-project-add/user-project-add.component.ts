@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule } fr
 import { CommonModule } from '@angular/common';
 import { User } from '../../models/user.model';
 import { UserRole } from '../../models/userProject.model';
+import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-user-project-add',
@@ -15,11 +16,12 @@ export class UserProjectAddComponent implements OnChanges {
   @Input() allUsers: User[] = [];
   @Input() availableRoles: string[] = ['ADMIN', 'MEMBER', 'OBSERVER'];
   @Input() initialData: UserRole[] = [];
+  @Input() projectId: number = 0;
   @Output() save = new EventEmitter<any[]>();
 
   addParticipantForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private apiService: ApiService) {
     this.addParticipantForm = this.fb.group({
       participants: this.fb.array([])
     });
@@ -45,14 +47,21 @@ export class UserProjectAddComponent implements OnChanges {
   }
 
   removeParticipant(index: number): void {
-    this.participants.removeAt(index);
+    const userId = this.allUsers[index].id;
+    this.apiService.deleteUserProject(this.projectId, userId)
+      .subscribe({
+        next: () => {
+          this.participants.removeAt(index);
+        },
+        error: (err) => console.error("Error deleting user from project", err)
+      });
   }
 
   onSubmit(): void {
     if (this.addParticipantForm.valid && this.participants.length > 0) {
       this.save.emit(this.addParticipantForm.value.participants);
       this.participants.clear();
-      this.addParticipant(); // Add a fresh row after submitting
+      this.addParticipant();
     }
   }
 }

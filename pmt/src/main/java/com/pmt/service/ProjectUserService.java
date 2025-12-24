@@ -10,4 +10,5 @@ public interface ProjectUserService {
     List<Project> getProjectsByUserId(Long userId);
     List<ProjectUser> addUsersToProject(UsersProject request);
     UsersProject getUsersByProjectId(Long projectId); // Change return type to UsersProject
+    void deleteByUserIdAndProjectId(Long userId, Long projectId);
 }
