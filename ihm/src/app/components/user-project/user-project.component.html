@@ -7,8 +7,9 @@
 
     <!-- Grid Rows -->
     <div formArrayName="participants" class="grid-rows-container">
-      @for (participant of participants.controls; track i; let i = $index) {
-        <div [formGroupName]="i" class="grid-row">
+      <div *ngFor="let participant of participants.controls; let i = index"
+        [formGroupName]="i"
+        class="grid-row">
           <select title="user" formControlName="userId" class="form-control">
             <option value="" disabled>-- Sélectionner un utilisateur --</option>
             @for (user of allUsers; track user.id) {
@@ -26,7 +27,6 @@
             <i class="bi bi-trash"></i>
           </button>
         </div>
-      }
     </div>
   </div>
 

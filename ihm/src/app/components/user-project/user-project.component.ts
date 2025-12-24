@@ -1,8 +1,8 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule, AbstractControl } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { User } from '../../models/user.model';
-import { UserRole } from '../../models/userProject.model';
+import { UserRole, UsersProject } from '../../models/userProject.model';
 import { ApiService } from '../../services/api.service';
 
 @Component({
@@ -15,10 +15,8 @@ import { ApiService } from '../../services/api.service';
 export class UserProjectComponent implements OnChanges {
   @Input() allUsers: User[] = [];
   @Input() availableRoles: string[] = ['ADMIN', 'MEMBER', 'OBSERVER'];
-  @Input() initialData: UserRole[] = [];
   @Input() projectId: number = 0;
   @Input() editing: boolean = false;
-  @Output() save = new EventEmitter<any[]>();
 
   addParticipantForm: FormGroup;
 
@@ -35,12 +33,22 @@ export class UserProjectComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['editing']) {
-      this.editing = changes['editing'].currentValue;
+    // If the projectId or editing status changes, fetch the data.
+    if (changes['projectId'] || changes['editing']) {
+      this.fetchAndBuildForm();
     }
-    if (changes['initialData'] && this.initialData && this.initialData.length > 0) {
+  }
+
+  fetchAndBuildForm(): void {
+    // Only fetch if we are in 'editing' mode (i.e., the project exists) and have a valid ID.
+    if (this.editing && this.projectId > 0) {
+      this.apiService.getUsersProject(this.projectId).subscribe(usersProject => {
+        this.participants.clear();
+        usersProject.users.forEach(p => this.addParticipant(p));
+      });
+    } else {
+      // If not editing (i.e., new project), ensure the form is empty.
       this.participants.clear();
-      this.initialData.forEach(p => this.addParticipant(p));
     }
   }
 
@@ -58,25 +66,42 @@ export class UserProjectComponent implements OnChanges {
   }
 
   removeParticipant(index: number): void {
-    const userId = this.allUsers[index].id;
-    this.apiService.deleteUserProject(this.projectId, userId)
-      .subscribe({
-        next: () => {
-          this.participants.removeAt(index);
-        },
+    const participantControl = this.participants.at(index);
+    const userRoleId = participantControl.value.id;
+
+    if (userRoleId) {
+      // If participant has an ID, it's saved in the DB. Call API to delete.
+      this.apiService.deleteUserProject(userRoleId).subscribe({
+        next: () => this.fetchAndBuildForm(), // On success, re-fetch the list from the server.
         error: (err) => console.error("Error deleting user from project", err)
       });
-  }
-
-  onSubmit(): void {
-    if (this.addParticipantForm.valid && this.participants.length > 0) {
-      console.log(this.participants);
-      console.log(this.addParticipantForm.value.participants);
-      this.save.emit(this.addParticipantForm.value.participants);
+    } else {
+      // If no ID, it's a new line item. Just remove from the form array.
+      this.participants.removeAt(index);
     }
   }
 
-  // Method to get the display name for a role
+  onSubmit(): void {
+    if (!this.addParticipantForm.valid) {
+      return;
+    }
+
+    const payload: UsersProject = {
+      projectId: this.projectId,
+      users: this.addParticipantForm.value.participants,
+    };
+
+    this.apiService.postUsersProject(payload).subscribe({
+      next: () => {
+        this.fetchAndBuildForm(); // Re-fetch to ensure UI is in sync.
+      },
+      error: (err) => {
+        console.error('Error saving participants:', err);
+        alert("Erreur lors de l'enregistrement des participants.");
+      }
+    });
+  }
+
   getRoleDisplayName(role: string): string {
     return this.roleDisplayNames[role] || role;
   }

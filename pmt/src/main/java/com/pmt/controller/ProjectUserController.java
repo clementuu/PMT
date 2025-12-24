@@ -55,11 +55,10 @@ public class ProjectUserController {
         }
     }
 
-    @DeleteMapping("/{projectId}/{userId}")
-    public ResponseEntity<?> deleteByUserId(@PathVariable Long projectId, @PathVariable Long userId) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteById(@PathVariable Long id) {
         try {
-            System.out.println("deleting");
-            projectUserService.deleteByUserIdAndProjectId(userId, projectId);
+            projectUserService.deleteById(id);
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

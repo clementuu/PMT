@@ -79,8 +79,8 @@ public class ProjectUserServiceImpl implements ProjectUserService {
         return usersProjectDTO;
     }
 
-    public void deleteByUserIdAndProjectId(Long userId, Long projectId) {
-        projectUserStore.deleteByUserIdAndProjectId(userId, projectId);
+    public void deleteById(Long id) {
+        projectUserStore.deleteById(id);
     }
 }
 

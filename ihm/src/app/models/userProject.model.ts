@@ -5,6 +5,7 @@ export interface UserRole {
 }
 
 export interface UserProject {
+    id: number,
     projectId: number,
     userId: number,
     role: string

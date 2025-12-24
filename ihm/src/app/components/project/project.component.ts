@@ -28,7 +28,6 @@ export class ProjectComponent implements OnInit {
   doneTasks: Task[] = [];
 
   allUsers: User[] = [];
-  allMembers: UserRole[] = [];
   availableRoles: string[] = ['ADMIN', 'MEMBER', 'OBSERVER'];
 
 
@@ -59,14 +58,6 @@ export class ProjectComponent implements OnInit {
       this.apiService.getAllUsers().subscribe(users => {
         this.allUsers = users;
       });
-
-      this.apiService.getUsersProject(+id).subscribe(usersProject => {
-        this.allMembers = usersProject.users.map(up => ({
-          id: up.id,
-          userId: up.userId,
-          role: up.role
-        }));
-      })
     }
   }
 
@@ -89,33 +80,6 @@ export class ProjectComponent implements OnInit {
         alert('Projet mis à jour avec succès!');
       });
     }
-  }
-
-  onParticipantsSaved(participants: any[]): void {
-    if (!this.project) {
-      return;
-    }
-
-    const payload: UsersProject = {
-      projectId: this.project.id,
-      users: participants,
-    };
-
-    this.apiService.postUsersProject(payload).subscribe({
-      next: () => {
-        alert('Participants ajoutés avec succès !');
-        // Refresh project data to show new participants
-        if (this.project?.id) {
-            this.apiService.getProjectById(this.project.id).subscribe(project => {
-                this.project = project;
-            });
-        }
-      },
-      error: (err) => {
-        console.error('Error adding participants:', err);
-        alert("Erreur lors de l'ajout des participants.");
-      }
-    });
   }
 
   deleteProject() {
@@ -180,3 +144,4 @@ export class ProjectComponent implements OnInit {
     }
   }
 }
+

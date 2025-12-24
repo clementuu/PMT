@@ -118,8 +118,8 @@ export class ApiService {
       );
   }
 
-  deleteUserProject(projectId: number, userId: number): Observable<void> {
-    return this.httpClient.delete<void>(`${this.apiUrl}/project/user/${projectId}/${userId}`)
+  deleteUserProject(id: number): Observable<void> {
+    return this.httpClient.delete<void>(`${this.apiUrl}/project/user/${id}`)
       .pipe(
         catchError(this.catchError)
       );
