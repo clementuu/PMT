@@ -91,14 +91,14 @@
       <div class="flex">
         <h3>Participants</h3>
       </div>
-      <app-user-project-add
+      <app-user-project
         [allUsers]="allUsers"
         [availableRoles]="availableRoles"
         [initialData]="allMembers"
         [projectId]="project.id"
         [editing]="true"
         (save)="onParticipantsSaved($event)">
-      </app-user-project-add>
+      </app-user-project>
     </div>
   </div>
 } @else {

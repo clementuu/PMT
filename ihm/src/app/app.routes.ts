@@ -6,9 +6,8 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { authGuard } from './guards/auth.guard';
 import { ProjectComponent } from './components/project/project.component';
-import { TaskComponent } from './components/task/task.component'; // New import for TaskComponent
+import { TaskComponent } from './components/task/task.component';
 import { ProjectNewComponent } from './components/project-new/project-new.component';
-import { UserProjectAddComponent } from './components/user-project-add/user-project-add.component';
 import { TaskNewComponent } from './components/task-new/task-new.component';
 
 export const routes: Routes = [

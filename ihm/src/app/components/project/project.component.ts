@@ -7,14 +7,14 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { CommonModule } from '@angular/common';
 import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { User } from '../../models/user.model';
-import { UserProjectAddComponent } from '../user-project-add/user-project-add.component';
+import { UserProjectComponent } from '../user-project/user-project.component';
 import { UserRole, UsersProject } from '../../models/userProject.model';
 
 
 @Component({
   selector: 'app-project',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, DragDropModule, UserProjectAddComponent],
+  imports: [CommonModule, ReactiveFormsModule, DragDropModule, UserProjectComponent],
   templateUrl: './project.component.html',
   styleUrls: ['./project.component.css']
 })

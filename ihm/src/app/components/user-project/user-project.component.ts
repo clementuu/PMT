@@ -6,13 +6,13 @@ import { UserRole } from '../../models/userProject.model';
 import { ApiService } from '../../services/api.service';
 
 @Component({
-  selector: 'app-user-project-add',
+  selector: 'app-user-project',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './user-project-add.component.html',
-  styleUrls: ['./user-project-add.component.css']
+  templateUrl: './user-project.component.html',
+  styleUrls: ['./user-project.component.css']
 })
-export class UserProjectAddComponent implements OnChanges {
+export class UserProjectComponent implements OnChanges {
   @Input() allUsers: User[] = [];
   @Input() availableRoles: string[] = ['ADMIN', 'MEMBER', 'OBSERVER'];
   @Input() initialData: UserRole[] = [];

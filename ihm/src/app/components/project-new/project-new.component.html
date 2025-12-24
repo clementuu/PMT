@@ -39,13 +39,13 @@
     </div>
 
     <h3>Membres</h3>
-    <app-user-project-add 
+    <app-user-project 
       [allUsers]="allUsers" 
       [availableRoles]="availableRoles"
       [initialData]="initialParticipantList"
       [editing]="false"
       (save)="setParticipants($event)">
-    </app-user-project-add>
+    </app-user-project>
 
     <hr />
 

@@ -7,13 +7,13 @@ import { Project } from '../../models/project.model';
 import { User } from '../../models/user.model';
 import { switchMap } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
-import { UserProjectAddComponent } from '../user-project-add/user-project-add.component';
+import { UserProjectComponent } from '../user-project/user-project.component';
 import { UserRole } from '../../models/userProject.model';
 
 @Component({
   selector: 'app-project-new',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, UserProjectAddComponent],
+  imports: [CommonModule, ReactiveFormsModule, UserProjectComponent],
   templateUrl: './project-new.component.html',
   styleUrl: './project-new.component.css',
 })
