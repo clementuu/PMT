@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -26,10 +25,10 @@ public class TaskAssignController {
     @Autowired
     TaskAssignService taskAssignService;
 
-    @PostMapping("")
-    public ResponseEntity<?> postTaskAssign(@RequestBody TaskAssign taskAssign) {
+    @PostMapping("/{taskId}/{userId}")
+    public ResponseEntity<?> postTaskAssign(@PathVariable Long taskId, @PathVariable Long userId) {
         try {
-            TaskAssign newTaskAssign = taskAssignService.create(taskAssign);
+            TaskAssign newTaskAssign = taskAssignService.create(taskId, userId);
             return ResponseEntity.status(HttpStatus.CREATED).body(newTaskAssign); 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));

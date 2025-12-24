@@ -13,9 +13,8 @@
             <p><strong>Priorité:</strong> {{ getPriorityDisplayName(task.priorite) }}</p>
             <p><strong>Date d'échéance:</strong> {{ task.dateEcheance | date:'dd/MM/yyyy' }}</p>
             <p><strong>Date de fin:</strong> {{ task.dateFin | date:'dd/MM/yyyy' }}</p>
-
             <div class="text-center mt-3">
-                <button class="btn btn-primary" [routerLink]="['/project', task.projectId]">Retour au projet</button>
+                <button type="button" class="btn btn-primary" [routerLink]="['/project', task.projectId]">Retour au projet</button>
             </div>
         } @else {
             <form [formGroup]="taskForm" (ngSubmit)="updateTask()">
@@ -52,6 +51,9 @@
                     <button type="submit" class="btn btn-primary" [disabled]="taskForm.invalid">Enregistrer</button>
                 </div>
             </form>
+        }
+        @if (task.id) {
+            <app-task-assign [taskId]="task.id" (taskAssigned)="onTaskAssigned()"></app-task-assign>
         }
     </div>
 } @else {

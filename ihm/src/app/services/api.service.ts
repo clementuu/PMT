@@ -125,6 +125,20 @@ export class ApiService {
       );
   }
 
+  assignTaskToUser(taskId: number, userId: number): Observable<any> {
+    return this.httpClient.post<any>(`${this.apiUrl}/assign/${taskId}/${userId}`, {})
+      .pipe(
+        catchError(this.catchError)
+      );
+  }
+
+  getAllAssigned(taskId: number): Observable<User[]> {
+    return this.httpClient.get<User[]>(`${this.apiUrl}/assign/${taskId}`)
+      .pipe(
+        catchError(this.catchError)
+      );
+  }
+
   catchError(error: HttpErrorResponse) {
     const apiError: ApiError = {
       message: error.message || "Une erreur inconnue s'est produite",

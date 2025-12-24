@@ -4,11 +4,12 @@ import { Task } from '../../models/task.model';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { TaskAssignComponent } from '../task-assign/task-assign.component'; // Import TaskAssignComponent
 
 @Component({
   selector: 'app-task',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, TaskAssignComponent], // Add TaskAssignComponent here
   templateUrl: './task.component.html',
   styleUrls: ['./task.component.css']
 })
@@ -49,6 +50,10 @@ export class TaskComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loadTask(); // Use a dedicated method to load task
+  }
+
+  loadTask(): void {
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
       if (id) {
@@ -60,6 +65,11 @@ export class TaskComponent implements OnInit {
         });
       }
     });
+  }
+
+  onTaskAssigned(): void {
+    // Reload the task to reflect the assigned user
+    this.loadTask();
   }
 
   startEditing(): void {

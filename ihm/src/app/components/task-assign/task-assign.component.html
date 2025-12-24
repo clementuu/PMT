@@ -1,0 +1,16 @@
+<div class="task-assign-container">
+  <h3>Assignation</h3>
+  <div class="form-group">
+    <label for="userSelect">Utilisateurs:</label>
+    @for (assign of assigned; track assign.id) {
+      <div>{{ assign.nom }}</div>
+    } 
+    <select id="userSelect" class="form-control" [(ngModel)]="selectedUserId" name="selectedUserId">
+      <option [ngValue]="undefined" disabled>-- Sélectionner un utilisateur --</option>
+      @for (user of users; track user.id) {
+        <option [ngValue]="user.id">{{ user.nom }}</option>
+      }
+    </select>
+  </div>
+  <button type="button" class="btn btn-primary" (click)="assignTask()" [disabled]="!selectedUserId">Assigner</button>
+</div>
