@@ -37,7 +37,7 @@ public class ProjectController {
             Project projet = projectService.findById(id);
             return ResponseEntity.status(HttpStatus.OK).body(projet);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 

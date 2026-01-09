@@ -1,6 +1,6 @@
 package com.pmt.model;
 
 public enum Type {
-    Titre,
-    Description
+    Titre, // 0
+    Description // 1
 }

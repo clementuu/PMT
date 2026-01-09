@@ -2,7 +2,12 @@ package com.pmt.model;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -11,57 +16,80 @@ import jakarta.persistence.Table;
 @Table(name="historique")
 public class Historique {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
     @ManyToOne
     private User user;
-    private Long project_id;
-    private Long task_id;
-    private LocalDateTime date_m;
+
+    @Column(name = "project_id")
+    private Long projectId;
+
+    @Column(name = "task_id")
+    private Long taskId;
+
+    @Column(name = "date_m")
+    private LocalDateTime dateM;
+
     private String modif;
-    private Type type;
+
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "type_m")
+    private Type typeM;
 
     public Long getId() {
         return id;
     }
+
     public void setId(Long id) {
         this.id = id;
     }
+
     public User getUser() {
         return user;
     }
+
     public void setUser(User user) {
         this.user = user;
     }
-    public Long getProject_id() {
-        return project_id;
+
+    public Long getProjectId() {
+        return projectId;
     }
-    public void setProject_id(Long project_id) {
-        this.project_id = project_id;
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
     }
-    public Long getTask_id() {
-        return task_id;
+
+    public Long getTaskId() {
+        return taskId;
     }
-    public void setTask_id(Long task_id) {
-        this.task_id = task_id;
+
+    public void setTaskId(Long taskId) {
+        this.taskId = taskId;
     }
-    public LocalDateTime getDate_m() {
-        return date_m;
+
+    public LocalDateTime getDateM() {
+        return dateM;
     }
-    public void setDate_m(LocalDateTime date_m) {
-        this.date_m = date_m;
+
+    public void setDateM(LocalDateTime dateM) {
+        this.dateM = dateM;
     }
+
     public String getModif() {
         return modif;
     }
+
     public void setModif(String modif) {
         this.modif = modif;
     }
-    public Type getType() {
-        return type;
-    }
-    public void setType(Type type) {
-        this.type = type;
+
+    public Type getTypeM() {
+        return typeM;
     }
 
-    
+    public void setTypeM(Type typeM) {
+        this.typeM = typeM;
+    }
 }
