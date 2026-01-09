@@ -13,6 +13,7 @@ import { Assigned, User } from '../../models/user.model';
 })
 export class TaskAssignComponent implements OnInit {
   @Input() taskId!: number;
+  @Input() projectId!: number;
   @Output() taskAssigned = new EventEmitter<void>();
 
   users: User[] = [];
@@ -27,7 +28,7 @@ export class TaskAssignComponent implements OnInit {
   }
 
   loadProjectUsers(): void {
-    this.apiService.getAllUsers().subscribe({
+    this.apiService.getUsersByProjectId(this.projectId).subscribe({
       next: (data) => {
         this.users = data;
       },
@@ -41,7 +42,6 @@ export class TaskAssignComponent implements OnInit {
     if (this.taskId) {
       this.apiService.getAllAssigned(this.taskId).subscribe({
         next: (data) => {
-          console.log(data);
           this.assigned = data;
         },
         error: (err) => {

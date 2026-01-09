@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -66,4 +67,15 @@ public class UserController {
             return ResponseEntity.ok(new LoginResponse(false, null));
         }
     }
+
+    @GetMapping("/project/{id}")
+    public ResponseEntity<?> getUsersByProjectId(@PathVariable Long id) {
+        try {
+            List<User> users = userService.findByProjectId(id);
+            return ResponseEntity.status(HttpStatus.OK).body(users);
+        } catch (ValidationException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", e.getMessage()));
+        }
+    }
+    
 }

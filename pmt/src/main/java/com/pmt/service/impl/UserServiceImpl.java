@@ -8,14 +8,19 @@ import org.springframework.stereotype.Service;
 
 import com.pmt.errors.AuthException;
 import com.pmt.errors.ValidationException;
+import com.pmt.model.ProjectUser;
 import com.pmt.model.User;
 import com.pmt.service.UserService;
+import com.pmt.store.ProjectUserStore;
 import com.pmt.store.UserStore;
 
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
     UserStore userStore;
+
+    @Autowired
+    ProjectUserStore projectUserStore;
 
     @Override
     public List<User> findAll() {
@@ -27,9 +32,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findById(Long id) {
-        User user = new User();
-        user = userStore.findById(id).get();
-        return user;
+        return userStore.findById(id)
+            .orElseThrow(() -> new ValidationException("Utilisateur non trouvé avec l'ID: " + id));
     }
 
     // Crée un utilisateur en controlant la validité des champs
@@ -70,4 +74,15 @@ public class UserServiceImpl implements UserService {
 
         return user;
     }
+
+    public List<User> findByProjectId(Long id) {
+        List<User> users = new ArrayList<User>();
+        List<ProjectUser> pUsers = projectUserStore.findByProjectId(id);
+
+        for (ProjectUser projectUser : pUsers) {
+            userStore.findById(projectUser.getUser().getId()).ifPresent(users::add);
+        }
+
+        return users;
+    } 
 }

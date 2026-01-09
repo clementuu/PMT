@@ -53,7 +53,7 @@
             </form>
         }
         @if (task.id) {
-            <app-task-assign [taskId]="task.id" (taskAssigned)="onTaskAssigned()"></app-task-assign>
+            <app-task-assign [taskId]="task.id" [projectId]="task.projectId" (taskAssigned)="onTaskAssigned()"></app-task-assign>
         }
     </div>
 } @else {

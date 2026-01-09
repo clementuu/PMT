@@ -9,4 +9,5 @@ public interface UserService {
     User findById(Long id);
     User create(User user);
     User login(String email, String password);
+    List<User> findByProjectId(Long id);
 }

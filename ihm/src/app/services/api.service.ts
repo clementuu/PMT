@@ -146,6 +146,13 @@ export class ApiService {
       );
   }
 
+  getUsersByProjectId(id: number): Observable<User[]> {
+    return this.httpClient.get<User[]>(`${this.apiUrl}/user/project/${id}`)
+      .pipe(
+        catchError(this.catchError)
+      );
+  }
+
   catchError(error: HttpErrorResponse) {
     const apiError: ApiError = {
       message: error.message || "Une erreur inconnue s'est produite",

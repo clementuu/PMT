@@ -48,7 +48,7 @@ public class ProjectUserController {
     @GetMapping("/list/{projectId}")
     public ResponseEntity<UsersProject> getUsersByProjectId(@PathVariable Long projectId) {
         try {
-            UsersProject projectUsers = projectUserService.getUsersByProjectId(projectId);
+            UsersProject projectUsers = projectUserService.getUsersProjectByProjectId(projectId);
             return ResponseEntity.status(HttpStatus.OK).body(projectUsers);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

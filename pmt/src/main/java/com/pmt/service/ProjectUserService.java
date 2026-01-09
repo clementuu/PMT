@@ -9,6 +9,6 @@ import com.pmt.model.ProjectUser;
 public interface ProjectUserService {
     List<Project> getProjectsByUserId(Long userId);
     List<ProjectUser> addUsersToProject(UsersProject request);
-    UsersProject getUsersByProjectId(Long projectId); // Change return type to UsersProject
+    UsersProject getUsersProjectByProjectId(Long projectId);
     void deleteById(Long id);
 }

@@ -52,7 +52,7 @@ public class ProjectUserServiceImpl implements ProjectUserService {
     }
 
     @Override
-    public UsersProject getUsersByProjectId(Long projectId) {
+    public UsersProject getUsersProjectByProjectId(Long projectId) {
         List<ProjectUser> projectUsers = projectUserStore.findByProjectId(projectId);
         UsersProject usersProjectDTO = new UsersProject();
 
@@ -83,4 +83,3 @@ public class ProjectUserServiceImpl implements ProjectUserService {
         projectUserStore.deleteById(id);
     }
 }
-
