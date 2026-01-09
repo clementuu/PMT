@@ -9,6 +9,6 @@ public interface TaskService {
     List<TaskDTO> findAll();
     TaskDTO findById(Long id);
     Task create(TaskDTO dto);
-    Task update(Task task);
+    TaskDTO update(TaskDTO task);
     void deleteById(Long taskId);
 }

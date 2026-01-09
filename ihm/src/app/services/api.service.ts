@@ -8,6 +8,7 @@ import { Project } from '../models/project.model';
 import { Task } from '../models/task.model';
 import { UserProject, UsersProject } from '../models/userProject.model';
 import { Historique } from '../models/historique.model';
+import { ProjectUpdatePayload } from '../models/project-update.model';
 
 export interface ApiError {
   message: string;
@@ -65,8 +66,8 @@ export class ApiService {
       );
   }
 
-  updateProject(project: Project): Observable<Project> {
-    return this.httpClient.put<Project>(`${this.apiUrl}/project`, project)
+  updateProject(payload: ProjectUpdatePayload): Observable<Project> {
+    return this.httpClient.put<Project>(`${this.apiUrl}/project`, payload)
       .pipe(
         catchError(this.catchError)
       );

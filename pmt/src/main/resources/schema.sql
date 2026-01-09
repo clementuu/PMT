@@ -48,6 +48,7 @@ CREATE TABLE historique (
     project_id INT DEFAULT NULL,
     date_m DATETIME,
     type_m VARCHAR,
-    modif TEXT,
+    new_string TEXT, 
+    old_string TEXT,
     FOREIGN KEY (user_id) REFERENCES user_app(id)
 );

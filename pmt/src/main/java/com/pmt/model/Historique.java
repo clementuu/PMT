@@ -31,7 +31,8 @@ public class Historique {
     @Column(name = "date_m")
     private LocalDateTime dateM;
 
-    private String modif;
+    private String newString;
+    private String oldString;
 
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "type_m")
@@ -77,12 +78,12 @@ public class Historique {
         this.dateM = dateM;
     }
 
-    public String getModif() {
-        return modif;
+    public String getNewString() {
+        return newString;
     }
 
-    public void setModif(String modif) {
-        this.modif = modif;
+    public void setNewString(String modif) {
+        this.newString = modif;
     }
 
     public Type getTypeM() {
@@ -91,5 +92,13 @@ public class Historique {
 
     public void setTypeM(Type typeM) {
         this.typeM = typeM;
+    }
+
+    public String getOldString() {
+        return oldString;
+    }
+
+    public void setOldString(String oldString) {
+        this.oldString = oldString;
     }
 }

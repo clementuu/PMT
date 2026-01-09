@@ -6,6 +6,7 @@ import { ApiService } from '../../services/api.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TaskAssignComponent } from '../task-assign/task-assign.component';
 import { HistoriqueComponent } from "../historique/historique.component"; // Import TaskAssignComponent
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-task',
@@ -39,6 +40,7 @@ export class TaskComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private apiService = inject(ApiService);
   private fb = inject(FormBuilder);
+  private authService = inject(AuthService);
 
   constructor(private router: Router) {
     this.taskForm = this.fb.group({
@@ -98,7 +100,8 @@ export class TaskComponent implements OnInit {
     const updatedTaskData: Task = {
       ...this.task,
       ...this.taskForm.value,
-      dateEcheance: new Date(this.taskForm.value.dateEcheance) // Ensure date is a Date object
+      dateEcheance: new Date(this.taskForm.value.dateEcheance), // Ensure date is a Date object
+      userId: this.authService.user?.id
     };
 
     this.apiService.updateTask(updatedTaskData).subscribe({

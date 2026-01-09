@@ -1,7 +1,7 @@
-import { Component, Inject, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common'; // Import CommonModule and DatePipe
 import { Historique } from '../../models/historique.model';
-import { ApiService } from '../../services/api.service';
+import { ApiService } from '../../services/api.service'; // Use ApiService
 
 @Component({
   selector: 'app-historique',
@@ -16,14 +16,20 @@ export class HistoriqueComponent implements OnChanges {
 
   historiques: Historique[] = [];
 
-  constructor(private apiService: ApiService) { }
+  constructor(private apiService: ApiService) { } // Inject ApiService
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['projectId'] && this.projectId) {
+    if ((changes['projectId'] && this.projectId) || (changes['taskId'] && this.taskId)) {
+      this.loadHistory();
+    }
+  }
+
+  public loadHistory(): void {
+    if (this.projectId) {
       this.apiService.getHistoriqueForProject(this.projectId).subscribe(data => {
         this.historiques = data;
       });
-    } else if (changes['taskId'] && this.taskId) {
+    } else if (this.taskId) {
       this.apiService.getHistoriqueForTask(this.taskId).subscribe(data => {
         this.historiques = data;
       });

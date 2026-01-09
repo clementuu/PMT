@@ -58,9 +58,9 @@ public class TaskController {
     }
 
     @PutMapping("")
-    public ResponseEntity<?> putTask(@RequestBody Task task) {
+    public ResponseEntity<?> putTask(@RequestBody TaskDTO task) {
         try {
-            Task patchedTask = taskService.update(task);
+            TaskDTO patchedTask = taskService.update(task);
             return ResponseEntity.status(HttpStatus.OK).body(patchedTask);
         } catch (ValidationException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));

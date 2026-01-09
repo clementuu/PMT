@@ -1,5 +1,6 @@
 package com.pmt.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -9,9 +10,14 @@ import org.springframework.stereotype.Service;
 
 import com.pmt.dto.TaskDTO;
 import com.pmt.errors.ValidationException;
+import com.pmt.model.Historique;
 import com.pmt.model.Project;
 import com.pmt.model.Task;
+import com.pmt.model.Type;
+import com.pmt.model.User;
 import com.pmt.service.TaskService;
+import com.pmt.service.UserService;
+import com.pmt.store.HistoriqueStore;
 import com.pmt.store.ProjectStore;
 import com.pmt.store.TaskAssignStore;
 import com.pmt.store.TaskStore;
@@ -26,6 +32,11 @@ public class TaskServiceImpl implements TaskService {
     ProjectStore projectStore;
     @Autowired
     TaskAssignStore taskAssignStore;
+    @Autowired
+    HistoriqueStore historiqueStore;
+
+    @Autowired
+    UserService userService;
 
     @Override
     public List<TaskDTO> findAll() {
@@ -99,48 +110,73 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Task update(Task task) {
+    public TaskDTO update(TaskDTO task) {
         if (task.getId() == null) {
             throw new ValidationException("L'ID de la tâche est requis pour la mise à jour.");
         }
-        Optional<Task> existingTaskOptional = taskStore.findById(task.getId());
-        if (existingTaskOptional.isEmpty()) {
-            throw new EntityNotFoundException("La tâche avec l'ID " + task.getId() + " n'existe pas.");
-        }
-        Task existingTask = existingTaskOptional.get();
-
-        // met a jour les champs
-        if (task.getNom() != null && !task.getNom().isBlank()) {
+        Task existingTask = taskStore.findById(task.getId())
+                .orElseThrow(() -> new EntityNotFoundException("La tâche avec l'ID " + task.getId() + " n'existe pas."));
+                
+        User user = userService.findById(task.getUserId());
+        
+        TaskDTO taskDTO = new TaskDTO();
+        // Historique pour le nom
+        if (task.getNom() != null && !task.getNom().isBlank() && !task.getNom().equals(existingTask.getNom())) {
+            Historique history = new Historique();
+            history.setTaskId(existingTask.getId());
+            history.setDateM(LocalDateTime.now());
+            history.setTypeM(Type.Titre);
+            history.setOldString(existingTask.getNom());
+            history.setNewString(task.getNom());
+            history.setUser(user);
+            historiqueStore.save(history);
             existingTask.setNom(task.getNom());
+            taskDTO.setNom(task.getNom());
         }
-        if (task.getDescription() != null) {
-            existingTask.setDescription(task.getDescription());
+
+        // Historique pour la description
+        if (task.getDescription() != null && !task.getDescription().equals(existingTask.getDescription())) {
+            Historique history = new Historique();
+            history.setTaskId(existingTask.getId());
+            history.setDateM(LocalDateTime.now());
+            history.setTypeM(Type.Description);
+            history.setOldString(existingTask.getDescription());
+            history.setNewString(task.getDescription());
+            history.setUser(user);
+            historiqueStore.save(history);
+            taskDTO.setNom(task.getDescription());
         }
+
         if (task.getDateFin() != null) {
             existingTask.setDateFin(task.getDateFin());
+            taskDTO.setDateFin(task.getDateFin());
         }
         if (task.getDateEcheance() != null) {
             existingTask.setDateEcheance(task.getDateEcheance());
+            taskDTO.setDateEcheance(task.getDateEcheance());
         }
         if (task.getPriorite() != null) {
             existingTask.setPriorite(task.getPriorite());
+            taskDTO.setPriorite(task.getPriorite());
         }
         if (task.getStatus() != null) {
             existingTask.setStatus(task.getStatus());
+            taskDTO.setStatus(task.getStatus());
         }
 
         // récupère le projet
-        if (task.getProject() != null && task.getProject().getId() != null) {
-            Optional<Project> projectOptional = projectStore.findById(task.getProject().getId());
-            if (projectOptional.isEmpty()) {
-                throw new ValidationException("Le projet spécifié pour la mise à jour n'existe pas.");
-            }
-            existingTask.setProject(projectOptional.get());
+        if (task.getProjectId() != null && task.getProjectId() != null) {
+            Project project = projectStore.findById(task.getProjectId())
+                    .orElseThrow(() -> new ValidationException("Le projet spécifié pour la mise à jour n'existe pas."));
+            existingTask.setProject(project);
+            taskDTO.setProjectId(project.getId());
         } else if (existingTask.getProject() == null) {
             throw new ValidationException("Impossible de dissocier le projet car il est requis.");
         }
 
-        return taskStore.save(existingTask);
+        taskStore.save(existingTask);
+
+        return taskDTO;
     }
 
     @Override

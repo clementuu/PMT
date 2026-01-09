@@ -1,5 +1,6 @@
 package com.pmt.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,14 +8,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.pmt.dto.ProjectUpdate;
 import com.pmt.errors.ValidationException;
+import com.pmt.model.Historique;
 import com.pmt.model.Project;
 import com.pmt.model.Task;
+import com.pmt.model.Type;
+import com.pmt.model.User;
 import com.pmt.service.ProjectService;
+import com.pmt.service.UserService;
+import com.pmt.store.HistoriqueStore;
 import com.pmt.store.ProjectStore;
 import com.pmt.store.TaskStore;
 import com.pmt.store.ProjectUserStore;
 import com.pmt.store.TaskAssignStore;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
@@ -26,6 +35,11 @@ public class ProjectServiceImpl implements ProjectService {
     TaskAssignStore taskAssignStore;
     @Autowired
     ProjectUserStore projectUserStore;
+    @Autowired
+    HistoriqueStore historiqueStore;
+
+    @Autowired
+    UserService userService;
 
     @Override
     public List<Project> findAll() {
@@ -52,6 +66,49 @@ public class ProjectServiceImpl implements ProjectService {
         }
 
         return projectStore.save(project);
+    }
+
+    @Override
+    public Project update(ProjectUpdate project) {
+        if (project.getProject().getId() == null) {
+            throw new ValidationException("L'ID du projet est requis pour la mise à jour.");
+        }
+        Project existingProject = projectStore.findById(project.getProject().getId())
+                .orElseThrow(() -> new EntityNotFoundException("Le projet avec l'ID " + project.getProject().getId() + " n'existe pas."));
+
+        User user = userService.findById(project.getUserId());
+
+        // Historique pour le nom
+        if (project.getProject().getNom() != null && !project.getProject().getNom().isBlank() && !project.getProject().getNom().equals(existingProject.getNom())) {
+            Historique history = new Historique();
+            history.setProjectId(existingProject.getId());
+            history.setDateM(LocalDateTime.now());
+            history.setTypeM(Type.Titre);
+            history.setOldString(existingProject.getNom());
+            history.setNewString(project.getProject().getNom());
+            history.setUser(user);
+            historiqueStore.save(history);
+            existingProject.setNom(project.getProject().getNom());
+        }
+
+        // Historique pour la description
+        if (project.getProject().getDescription() != null && !project.getProject().getDescription().equals(existingProject.getDescription())) {
+            Historique history = new Historique();
+            history.setProjectId(existingProject.getId());
+            history.setDateM(LocalDateTime.now());
+            history.setTypeM(Type.Description);
+            history.setOldString(existingProject.getDescription());
+            history.setNewString(project.getProject().getDescription());
+            history.setUser(user);
+            historiqueStore.save(history);
+            existingProject.setDescription(project.getProject().getDescription());
+        }
+
+        if (project.getProject().getDateFin() != null) {
+            existingProject.setDateFin(project.getProject().getDateFin());
+        }
+
+        return projectStore.save(existingProject);
     }
 
     @Override

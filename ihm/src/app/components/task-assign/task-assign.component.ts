@@ -43,7 +43,6 @@ export class TaskAssignComponent implements OnInit {
       this.apiService.getAllAssigned(this.taskId).subscribe({
         next: (data) => {
           this.assigned = data;
-          console.log(this.assigned[1]);
         },
         error: (err) => {
           console.error("getting assigned", err);

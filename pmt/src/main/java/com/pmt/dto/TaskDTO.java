@@ -12,11 +12,12 @@ public class TaskDTO {
     private LocalDate dateFin;
     private LocalDate dateEcheance;
     private Long projectId;
+    private Long userId;
     private Priorite priorite;
     private Status status;
 
     public TaskDTO() {};
-
+    
     // Getters et setters
     public Long getId() {
         return id;
@@ -65,5 +66,11 @@ public class TaskDTO {
     }
     public void setStatus(Status status) {
         this.status = status;
+    }
+    public Long getUserId() {
+        return userId;
+    }
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }

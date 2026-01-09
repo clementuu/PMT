@@ -50,11 +50,11 @@ export class UserProjectComponent implements OnChanges, OnInit {
   ngOnChanges(changes: SimpleChanges): void {
     // If the projectId or editing status changes, fetch the data.
     if (changes['projectId'] || changes['editing']) {
-      this.fetchAndBuildForm();
+      this.loadParticipants();
     }
   }
 
-  fetchAndBuildForm(): void {
+  public loadParticipants(): void { // Renamed from fetchAndBuildForm and made public
     // Only fetch if we are in 'editing' mode (i.e., the project exists) and have a valid ID.
     if (this.editing && this.projectId > 0) {
       this.apiService.getUsersProject(this.projectId).subscribe(usersProject => {
@@ -87,7 +87,7 @@ export class UserProjectComponent implements OnChanges, OnInit {
     if (userRoleId) {
       // If participant has an ID, it's saved in the DB. Call API to delete.
       this.apiService.deleteUserProject(userRoleId).subscribe({
-        next: () => this.fetchAndBuildForm(), // On success, re-fetch the list from the server.
+        next: () => this.loadParticipants(), // On success, re-fetch the list from the server.
         error: (err) => console.error("Error deleting user from project", err)
       });
     } else {
@@ -108,7 +108,7 @@ export class UserProjectComponent implements OnChanges, OnInit {
 
     this.apiService.postUsersProject(payload).subscribe({
       next: () => {
-        this.fetchAndBuildForm(); // Re-fetch to ensure UI is in sync.
+        this.loadParticipants(); // Re-fetch to ensure UI is in sync.
       },
       error: (err) => {
         console.error('Error saving participants:', err);

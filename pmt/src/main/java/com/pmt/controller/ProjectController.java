@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.pmt.dto.ProjectUpdate;
 import com.pmt.errors.ValidationException;
 import com.pmt.model.Project;
 import com.pmt.service.ProjectService;
@@ -52,12 +53,12 @@ public class ProjectController {
     }
 
     @PutMapping("")
-    public ResponseEntity<Project> putProject(@RequestBody Project project) {
+    public ResponseEntity<?> putProject(@RequestBody ProjectUpdate project) {
         try {
-            Project updatedProject = projectService.create(project);
+            Project updatedProject = projectService.update(project);
             return ResponseEntity.status(HttpStatus.OK).body(updatedProject);
         } catch (ValidationException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
         }
     }
 

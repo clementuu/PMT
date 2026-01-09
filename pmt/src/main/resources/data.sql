@@ -23,11 +23,12 @@ INSERT INTO task (nom, description, date_echeance, date_fin, priorite, status, p
 -- Assignations de tâches
 INSERT INTO task_assign (user_id, task_id) VALUES
 (1, 1),
+(2,1),
 (2, 2);
 
-INSERT INTO historique (user_id, task_id, project_id, date_m, type_m, modif) VALUES
-(1,1,NULL,'2025-09-05',1,'ancienne description de la tache'),
-(1,2,NULL,'2025-09-05',0,'modification du titre'),
-(1,NULL,2,'2025-09-05',1,'première modif'),
-(1,NULL,2,'2025-09-05',1,'deuxième modif'),
-(1,NULL,1,'2025-09-05',1,'modification du titre');
+INSERT INTO historique (user_id, task_id, project_id, date_m, type_m, new_string, old_string) VALUES
+(1,1,NULL,'2025-09-05 17:43',1,'nouvelle description','ancienne description de la tache'),
+(2,2,NULL,'2025-09-05 18:33',0,'Le forceur des abdos','Le seigneur des anneaux'),
+(2,NULL,2,'2025-09-05 14:05',1,'première modif','texte original'),
+(1,NULL,2,'2025-09-05 11:12',1,'deuxième modif','première modif'),
+(2,NULL,1,'2025-09-05 09:54',1,'nouvelle','modification du titre');

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
 import { ProjectListComponent } from '../project-list/project-list.component';
 
 @Component({
@@ -13,7 +12,7 @@ import { ProjectListComponent } from '../project-list/project-list.component';
 })
 export class DashboardComponent {
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private router: Router) {}
 
   goToNewProject() {
     this.router.navigate(['/new-project']);
