@@ -4,12 +4,13 @@ import { Task } from '../../models/task.model';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TaskAssignComponent } from '../task-assign/task-assign.component'; // Import TaskAssignComponent
+import { TaskAssignComponent } from '../task-assign/task-assign.component';
+import { HistoriqueComponent } from "../historique/historique.component"; // Import TaskAssignComponent
 
 @Component({
   selector: 'app-task',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule, TaskAssignComponent], // Add TaskAssignComponent here
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, TaskAssignComponent, HistoriqueComponent], // Add TaskAssignComponent here
   templateUrl: './task.component.html',
   styleUrls: ['./task.component.css']
 })

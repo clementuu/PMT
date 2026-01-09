@@ -56,6 +56,9 @@
             <app-task-assign [taskId]="task.id" [projectId]="task.projectId" (taskAssigned)="onTaskAssigned()"></app-task-assign>
         }
     </div>
+    <div>
+        <app-historique [taskId]="task.id"></app-historique>
+    </div>
 } @else {
     <p>Chargement de la tâche...</p>
 }

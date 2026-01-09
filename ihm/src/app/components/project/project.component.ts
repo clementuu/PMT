@@ -9,12 +9,13 @@ import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from 
 import { User } from '../../models/user.model';
 import { UserProjectComponent } from '../user-project/user-project.component';
 import { UserRole, UsersProject } from '../../models/userProject.model';
+import { HistoriqueComponent } from "../historique/historique.component";
 
 
 @Component({
   selector: 'app-project',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, DragDropModule, UserProjectComponent],
+  imports: [CommonModule, ReactiveFormsModule, DragDropModule, UserProjectComponent, HistoriqueComponent],
   templateUrl: './project.component.html',
   styleUrls: ['./project.component.css']
 })

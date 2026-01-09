@@ -7,6 +7,7 @@ import { Assigned, User } from '../models/user.model';
 import { Project } from '../models/project.model';
 import { Task } from '../models/task.model';
 import { UserProject, UsersProject } from '../models/userProject.model';
+import { Historique } from '../models/historique.model';
 
 export interface ApiError {
   message: string;
@@ -151,6 +152,20 @@ export class ApiService {
       .pipe(
         catchError(this.catchError)
       );
+  }
+
+  getHistoriqueForProject(projectId: number): Observable<Historique[]> {
+    return this.httpClient.get<Historique[]>(`${this.apiUrl}/historique/project/${projectId}`)
+      .pipe(
+          catchError(this.catchError)
+        );
+  }
+
+  getHistoriqueForTask(taskId: number): Observable<Historique[]> {
+    return this.httpClient.get<Historique[]>(`${this.apiUrl}/historique/task/${taskId}`)
+      .pipe(
+          catchError(this.catchError)
+        );
   }
 
   catchError(error: HttpErrorResponse) {

@@ -1,0 +1,25 @@
+<div class="historique-container">
+  <h4>Historique des modifications</h4>
+  @if (historiques.length > 0) {
+    <ul class="timeline">
+      @for (item of historiques; track $index) {
+        <li>
+          <div class="timeline-badge"><i class="glyphicon glyphicon-check"></i></div>
+          <div class="timeline-panel">
+            <div class="timeline-heading">
+              <h5 class="timeline-title">Modification par {{ item.user.nom || 'Utilisateur inconnu' }}</h5>
+              <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i> {{ item.dateM | date:'dd/MM/yyyy à HH:mm' }}</small></p>
+            </div>
+            <div class="timeline-body">
+              <p>{{ item.modif }}</p>
+            </div>
+          </div>
+        </li>
+      }
+    </ul>
+  } @else {
+    <div>
+      <p>Aucun historique de modification disponible.</p>
+    </div>
+  }  
+</div>

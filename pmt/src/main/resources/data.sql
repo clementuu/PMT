@@ -29,5 +29,5 @@ INSERT INTO historique (user_id, task_id, project_id, date_m, type_m, modif) VAL
 (1,1,NULL,'2025-09-05',1,'ancienne description de la tache'),
 (1,2,NULL,'2025-09-05',0,'modification du titre'),
 (1,NULL,2,'2025-09-05',1,'première modif'),
-(1,NULL,2,'2025-09-05',1,'deuxième modif');
+(1,NULL,2,'2025-09-05',1,'deuxième modif'),
 (1,NULL,1,'2025-09-05',1,'modification du titre');
