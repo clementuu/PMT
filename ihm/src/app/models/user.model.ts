@@ -3,3 +3,10 @@ export interface User {
   nom: string;
   email: string;
 }
+
+export interface Assigned {
+  id: number;
+  userId: number;
+  taskId: number;
+  nom: string;
+}

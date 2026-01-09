@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { LoginRequest, LoginResponse, SigninRequest } from '../models/requests.model';
-import { User } from '../models/user.model';
+import { Assigned, User } from '../models/user.model';
 import { Project } from '../models/project.model';
 import { Task } from '../models/task.model';
 import { UserProject, UsersProject } from '../models/userProject.model';
@@ -132,8 +132,15 @@ export class ApiService {
       );
   }
 
-  getAllAssigned(taskId: number): Observable<User[]> {
-    return this.httpClient.get<User[]>(`${this.apiUrl}/assign/${taskId}`)
+  getAllAssigned(taskId: number): Observable<Assigned[]> {
+    return this.httpClient.get<Assigned[]>(`${this.apiUrl}/assign/${taskId}`)
+      .pipe(
+        catchError(this.catchError)
+      );
+  }
+
+  unassignTaskFromUser(id: number): Observable<void> {
+    return this.httpClient.delete<void>(`${this.apiUrl}/assign/${id}`)
       .pipe(
         catchError(this.catchError)
       );

@@ -2,8 +2,7 @@ import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
-import { User } from '../../models/user.model';
-import { error } from 'console';
+import { Assigned, User } from '../../models/user.model';
 
 @Component({
   selector: 'app-task-assign',
@@ -18,37 +17,48 @@ export class TaskAssignComponent implements OnInit {
 
   users: User[] = [];
   selectedUserId: number | undefined;
-  assigned: User[] = [];
+  assigned: Assigned[] = [];
 
   constructor(private apiService: ApiService) {}
 
   ngOnInit(): void {
+    this.loadProjectUsers();
+    this.loadAssignedUsers();
+  }
+
+  loadProjectUsers(): void {
     this.apiService.getAllUsers().subscribe({
       next: (data) => {
         this.users = data;
       },
       error: (err) => {
         console.error('Failed to fetch users', err);
-        // Optionally display an error message to the user
       },
     });
-    this.apiService.getAllAssigned(this.taskId).subscribe({
-      next: (data) => {
-        this.assigned = data;
-      },
-      error: (err) => {
-        console.error("getting assigned", err)
-      }
-    });
+  }
+
+  loadAssignedUsers(): void {
+    if (this.taskId) {
+      this.apiService.getAllAssigned(this.taskId).subscribe({
+        next: (data) => {
+          console.log(data);
+          this.assigned = data;
+        },
+        error: (err) => {
+          console.error("getting assigned", err);
+        }
+      });
+    }
   }
 
   assignTask(): void {
     if (this.taskId && this.selectedUserId) {
       this.apiService.assignTaskToUser(this.taskId, this.selectedUserId).subscribe({
         next: () => {
-          alert('Task assigned successfully!');
           this.taskAssigned.emit();
           this.selectedUserId = undefined; // Reset selection
+          this.loadAssignedUsers(); // Refresh assigned users list
+          this.loadProjectUsers(); // Refresh available users list
         },
         error: (err) => {
           console.error('Failed to assign task', err);
@@ -57,6 +67,23 @@ export class TaskAssignComponent implements OnInit {
       });
     } else {
       alert('Please select a user to assign the task.');
+    }
+  }
+
+  unassignUser(id: number): void {
+    if (this.taskId) {
+      console.log(id);
+      this.apiService.unassignTaskFromUser(id).subscribe({
+        next: () => {
+          alert('User unassigned successfully!');
+          this.loadAssignedUsers();
+          this.loadProjectUsers();
+        },
+        error: (err) => {
+          console.error('Failed to unassign user', err);
+          alert('Failed to unassign user: ' + (err.details?.error || err.message));
+        },
+      });
     }
   }
 }

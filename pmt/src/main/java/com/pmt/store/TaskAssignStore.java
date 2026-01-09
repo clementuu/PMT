@@ -11,4 +11,5 @@ public interface TaskAssignStore extends CrudRepository<TaskAssign, Long> {
     @Transactional
     void deleteByTaskId(Long taskId);
     List<TaskAssign> findByTaskId(Long taskId);
+    void deleteById(Long id);
 }

@@ -1,32 +1,80 @@
 .task-assign-container {
   margin-top: 20px;
-  padding: 15px;
-  border: 1px solid #ddd;
+  padding: 20px;
+  border: 1px solid #e0e0e0;
   border-radius: 8px;
-  background-color: #f9f9f9;
+  background-color: #fdfdfd;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-.task-assign-container h3 {
+.task-assign-container h3, .task-assign-container h4 {
   color: #333;
+  margin-top: 0;
   margin-bottom: 15px;
 }
 
-.form-group {
-  margin-bottom: 15px;
+.assigned-users {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
 }
 
-.form-group label {
-  display: block;
-  margin-bottom: 5px;
+.user-tag {
+  display: inline-flex;
+  align-items: center;
+  background-color: #eef4ff;
+  color: #333;
+  padding: 8px 12px;
+  border-radius: 15px;
+  font-weight: 500;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  transition: all 0.2s ease-in-out;
+}
+
+.remove-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #545454;
+  border: none;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  margin-left: 5px;
+  cursor: pointer;
   font-weight: bold;
+  font-size: 15px;
+  transition: all 0.2s ease;
+}
+
+.remove-btn:hover {
+  color: #ff5a5a;
+  transform: scale(1.1);
+}
+
+.no-users {
+  color: #888;
+  font-style: italic;
+}
+
+.add-user-form {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.add-user-form .form-group {
+  display: flex;
+  gap: 10px;
+  align-items: center;
 }
 
 .form-control {
-  width: 100%;
+  flex-grow: 1;
   padding: 8px 12px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  box-sizing: border-box; /* Ensures padding doesn't affect width */
 }
 
 .btn-primary {
@@ -37,9 +85,21 @@
   border-radius: 4px;
   cursor: pointer;
   font-size: 16px;
+  transition: background-color 0.2s;
 }
 
 .btn-primary:disabled {
   background-color: #a0c9f1;
   cursor: not-allowed;
+}
+
+.btn-primary:not(:disabled):hover {
+  background-color: #0056b3;
+}
+
+@media (max-width: 480px) {
+  .add-user-form .form-group {
+    flex-direction: column;
+    align-items: stretch;
+  }
 }

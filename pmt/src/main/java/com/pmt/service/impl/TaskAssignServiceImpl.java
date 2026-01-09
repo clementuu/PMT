@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.pmt.dto.Assigned;
 import com.pmt.errors.ValidationException;
 import com.pmt.model.Task;
 import com.pmt.model.TaskAssign;
@@ -45,23 +46,39 @@ public class TaskAssignServiceImpl implements TaskAssignService {
         if(id == null) {
             throw new ValidationException("l'id ne peut pas être null");
         }
-        taskAssignStore.deleteByTaskId(id);
+        try {
+            taskAssignStore.deleteByTaskId(id);
+        } catch (Exception e) {
+            throw new Error(e.getMessage());
+        }
     }
 
     @Override
-    public List<User> getUsersByTaskId(Long taskId) {
+    public List<Assigned> getUsersByTaskId(Long taskId) {
         if(taskId == null) {
             throw new ValidationException("l'id ne peut pas être null");
         }
-        List<User> users = new ArrayList<>();
+        List<Assigned> users = new ArrayList<>();
         List<TaskAssign> taskAssigns = taskAssignStore.findByTaskId(taskId);
 
         for (TaskAssign taskAssign : taskAssigns) {
-            System.out.println(taskAssign.getUser());
             User user = userStore.findById(taskAssign.getUser().getId()).get();
-            users.add(user);
+            Assigned assigned = new Assigned(taskAssign.getId(),user.getId(),taskAssign.getTask().getId(), user.getNom());
+            users.add(assigned);
         }
 
         return users;
+    }
+
+    @Override
+    public void deleteById(Long id) {
+         if(id == null) {
+            throw new ValidationException("l'id ne peut pas être null");
+        }
+        try {
+            taskAssignStore.deleteById(id);
+        } catch (Exception e) {
+            throw new Error(e.getMessage());
+        }
     }
 }

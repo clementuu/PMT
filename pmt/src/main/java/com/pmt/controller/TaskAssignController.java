@@ -3,8 +3,8 @@ package com.pmt.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.pmt.dto.Assigned;
 import com.pmt.model.TaskAssign;
-import com.pmt.model.User;
 import com.pmt.service.TaskAssignService;
 
 import java.util.List;
@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -38,11 +39,20 @@ public class TaskAssignController {
     @GetMapping("{taskId}")
     public ResponseEntity<?> getUsersByTaskId(@PathVariable Long taskId) {
         try {
-            List<User> users = taskAssignService.getUsersByTaskId(taskId);
+            List<Assigned> users = taskAssignService.getUsersByTaskId(taskId);
             return ResponseEntity.status(HttpStatus.OK).body(users); 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
         }
     }
     
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> deleteByID(@PathVariable Long id) {
+        try {
+            taskAssignService.deleteById(id);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
+        }
+    }
 }
