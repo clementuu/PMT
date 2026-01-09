@@ -3,7 +3,7 @@
   <div class="assigned-users">
     @for (user of assigned; track user.id) {
       <div class="user-tag">
-        {{ user.nom }}
+        {{ user.username }}
         <button type="button" class="remove-btn" (click)="unassignUser(user.id)"><i class="bi bi-backspace"></i></button>
       </div>
     } 

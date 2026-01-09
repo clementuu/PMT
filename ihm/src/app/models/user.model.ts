@@ -8,5 +8,5 @@ export interface Assigned {
   id: number;
   userId: number;
   taskId: number;
-  nom: string;
+  username: string;
 }

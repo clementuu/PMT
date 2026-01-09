@@ -43,6 +43,7 @@ export class TaskAssignComponent implements OnInit {
       this.apiService.getAllAssigned(this.taskId).subscribe({
         next: (data) => {
           this.assigned = data;
+          console.log(this.assigned[1]);
         },
         error: (err) => {
           console.error("getting assigned", err);
@@ -72,10 +73,8 @@ export class TaskAssignComponent implements OnInit {
 
   unassignUser(id: number): void {
     if (this.taskId) {
-      console.log(id);
       this.apiService.unassignTaskFromUser(id).subscribe({
         next: () => {
-          alert('User unassigned successfully!');
           this.loadAssignedUsers();
           this.loadProjectUsers();
         },

@@ -1,17 +1,23 @@
 <div class="historique-container">
-  <h4>Historique des modifications</h4>
+  <h4 class="mt-3">Historique</h4>
   @if (historiques.length > 0) {
     <ul class="timeline">
       @for (item of historiques; track $index) {
         <li>
-          <div class="timeline-badge"><i class="glyphicon glyphicon-check"></i></div>
+          <div class="timeline-badge">
+            <p class="timeline-date-badge"><small>{{ item.dateM | date:'dd/MM/yy' }}</small></p>
+            <div class="change-arrow">
+              <i class="bi bi-arrow-right-circle-fill"></i>
+            </div>
+          </div>
           <div class="timeline-panel">
             <div class="timeline-heading">
               <h5 class="timeline-title">Modification par {{ item.user.nom || 'Utilisateur inconnu' }}</h5>
-              <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i> {{ item.dateM | date:'dd/MM/yyyy à HH:mm' }}</small></p>
+              <p><small class="text-muted">{{ item.dateM | date:'HH:mm' }}</small></p>
             </div>
             <div class="timeline-body">
-              <p>{{ item.modif }}</p>
+              <p class="old-value">Ancienne valeur: {{ item.oldString }}</p>
+              <p class="new-value">Nouvelle valeur: {{ item.newString }}</p>
             </div>
           </div>
         </li>

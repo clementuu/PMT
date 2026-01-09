@@ -7,6 +7,7 @@ export interface Historique {
     projectId?: number;
     taskId?: number;
     dateM: Date;
-    modif: string;
+    newString: string;
+    oldString: string;
     typeM: Type;
 }
