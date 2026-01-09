@@ -80,7 +80,9 @@ public class UserServiceImpl implements UserService {
         List<ProjectUser> pUsers = projectUserStore.findByProjectId(id);
 
         for (ProjectUser projectUser : pUsers) {
-            userStore.findById(projectUser.getUser().getId()).ifPresent(users::add);
+            if (projectUser.getUser() != null) {
+                userStore.findById(projectUser.getUser().getId()).ifPresent(users::add);
+            }
         }
 
         return users;

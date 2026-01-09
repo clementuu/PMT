@@ -53,7 +53,8 @@ public class TaskServiceImpl implements TaskService {
     }
 
     public TaskDTO findById(Long id) {
-        Task task = taskStore.findById(id).get();
+        Task task = taskStore.findById(id)
+            .orElseThrow(() -> new ValidationException("Tâche non trouvé avec l'ID: " + id));
 
         TaskDTO dto = new TaskDTO();
 

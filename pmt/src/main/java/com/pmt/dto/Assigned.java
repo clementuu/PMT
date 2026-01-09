@@ -31,10 +31,10 @@ public class Assigned {
     public void setTaskId(Long taskId) {
         this.taskId = taskId;
     }
-    public String getNom() {
+    public String getUsername() {
         return username;
     }
-    public void setNom(String username) {
+    public void setUsername(String username) {
         this.username = username;
     }
 }

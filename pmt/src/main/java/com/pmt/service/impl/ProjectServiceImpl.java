@@ -37,7 +37,8 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public Project findById(Long id) {
-        return projectStore.findById(id).get();
+        return projectStore.findById(id)
+            .orElseThrow(() -> new ValidationException("Projet non trouvé avec l'ID: " + id));
     }
 
     @Override
