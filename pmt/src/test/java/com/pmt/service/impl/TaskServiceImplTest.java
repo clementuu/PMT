@@ -125,14 +125,14 @@ class TaskServiceImplTest {
 
     @Test
     void testUpdate_Success() {
-        Task updatedInfo = new Task();
+        TaskDTO updatedInfo = new TaskDTO();
         updatedInfo.setId(101L);
         updatedInfo.setNom("Updated Name");
         
         when(taskStore.findById(101L)).thenReturn(Optional.of(task));
         when(taskStore.save(any(Task.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        Task result = taskService.update(updatedInfo);
+        TaskDTO result = taskService.update(updatedInfo);
 
         assertNotNull(result);
         assertEquals("Updated Name", result.getNom());
@@ -142,7 +142,7 @@ class TaskServiceImplTest {
     
     @Test
     void testUpdate_TaskNotFound() {
-        Task updatedInfo = new Task();
+        TaskDTO updatedInfo = new TaskDTO();
         updatedInfo.setId(101L);
 
         when(taskStore.findById(101L)).thenReturn(Optional.empty());

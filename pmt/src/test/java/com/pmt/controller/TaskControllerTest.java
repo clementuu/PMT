@@ -112,18 +112,18 @@ class TaskControllerTest {
 
     @Test
     void testPutTask_Success() throws Exception {
-        when(taskService.update(any(Task.class))).thenReturn(task);
+        when(taskService.update(any(TaskDTO.class))).thenReturn(taskDTO);
 
         mockMvc.perform(put("/task")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(task)))
+                        .content(objectMapper.writeValueAsString(taskDTO)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.nom").value("Test Task"));
+                .andExpect(jsonPath("$.nom").value("Test Task DTO"));
     }
 
     @Test
     void testPutTask_ValidationException() throws Exception {
-        when(taskService.update(any(Task.class))).thenThrow(new ValidationException("Invalid task ID"));
+        when(taskService.update(any(TaskDTO.class))).thenThrow(new ValidationException("Invalid task ID"));
 
         mockMvc.perform(put("/task")
                         .contentType(MediaType.APPLICATION_JSON)
