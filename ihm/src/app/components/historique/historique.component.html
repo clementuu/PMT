@@ -1,5 +1,5 @@
 <div class="historique-container">
-  <h4 class="mt-3">Historique</h4>
+  <h3 class="mt-3">Historique</h3>
   @if (historiques.length > 0) {
     <ul class="timeline">
       @for (item of historiques; track $index) {
@@ -11,7 +11,7 @@
           </div>
           <div class="timeline-panel">
             <div class="timeline-heading">
-              <h5 class="timeline-title">Modification par {{ item.user.nom || 'Utilisateur inconnu' }}</h5>
+              <h5 class="timeline-title">{{ item.user.nom || 'Utilisateur inconnu' }}</h5>
               <p>{{ item.dateM | date:'dd/MM/yy' }} <small class="text-muted">{{ item.dateM | date:'HH:mm' }}</small></p>
             </div>
             <div class="timeline-body">
