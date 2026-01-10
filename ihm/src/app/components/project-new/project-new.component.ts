@@ -73,7 +73,7 @@ export class ProjectNewComponent implements OnInit {
     const newProject: Partial<Project> = {
       nom,
       description,
-      dateFin: dateFin || null,
+      dateFin: dateFin ? new Date(dateFin) : undefined,
     };
 
     this.apiService

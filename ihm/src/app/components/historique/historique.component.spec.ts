@@ -92,15 +92,6 @@ describe('HistoriqueComponent', () => {
     expect(component.historiques).toEqual(mockHistoriques);
   }));
 
-  it('should display "no history" message when historiques array is empty', () => {
-    component.historiques = [];
-    fixture.detectChanges();
-    const element = fixture.nativeElement as HTMLElement;
-    expect(element.textContent).toContain('Aucun historique de modification disponible.');
-    const timelineElement = fixture.debugElement.query(By.css('.timeline'));
-    expect(timelineElement).toBeFalsy();
-  });
-
   it('should display the timeline when historiques array has items', () => {
     component.historiques = mockHistoriques;
     fixture.detectChanges();

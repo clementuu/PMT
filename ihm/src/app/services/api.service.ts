@@ -170,12 +170,23 @@ export class ApiService {
   }
 
   catchError(error: HttpErrorResponse) {
+    let userFriendlyErrorMessage: string;
+    if (typeof error.error === 'string') {
+      userFriendlyErrorMessage = error.error;
+    } else if (error.error && typeof error.error === 'object' && error.error.error) {
+      userFriendlyErrorMessage = error.error.error;
+    } else if (error.error && typeof error.error === 'object' && error.error.message) {
+      userFriendlyErrorMessage = error.error.message;
+    } else {
+      userFriendlyErrorMessage = "Une erreur inconnue s'est produite";
+    }
+
     const apiError: ApiError = {
-      message: error.message || "Une erreur inconnue s'est produite",
+      message: userFriendlyErrorMessage,
       status: error.status,
       details: error.error ?? "Aucune information sur l'erreur"
     };
-    alert("Erreur API: "+apiError.details.error); 
+    alert(`Erreur API: ${apiError.message}`); 
     return throwError(() => apiError);
   }
 }

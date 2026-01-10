@@ -1,6 +1,6 @@
 <div class="historique-container">
-  <h3 class="mt-3">Historique</h3>
   @if (historiques.length > 0) {
+    <h3 class="mt-3">Historique</h3>
     <ul class="timeline">
       @for (item of historiques; track $index) {
         <li>
@@ -22,9 +22,5 @@
         </li>
       }
     </ul>
-  } @else {
-    <div>
-      <p>Aucun historique de modification disponible.</p>
-    </div>
-  }  
+  }
 </div>
