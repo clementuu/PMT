@@ -9,3 +9,7 @@ pmt:
 .PHONY: ihmtest
 ihmtest:
 	cd ihm && ng test --code-coverage
+
+.PHONY: pmttest
+pmttest:
+	cd pmt && mvn test verify

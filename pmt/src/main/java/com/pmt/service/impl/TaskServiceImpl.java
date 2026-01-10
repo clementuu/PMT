@@ -144,7 +144,8 @@ public class TaskServiceImpl implements TaskService {
             history.setNewString(task.getDescription());
             history.setUser(user);
             historiqueStore.save(history);
-            taskDTO.setNom(task.getDescription());
+            existingTask.setDescription(task.getDescription());
+            taskDTO.setDescription(task.getDescription());
         }
 
         if (task.getDateFin() != null) {
@@ -176,7 +177,7 @@ public class TaskServiceImpl implements TaskService {
 
         taskStore.save(existingTask);
 
-        return findById(task.getId());
+        return taskDTO;
     }
 
     @Override

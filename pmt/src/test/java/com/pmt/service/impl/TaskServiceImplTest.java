@@ -4,6 +4,8 @@ import com.pmt.dto.TaskDTO;
 import com.pmt.errors.ValidationException;
 import com.pmt.model.Project;
 import com.pmt.model.Task;
+import com.pmt.service.UserService;
+import com.pmt.store.HistoriqueStore;
 import com.pmt.store.ProjectStore;
 import com.pmt.store.TaskAssignStore;
 import com.pmt.store.TaskStore;
@@ -36,6 +38,12 @@ class TaskServiceImplTest {
 
     @Mock
     private TaskAssignStore taskAssignStore;
+
+    @Mock
+    private UserService userService;
+
+    @Mock 
+    private HistoriqueStore historiqueStore;
 
     private Task task;
     private Project project;
@@ -136,8 +144,8 @@ class TaskServiceImplTest {
 
         assertNotNull(result);
         assertEquals("Updated Name", result.getNom());
-        verify(taskStore).findById(101L);
         verify(taskStore).save(task);
+        verify(taskStore).findById(101L);
     }
     
     @Test
