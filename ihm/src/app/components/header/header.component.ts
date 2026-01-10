@@ -11,7 +11,6 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './header.component.css'
 })
 export class HeaderComponent {
-
   constructor(
     public authService: AuthService,
     private router: Router

@@ -176,7 +176,7 @@ public class TaskServiceImpl implements TaskService {
 
         taskStore.save(existingTask);
 
-        return taskDTO;
+        return findById(task.getId());
     }
 
     @Override

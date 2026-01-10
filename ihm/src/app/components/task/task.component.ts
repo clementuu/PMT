@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { CommonModule, formatDate } from '@angular/common';
 import { Task } from '../../models/task.model';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -7,6 +7,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { TaskAssignComponent } from '../task-assign/task-assign.component';
 import { HistoriqueComponent } from "../historique/historique.component"; // Import TaskAssignComponent
 import { AuthService } from '../../services/auth.service';
+import { Observable, of, switchMap, tap } from 'rxjs'; // Import switchMap and tap
 
 @Component({
   selector: 'app-task',
@@ -16,6 +17,8 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./task.component.css']
 })
 export class TaskComponent implements OnInit {
+  @ViewChild(HistoriqueComponent) historiqueComponent!: HistoriqueComponent;
+
   task: Task | null = null;
   isEditing = false;
   taskForm: FormGroup;
@@ -53,26 +56,32 @@ export class TaskComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadTask(); // Use a dedicated method to load task
+    this.loadTask().subscribe(); // Subscribe to the observable
   }
 
-  loadTask(): void {
-    this.route.paramMap.subscribe(params => {
-      const id = params.get('id');
-      if (id) {
-        this.apiService.getTask(+id).subscribe({
-          next: (task: Task) => {
-            this.task = task;
-          },
-          error: (error) => console.error('Error fetching task details:', error)
-        });
-      }
-    });
+  loadTask(): Observable<Task> {
+    return this.route.paramMap.pipe(
+      switchMap(params => {
+        const id = params.get('id');
+        if (id) {
+          return this.apiService.getTask(+id).pipe(
+            tap(task => {
+              this.task = task;
+              if (this.historiqueComponent) {
+                this.historiqueComponent.loadHistory();
+              }
+            })
+          );
+        } else {
+          return of(null as any); // Return an observable of null if no ID
+        }
+      })
+    );
   }
 
   onTaskAssigned(): void {
     // Reload the task to reflect the assigned user
-    this.loadTask();
+    this.loadTask().subscribe(); // Subscribe to the observable
   }
 
   startEditing(): void {
@@ -106,8 +115,8 @@ export class TaskComponent implements OnInit {
 
     this.apiService.updateTask(updatedTaskData).subscribe({
       next: (updatedTask) => {
-        this.task = updatedTask;
         this.isEditing = false;
+        this.loadTask().subscribe(); // Explicitly reload the task after successful update
       },
       error: (err) => {
         console.error('Error updating task:', err);

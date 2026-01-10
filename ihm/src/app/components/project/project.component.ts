@@ -124,7 +124,6 @@ export class ProjectComponent implements OnInit, AfterViewInit { // Add AfterVie
   
     this.apiService.updateProject(payload).subscribe({
       next: (project) => {
-        alert('Projet mis à jour avec succès!');
         this.isEditing = false;
         this.loadProjectData(project.id); // Reload all data after successful update
       },
@@ -140,16 +139,19 @@ export class ProjectComponent implements OnInit, AfterViewInit { // Add AfterVie
     if (this.project == null ) {
       return;
     }
-    this.apiService.deleteProject(this.project.id).subscribe({
-      next: () => {
-        alert("Projet supprimé !");
-        this.router.navigate(['/dashboard']);
-      },
-      error: (err) => {
-        console.error('Error removing project:', err);
-        alert("Erreur lors de la suppression du projet.");
-      }
-    })
+    var ok = confirm("Voulez vous supprimer ce projet ?");
+    if (ok) {
+      this.apiService.deleteProject(this.project.id).subscribe({
+        next: () => {
+          alert("Projet supprimé !");
+          this.router.navigate(['/dashboard']);
+        },
+        error: (err) => {
+          console.error('Error removing project:', err);
+          alert("Erreur lors de la suppression du projet.");
+        }
+      })
+    }
   }
 
   goToTaskDetail(taskId: number): void {
