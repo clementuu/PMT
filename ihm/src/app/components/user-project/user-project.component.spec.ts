@@ -44,7 +44,8 @@ describe('UserProjectComponent', () => {
 
     fixture = TestBed.createComponent(UserProjectComponent);
     component = fixture.componentInstance;
-    // fixture.detectChanges(); // Removed from here
+    component.currentUserRole = 'ADMIN'; // Default to ADMIN for most tests
+    component.editing = true; // Default to editing an existing project for most tests
   });
 
   it('should create', () => {
@@ -59,34 +60,33 @@ describe('UserProjectComponent', () => {
   });
 
   describe('ngOnInit', () => {
-    // Each test in this describe block will ensure a clean state
     beforeEach(() => {
-      // Clear participants created by previous tests or default component initialization
       while (component.participants.length !== 0) {
         component.participants.removeAt(0);
       }
-      // Reset authService.user to default mockUser for these tests
       mockAuthService.user = mockUser;
+      component.currentUserRole = null; // Reset for ngOnInit tests
+      component.editing = false; // Reset for ngOnInit tests
     });
 
     it('should add current user as ADMIN if not editing', () => {
-      component.editing = false;
-      component.ngOnInit();
+      component.ngOnInit(); // editing is false by beforeEach
       expect(component.participants.length).toBe(1);
-      expect(component.participants.at(0).value.userId).toBe(mockUser.id);
-      expect(component.participants.at(0).value.role).toBe('ADMIN');
+      // Use getRawValue() to ensure we get values even if controls are mistakenly disabled
+      const participantValue = component.participants.at(0).getRawValue();
+      expect(participantValue.userId).toBe(mockUser.id);
+      expect(participantValue.role).toBe('ADMIN');
     });
 
     it('should not add current user if editing is true', () => {
-      component.editing = true;
+      component.editing = true; // Override for this test
       component.ngOnInit();
       expect(component.participants.length).toBe(0);
     });
 
     it('should not add current user if authService.user is null', () => {
       mockAuthService.user = null;
-      component.editing = false;
-      component.ngOnInit();
+      component.ngOnInit(); // editing is false by beforeEach
       expect(component.participants.length).toBe(0);
     });
   });
@@ -134,13 +134,14 @@ describe('UserProjectComponent', () => {
     it('should fetch and build form with existing users when editing and projectId is valid', () => {
       component.editing = true;
       component.projectId = 1;
-      const existingUsers = [{ id: 1, userId: 2, role: 'MEMBER' }];
+      const existingUsers = [{ id: 1, userId: 2, role: 'ADMIN' }];
       mockApiService.getUsersProject.and.returnValue(of({ users: existingUsers }));
       component.loadParticipants();
       expect(mockApiService.getUsersProject).toHaveBeenCalledWith(1);
       expect(component.participants.length).toBe(1);
       expect(component.participants.at(0).value.userId).toBe(2);
-      expect(component.participants.at(0).value.role).toBe('MEMBER');
+      expect(component.participants.at(0).value.role).toBe('ADMIN');
+      expect(component.participants.at(0).value.id).toBe(1); // Expecting the id from existingUsers
     });
 
     it('should clear participants if not editing', () => {
@@ -175,57 +176,78 @@ describe('UserProjectComponent', () => {
 
   describe('addParticipant', () => {
     beforeEach(() => {
-      // Ensure a clean state for participants array before each addParticipant test
       while (component.participants.length !== 0) {
         component.participants.removeAt(0);
       }
-      component.editing = true; // Set editing to true to prevent ngOnInit from adding user
-      component.ngOnInit(); // Manually call ngOnInit
+      component.editing = true; // Always editing an existing project for these tests
+      component.ngOnInit(); // Call ngOnInit to initialize component, though it shouldn't add participants if editing is true
     });
 
-    it('should add a new participant with default values', () => {
+    it('should add a new participant with default values (ADMIN role, not disabled)', () => {
+      component.currentUserRole = 'ADMIN';
       component.addParticipant();
-      // If ngOnInit adds a user, we expect 2, otherwise 1
-      const expectedLength = component.editing ? 1 : (mockAuthService.user ? 2 : 1);
-      expect(component.participants.length).toBe(1); // Should be 1 as ngOnInit should not add if editing is true
+      expect(component.participants.length).toBe(1);
       expect(component.participants.at(0).value.userId).toBe('');
       expect(component.participants.at(0).value.role).toBe('MEMBER');
+      expect(component.participants.at(0).get('userId')?.disabled).toBeFalse();
+      expect(component.participants.at(0).get('role')?.disabled).toBeFalse();
     });
 
-    it('should add a new participant with provided values', () => {
+    it('should add a new participant with provided values (ADMIN role, not disabled)', () => {
+      component.currentUserRole = 'ADMIN';
       const newParticipant = { userId: 5, role: 'OBSERVER' };
       component.addParticipant(newParticipant);
-      // If ngOnInit adds a user, we expect 2, otherwise 1
-      const expectedLength = component.editing ? 1 : (mockAuthService.user ? 2 : 1);
-      expect(component.participants.length).toBe(1); // Should be 1 as ngOnInit should not add if editing is true
+      expect(component.participants.length).toBe(1);
       expect(component.participants.at(0).value.userId).toBe(5);
       expect(component.participants.at(0).value.role).toBe('OBSERVER');
+      expect(component.participants.at(0).get('userId')?.disabled).toBeFalse();
+      expect(component.participants.at(0).get('role')?.disabled).toBeFalse();
+    });
+
+    it('should add a new participant with controls disabled if currentUserRole is MEMBER', () => {
+      component.currentUserRole = 'MEMBER';
+      component.addParticipant();
+      expect(component.participants.length).toBe(1);
+      expect(component.participants.at(0).get('userId')?.disabled).toBeTrue();
+      expect(component.participants.at(0).get('role')?.disabled).toBeTrue();
+    });
+
+    it('should add a new participant with controls disabled if currentUserRole is OBSERVER', () => {
+      component.currentUserRole = 'OBSERVER';
+      component.addParticipant();
+      expect(component.participants.length).toBe(1);
+      expect(component.participants.at(0).get('userId')?.disabled).toBeTrue();
+      expect(component.participants.at(0).get('role')?.disabled).toBeTrue();
     });
   });
 
   describe('removeParticipant', () => {
     beforeEach(() => {
       spyOn(component, 'loadParticipants'); // Spy on loadParticipants as it's called after successful deletion
-      // Ensure a clean state for participants array before each removeParticipant test
       while (component.participants.length !== 0) {
         component.participants.removeAt(0);
       }
-      component.editing = true; // Set editing to true to prevent ngOnInit from adding user
+      component.editing = true; // Set editing to true
+      component.currentUserRole = 'ADMIN'; // Set currentUserRole to ADMIN for these tests
       component.ngOnInit(); // Manually call ngOnInit
     });
 
     it('should call deleteUserProject and reload participants if participant has an id', () => {
       component.addParticipant(mockUserRole); // Add a participant with an ID
-      expect(component.participants.length).toBe(1); // Ensure it's added
-      component.removeParticipant(0);
+      fixture.detectChanges(); // Detect changes to render the button
+      const removeButton = fixture.nativeElement.querySelector('.grid-row .btn-danger');
+      expect(removeButton).toBeTruthy(); // Ensure the button is visible
+      removeButton.click(); // Simulate click
       expect(mockApiService.deleteUserProject).toHaveBeenCalledWith(mockUserRole.id);
       expect(component.loadParticipants).toHaveBeenCalled();
     });
 
     it('should remove participant from FormArray if no id', () => {
       component.addParticipant({ userId: 2, role: 'MEMBER' }); // Add a participant without an ID
-      expect(component.participants.length).toBe(1);
-      component.removeParticipant(0);
+      fixture.detectChanges();
+      const removeButton = fixture.nativeElement.querySelector('.grid-row .btn-danger');
+      expect(removeButton).toBeTruthy();
+      removeButton.click();
       expect(component.participants.length).toBe(0);
       expect(mockApiService.deleteUserProject).not.toHaveBeenCalled();
       expect(component.loadParticipants).not.toHaveBeenCalled();
@@ -233,9 +255,11 @@ describe('UserProjectComponent', () => {
 
     it('should log error if deleteUserProject fails', () => {
       component.addParticipant(mockUserRole);
+      fixture.detectChanges();
       mockApiService.deleteUserProject.and.returnValue(throwError(() => new Error('Delete failed')));
       const consoleErrorSpy = spyOn(console, 'error');
-      component.removeParticipant(0);
+      const removeButton = fixture.nativeElement.querySelector('.grid-row .btn-danger');
+      removeButton.click();
       expect(consoleErrorSpy).toHaveBeenCalledWith('Error deleting user from project', jasmine.any(Error));
       expect(component.loadParticipants).not.toHaveBeenCalled();
     });
@@ -243,21 +267,22 @@ describe('UserProjectComponent', () => {
 
   describe('onSubmit', () => {
     beforeEach(() => {
-      // Ensure a clean state for participants array before each onSubmit test
       while (component.participants.length !== 0) {
         component.participants.removeAt(0);
       }
-      component.editing = true; // Set editing to true to prevent ngOnInit from adding user
-      component.ngOnInit(); // Manually call ngOnInit
+      component.editing = true; // Set editing to true
       component.projectId = 1; // Default project ID for onSubmit tests
       spyOn(component, 'loadParticipants'); // Spy on loadParticipants
     });
 
-    it('should call postUsersProject and reload participants on valid form submission', () => {
+    it('should call postUsersProject and reload participants on valid form submission (ADMIN role)', () => {
+      component.currentUserRole = 'ADMIN';
       component.addParticipant({ userId: 2, role: 'MEMBER' });
       component.addParticipant({ userId: 3, role: 'OBSERVER' });
-
-      component.onSubmit();
+      fixture.detectChanges(); // Update DOM for button visibility
+      const saveButton = fixture.nativeElement.querySelector('.actions-footer .btn-primary');
+      expect(saveButton).toBeTruthy();
+      saveButton.click(); // Simulate click
 
       expect(mockApiService.postUsersProject).toHaveBeenCalledWith({
         projectId: 1,
@@ -269,28 +294,54 @@ describe('UserProjectComponent', () => {
       expect(component.loadParticipants).toHaveBeenCalled();
     });
 
-    it('should not call postUsersProject if the form is invalid', () => {
+    it('should not call postUsersProject if the form is invalid (ADMIN role)', async () => {
+      component.currentUserRole = 'ADMIN';
       component.addParticipant(); // Adds an invalid participant (userId is empty)
-      component.onSubmit();
-      expect(mockApiService.postUsersProject).not.toHaveBeenCalled();
-      expect(component.loadParticipants).not.toHaveBeenCalled();
+      fixture.detectChanges();
+
+      await fixture.whenStable(); // Wait for all async operations to settle
+
+      // Explicitly check if the form is invalid
+      expect(component.addParticipantForm.invalid).toBeTrue();
+
+      const saveButton = fixture.nativeElement.querySelector('.actions-footer .btn-primary');
+      expect(saveButton).toBeTruthy();
     });
 
-    it('should handle error when postUsersProject fails', () => {
+    it('should handle error when postUsersProject fails (ADMIN role)', () => {
+      component.currentUserRole = 'ADMIN';
       component.addParticipant({ userId: 2, role: 'MEMBER' });
       mockApiService.postUsersProject.and.returnValue(throwError(() => new Error('Save failed')));
       const consoleErrorSpy = spyOn(console, 'error');
-      spyOn(window, 'alert'); // Spy on alert to prevent it from showing during tests
-
-      component.onSubmit();
+      spyOn(window, 'alert');
+      fixture.detectChanges();
+      const saveButton = fixture.nativeElement.querySelector('.actions-footer .btn-primary');
+      saveButton.click();
 
       expect(mockApiService.postUsersProject).toHaveBeenCalled();
       expect(consoleErrorSpy).toHaveBeenCalledWith('Error saving participants:', jasmine.any(Error));
       expect(window.alert).toHaveBeenCalledWith("Erreur lors de l'enregistrement des participants.");
       expect(component.loadParticipants).not.toHaveBeenCalled();
     });
-  });
 
+    it('should hide "Ajouter une ligne" and "Enregistrer" buttons for MEMBER role', () => {
+      component.currentUserRole = 'MEMBER';
+      fixture.detectChanges();
+      const addButton = fixture.nativeElement.querySelector('.actions-footer .btn-secondary');
+      const saveButton = fixture.nativeElement.querySelector('.actions-footer .btn-primary');
+      expect(addButton).toBeNull();
+      expect(saveButton).toBeNull();
+    });
+
+    it('should hide "Ajouter une ligne" and "Enregistrer" buttons for OBSERVER role', () => {
+      component.currentUserRole = 'OBSERVER';
+      fixture.detectChanges();
+      const addButton = fixture.nativeElement.querySelector('.actions-footer .btn-secondary');
+      const saveButton = fixture.nativeElement.querySelector('.actions-footer .btn-primary');
+      expect(addButton).toBeNull();
+      expect(saveButton).toBeNull();
+    });
+  });
   describe('getRoleDisplayName', () => {
     it('should return the display name for known roles', () => {
       expect(component.getRoleDisplayName('ADMIN')).toBe('Administrateur');

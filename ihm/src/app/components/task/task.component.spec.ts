@@ -54,6 +54,7 @@ describe('TaskComponent', () => {
       assignTaskToUser: jasmine.createSpy('assignTaskToUser').and.returnValue(of({})),
       unassignTaskFromUser: jasmine.createSpy('unassignTaskFromUser').and.returnValue(of(void 0)),
       getHistoriqueForTask: jasmine.createSpy('getHistoriqueForTask').and.returnValue(of([])),
+      getUsersProject: jasmine.createSpy('getUsersProject').and.returnValue(of({ users: [] })),
     };
 
     mockAuthService = { user: mockUser };

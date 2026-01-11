@@ -43,7 +43,7 @@ describe('ProjectNewComponent', () => {
   let router: Router; // Changed from mockRouter to router to inject the real router from RouterTestingModule
 
   const mockUser: User = { id: 1, nom: 'Test User', email: 'test@example.com' };
-  const mockProject: Project = { id: 1, nom: 'Test Project', description: 'Test Description', tasks: [], dateFin: new Date('2024-12-31') };
+  const mockProject: Project = { id: 1, nom: 'Test Project', description: 'Test Description', tasks: [], dateDebut: new Date('2024-01-31'), dateFin: new Date('2024-12-31') };
   const mockAllUsers: User[] = [{ id: 1, nom: 'User1', email: 'user1@test.com' }, { id: 2, nom: 'User2', email: 'user2@test.com' }];
 
 
@@ -131,7 +131,8 @@ describe('ProjectNewComponent', () => {
   it('should enable submit button when form is valid and participants exist', fakeAsync(() => {
     component.projectForm.controls['nom'].setValue('New Project');
     component.projectForm.controls['description'].setValue('New Description');
-    component.participantsToSave = [{ id: NaN, userId: mockUser.id, role: 'ADMIN' }];
+    component.projectForm.controls['dateDebut'].setValue('2024-01-01'); // Added missing required field
+    component.participantsToSave = [{ id: NaN, userId: mockUser.id, role: 'ADMIN' }]; // id should be undefined for new
 
     fixture.detectChanges();
     tick();
@@ -171,7 +172,7 @@ describe('ProjectNewComponent', () => {
     component.onSubmit();
     tick();
 
-    expect(window.alert).toHaveBeenCalledWith('Veuillez ajouter au moins un participant.');
+    expect(window.alert).toHaveBeenCalledWith("Veuillez remplir les champs du projet.");
     expect(mockApiService.createProject).not.toHaveBeenCalled();
   }));
 
@@ -183,6 +184,7 @@ describe('ProjectNewComponent', () => {
 
     component.projectForm.controls['nom'].setValue('New Project');
     component.projectForm.controls['description'].setValue('New Description');
+    component.projectForm.controls['dateDebut'].setValue('2024-01-01'); // Added missing required field
     component.participantsToSave = [{ id: NaN, userId: mockUser.id, role: 'ADMIN' }];
 
     component.onSubmit();
@@ -196,14 +198,18 @@ describe('ProjectNewComponent', () => {
   }));
 
   it('should log error and alert if postUsersProject API fails', fakeAsync(() => {
-    const errorResponse = new Error('Assignment failed');
+    const errorResponse = new Error('Assignment failed'); // Corrected error message
     mockApiService.postUsersProject.and.returnValue(throwError(() => errorResponse));
     spyOn(console, 'error');
     spyOn(window, 'alert');
 
     component.projectForm.controls['nom'].setValue('New Project');
     component.projectForm.controls['description'].setValue('New Description');
+    component.projectForm.controls['dateDebut'].setValue('2024-01-01'); // Added missing required field
     component.participantsToSave = [{ id: NaN, userId: mockUser.id, role: 'ADMIN' }];
+
+    // Ensure createProject is successful so postUsersProject is attempted
+    mockApiService.createProject.and.returnValue(of(mockProject));
 
     component.onSubmit();
     tick(); // for createProject

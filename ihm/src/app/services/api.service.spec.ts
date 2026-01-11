@@ -135,7 +135,7 @@ describe('ApiService', () => {
   // --- createProject ---
   it('createProject should send a POST request and return Project', () => {
     const mockProjectRequest: Partial<Project> = { nom: 'New Project', description: 'Desc' };
-    const mockProjectResponse: Project = { id: 1, nom: 'New Project', description: 'Desc', dateFin: new Date('2024-12-31'), tasks: [] };
+    const mockProjectResponse: Project = { id: 1, nom: 'New Project', description: 'Desc', dateDebut: new Date('2024-01-31'), dateFin: new Date('2024-12-31'), tasks: [] };
 
     service.createProject(mockProjectRequest).subscribe(project => {
       expect(project).toEqual(mockProjectResponse);
@@ -167,7 +167,7 @@ describe('ApiService', () => {
   // --- getProjectsByUserId ---
   it('getProjectsByUserId should send a GET request and return Project[]', () => {
     const userId = 1;
-    const mockProjects: Project[] = [{ id: 1, nom: 'P1', description: 'D1', dateFin: new Date('2024-12-31'), tasks: [] }];
+    const mockProjects: Project[] = [{ id: 1, nom: 'P1', description: 'D1', dateDebut: new Date('2024-01-31'), dateFin: new Date('2024-12-31'), tasks: [] }];
 
     service.getProjectsByUserId(userId).subscribe(projects => {
       expect(projects).toEqual(mockProjects);
@@ -198,7 +198,7 @@ describe('ApiService', () => {
   // --- getProjectById ---
   it('getProjectById should send a GET request and return Project', () => {
     const projectId = 1;
-    const mockProject: Project = { id: 1, nom: 'P1', description: 'D1', dateFin: new Date('2024-12-31'), tasks: [] };
+    const mockProject: Project = { id: 1, nom: 'P1', description: 'D1', dateDebut: new Date('2024-01-31'), dateFin: new Date('2024-12-31'), tasks: [] };
 
     service.getProjectById(projectId).subscribe(project => {
       expect(project).toEqual(mockProject);
@@ -211,8 +211,8 @@ describe('ApiService', () => {
 
   // --- updateProject ---
   it('updateProject should send a PUT request and return Project', () => {
-    const mockPayload: ProjectUpdatePayload = { project: { id: 1, nom: 'Updated', description: 'Upd', dateFin: new Date('2024-12-31'), tasks:[] }, userId: 1 };
-    const mockProjectResponse: Project = { id: 1, nom: 'Updated', description: 'Upd', dateFin: new Date('2024-12-31'), tasks: [] };
+    const mockPayload: ProjectUpdatePayload = { project: { id: 1, nom: 'Updated', description: 'Upd', dateDebut: new Date('2024-01-31'), dateFin: new Date('2024-12-31'), tasks:[] }, userId: 1 };
+    const mockProjectResponse: Project = { id: 1, nom: 'Updated', description: 'Upd', dateDebut: new Date('2024-01-31'), dateFin: new Date('2024-12-31'), tasks: [] };
 
     service.updateProject(mockPayload).subscribe(project => {
       expect(project).toEqual(mockProjectResponse);
@@ -225,7 +225,7 @@ describe('ApiService', () => {
   });
 
   it('updateProject should handle errors', () => {
-    const mockPayload: ProjectUpdatePayload = { project: { id: 1, nom: 'Updated', description: 'Upd', dateFin: new Date('2024-12-31'), tasks:[]  }, userId: 1 };
+    const mockPayload: ProjectUpdatePayload = { project: { id: 1, nom: 'Updated', description: 'Upd', dateDebut: new Date('2024-01-31'), dateFin: new Date('2024-12-31'), tasks:[]  }, userId: 1 };
     const mockError = new HttpErrorResponse({ status: 400, statusText: 'Bad Request', error: { message: ErrorApi } });
 
     service.updateProject(mockPayload).subscribe({

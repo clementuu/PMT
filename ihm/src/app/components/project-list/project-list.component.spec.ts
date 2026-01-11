@@ -16,8 +16,8 @@ describe('ProjectListComponent', () => {
 
   const mockUser: User = { id: 1, nom: 'Test User', email: 'test@example.com'};
   const mockProjects: Project[] = [
-    { id: 1, nom: 'Project Alpha', description: 'Desc Alpha', dateFin: new Date(), tasks: [] },
-    { id: 2, nom: 'Project Beta', description: 'Desc Beta', dateFin: new Date(), tasks: [] },
+    { id: 1, nom: 'Project Alpha', description: 'Desc Alpha', dateDebut: new Date('2024-01-31'), dateFin: new Date(), tasks: [] },
+    { id: 2, nom: 'Project Beta', description: 'Desc Beta', dateDebut: new Date('2024-01-31'), dateFin: new Date(), tasks: [] },
   ];
 
   beforeEach(async () => {
