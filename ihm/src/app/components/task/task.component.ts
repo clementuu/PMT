@@ -8,6 +8,7 @@ import { TaskAssignComponent } from '../task-assign/task-assign.component';
 import { HistoriqueComponent } from "../historique/historique.component"; // Import TaskAssignComponent
 import { AuthService } from '../../services/auth.service';
 import { Observable, of, switchMap, tap } from 'rxjs'; // Import switchMap and tap
+import { UserRole } from '../../models/userProject.model'; // Import UserRole
 
 @Component({
   selector: 'app-task',
@@ -22,6 +23,7 @@ export class TaskComponent implements OnInit {
   task: Task | null = null;
   isEditing = false;
   taskForm: FormGroup;
+  currentUserRole: string | null = null; // New property for current user's role
 
   // Enums
   priorities: Task['priorite'][] = ['LOW', 'MEDIUM', 'HIGH'];
@@ -69,6 +71,14 @@ export class TaskComponent implements OnInit {
               this.task = task;
               if (this.historiqueComponent) {
                 this.historiqueComponent.loadHistory();
+              }
+
+              // Fetch current user's role for this project
+              if (this.authService.user && this.task.projectId) {
+                this.apiService.getUsersProject(this.task.projectId).subscribe(usersProject => {
+                  const userRole = usersProject.users.find(up => up.userId === this.authService.user?.id);
+                  this.currentUserRole = userRole ? userRole.role : null;
+                });
               }
             })
           );

@@ -17,6 +17,7 @@ export class UserProjectComponent implements OnChanges, OnInit {
   @Input() allUsers: User[] = [];
   @Input() availableRoles: string[] = ['ADMIN', 'MEMBER', 'OBSERVER'];
   @Input() projectId: number = 0;
+  @Input() currentUserRole: string | null = null;
   @Input() editing: boolean = false;
 
   addParticipantForm: FormGroup;

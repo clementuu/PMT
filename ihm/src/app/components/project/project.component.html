@@ -5,15 +5,17 @@
       @if (!isEditing) {
           <div class="flex">
             <h1>{{ project.nom }}</h1>
-            <div class="flex">
-              <button class="btn btn-secondary me-1" type="button" (click)="startEditing()"><i class="bi bi-pencil-square"></i> Modifier</button>
-              <button class="btn btn-danger" title="supprimer" type="button" (click)="deleteProject()"><i class="bi bi-trash"></i></button>
-            </div>
+            @if (currentUserRole !== 'OBSERVER') {
+              <div class="flex">
+                <button class="btn btn-secondary me-1" type="button" (click)="startEditing()"><i class="bi bi-pencil-square"></i> Modifier</button>
+                <button class="btn btn-danger" title="supprimer" type="button" (click)="deleteProject()"><i class="bi bi-trash"></i></button>
+              </div>
+            }
           </div>
           <p>{{ project.description }}</p>
           <small>Date de début: {{ project.dateDebut | date: 'dd/MM/yyyy' }}</small><br>
           <small>Date de fin: {{ project.dateFin | date: 'dd/MM/yyyy' }}</small>
-      } @else if (isEditing) {
+      } @else if (isEditing && currentUserRole !== 'OBSERVER') {
         <form [formGroup]="projectForm" (ngSubmit)="updateProject()">
           <div class="input-group">
             <label for="nom">Nom du projet:</label>
@@ -38,7 +40,9 @@
     <!-- Task Section -->
     <div class="flex mt-3 mb-2">
       <h3>Tâches</h3>
-      <button class="btn btn-primary" type="button" (click)="goToNewTask()"><i class="bi bi-plus"></i> Nouvelle tâche</button>
+      @if (currentUserRole !== 'OBSERVER') {
+        <button class="btn btn-primary" type="button" (click)="goToNewTask()"><i class="bi bi-plus"></i> Nouvelle tâche</button>
+      }
     </div>
 
     <!-- Task Board Section -->
@@ -46,11 +50,12 @@
       <div class="task-column"
            id="TODO"
            cdkDropList
+           [cdkDropListDisabled]="currentUserRole === 'OBSERVER'"
            [cdkDropListData]="todoTasks"
            (cdkDropListDropped)="drop($event)">
         <h2>À faire</h2>
         @for (task of todoTasks ; track task.id) {
-          <div cdkDrag class="task-card" (click)="goToTaskDetail(task.id)">
+          <div cdkDrag [cdkDragDisabled]="currentUserRole === 'OBSERVER'" class="task-card" (click)="goToTaskDetail(task.id)">
             <div class="priority-indicator" [ngClass]="{
               'priority-high': task.priorite === 'HIGH',
               'priority-medium': task.priorite === 'MEDIUM',
@@ -65,11 +70,12 @@
       <div class="task-column"
            id="IN_PROGRESS"
            cdkDropList
+           [cdkDropListDisabled]="currentUserRole === 'OBSERVER'"
            [cdkDropListData]="inProgressTasks"
            (cdkDropListDropped)="drop($event)">
         <h2>En cours</h2>
         @for (task of inProgressTasks ; track task.id) {
-          <div cdkDrag class="task-card" (click)="goToTaskDetail(task.id)">
+          <div cdkDrag [cdkDragDisabled]="currentUserRole === 'OBSERVER'" class="task-card" (click)="goToTaskDetail(task.id)">
             <div class="priority-indicator" [ngClass]="{
               'priority-high': task.priorite === 'HIGH',
               'priority-medium': task.priorite === 'MEDIUM',
@@ -84,11 +90,12 @@
       <div class="task-column"
            id="DONE"
            cdkDropList
+           [cdkDropListDisabled]="currentUserRole === 'OBSERVER'"
            [cdkDropListData]="doneTasks"
            (cdkDropListDropped)="drop($event)">
         <h2>Terminé</h2>
         @for (task of doneTasks ; track task.id) {
-          <div cdkDrag class="task-card" (click)="goToTaskDetail(task.id)">
+          <div cdkDrag [cdkDragDisabled]="currentUserRole === 'OBSERVER'" class="task-card" (click)="goToTaskDetail(task.id)">
             <div class="priority-indicator" [ngClass]="{
               'priority-high': task.priorite === 'HIGH',
               'priority-medium': task.priorite === 'MEDIUM',
@@ -111,6 +118,7 @@
         [allUsers]="allUsers"
         [availableRoles]="availableRoles"
         [projectId]="project.id"
+        [currentUserRole]="this.currentUserRole"
         [editing]="true">
       </app-user-project>
     </div>

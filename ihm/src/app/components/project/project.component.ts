@@ -11,7 +11,7 @@ import { UserProjectComponent } from '../user-project/user-project.component';
 import { HistoriqueComponent } from "../historique/historique.component";
 import { AuthService } from '../../services/auth.service';
 import { ProjectUpdatePayload } from '../../models/project-update.model';
-
+import { UserRole } from '../../models/userProject.model'; // Import UserRole
 
 @Component({
   selector: 'app-project',
@@ -27,6 +27,7 @@ export class ProjectComponent implements OnInit, AfterViewInit { // Add AfterVie
   project: Project | null = null;
   projectForm: FormGroup;
   isEditing = false;
+  currentUserRole: string | null = null; // New property to store the current user's role
 
   private authService = inject(AuthService);
 
@@ -78,6 +79,15 @@ export class ProjectComponent implements OnInit, AfterViewInit { // Add AfterVie
       this.apiService.getAllUsers().subscribe(users => {
         this.allUsers = users;
       });
+
+      // Fetch current user's role for this project
+      if (this.authService.user && this.project.id) {
+        this.apiService.getUsersProject(this.project.id).subscribe(usersProject => {
+          const userRole = usersProject.users.find(up => up.userId === this.authService.user?.id);
+          this.currentUserRole = userRole ? userRole.role : null; // Set the role, or null if not found
+        });
+      }
+
 
       // Explicitly reload child components after main project data is loaded
       if (this.historiqueComponent) {

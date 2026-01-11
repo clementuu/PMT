@@ -3,18 +3,20 @@
         @if (!isEditing) {
             <div class="flex">
                 <h2>{{ task.nom }}</h2>
-                <div class="flex">
-                    <button class="btn btn-secondary me-1" type="button" title="retour" [routerLink]="['/project', task.projectId]"><i class="bi bi-reply"></i></button>
-                    <button class="btn btn-primary me-1" type="button" title="modifier" (click)="startEditing()"><i class="bi bi-pencil-square"></i></button>
-                    <button class="btn btn-danger" type="button" title="supprimer" (click)="deleteTask()"><i class="bi bi-trash"></i></button>
-                </div>
+                    <div class="flex">
+                        <button class="btn btn-secondary me-1" type="button" title="retour" [routerLink]="['/project', task.projectId]"><i class="bi bi-reply"></i></button>
+                        @if (currentUserRole !== 'OBSERVER') {
+                            <button class="btn btn-primary me-1" type="button" title="modifier" (click)="startEditing()"><i class="bi bi-pencil-square"></i></button>
+                            <button class="btn btn-danger" type="button" title="supprimer" (click)="deleteTask()"><i class="bi bi-trash"></i></button>
+                        }
+                    </div>
             </div>
             <p><strong>Description:</strong> {{ task.description }}</p>
             <p><strong>Statut:</strong> {{ getStatusDisplayName(task.status) }}</p>
             <p><strong>Priorité:</strong> {{ getPriorityDisplayName(task.priorite) }}</p>
             <p><strong>Date d'échéance:</strong> {{ task.dateEcheance | date:'dd/MM/yyyy' }}</p>
             <p><strong>Date de fin:</strong> {{ task.dateFin | date:'dd/MM/yyyy' }}</p>
-        } @else {
+        } @else if (currentUserRole !== 'OBSERVER') {
             <form [formGroup]="taskForm" (ngSubmit)="updateTask()">
                 <div class="form-group">
                     <label for="nom">Nom</label>
@@ -50,8 +52,8 @@
                 </div>
             </form>
         }
-        @if (task.id) {
-            <app-task-assign [taskId]="task.id" [projectId]="task.projectId" (taskAssigned)="onTaskAssigned()"></app-task-assign>
+        @if (task.id && currentUserRole !== 'OBSERVER') {
+            <app-task-assign [taskId]="task.id" [projectId]="task.projectId" [currentUserRole]="this.currentUserRole" (taskAssigned)="onTaskAssigned()"></app-task-assign>
             <app-historique [taskId]="task.id"></app-historique>
         }
     </div>

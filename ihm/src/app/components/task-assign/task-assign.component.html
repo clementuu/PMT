@@ -4,24 +4,28 @@
     @for (user of assigned; track user.id) {
       <div class="user-tag">
         {{ user.username }}
-        <button type="button" class="remove-btn" (click)="unassignUser(user.id)"><i class="bi bi-backspace"></i></button>
-      </div>
+        @if (this.currentUserRole != 'OBSERVER') {
+          <button type="button" class="remove-btn" (click)="unassignUser(user.id)"><i class="bi bi-backspace"></i></button>
+        }
+        </div>
     } 
     @if (assigned.length === 0) {
       <p class="no-users">Aucun utilisateur assigné pour le moment.</p>
     }
   </div>
 
-  <div class="add-user-form">
-    <h4>Nouveau membre</h4>
-    <div class="form-group">
-      <select class="form-control" name="userSelect" [(ngModel)]="selectedUserId" name="selectedUserId">
-        <option [ngValue]="undefined" disabled>-- Sélectionner un utilisateur --</option>
-        @for (user of users; track user.id) {
-          <option [ngValue]="user.id">{{ user.nom }}</option>
-        }
-      </select>
-      <button type="button" class="btn btn-primary" (click)="assignTask()" [disabled]="!selectedUserId">Assigner</button>
+  @if (this.currentUserRole != 'OBSERVER') {
+    <div class="add-user-form">
+      <h4>Nouveau membre</h4>
+      <div class="form-group">
+        <select class="form-control" name="userSelect" [(ngModel)]="selectedUserId" name="selectedUserId">
+          <option [ngValue]="undefined" disabled>-- Sélectionner un utilisateur --</option>
+          @for (user of users; track user.id) {
+            <option [ngValue]="user.id">{{ user.nom }}</option>
+          }
+        </select>
+        <button type="button" class="btn btn-primary" (click)="assignTask()" [disabled]="!selectedUserId">Assigner</button>
+      </div>
     </div>
-  </div>
+  }
 </div>

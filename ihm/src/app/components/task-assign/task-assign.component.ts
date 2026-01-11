@@ -14,6 +14,7 @@ import { Assigned, User } from '../../models/user.model';
 export class TaskAssignComponent implements OnInit {
   @Input() taskId!: number;
   @Input() projectId!: number;
+  @Input() currentUserRole: string | null = null;
   @Output() taskAssigned = new EventEmitter<void>();
 
   users: User[] = [];
