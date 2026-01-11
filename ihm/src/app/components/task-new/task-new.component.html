@@ -29,7 +29,9 @@
     <div class="form-group">
       <label for="priorite">Priorité</label>
       <select id="priorite" formControlName="priorite" class="form-control">
-        <option *ngFor="let p of priorities" [value]="p">{{ p }}</option>
+        @for (p of priorities; track p) {
+          <option [value]="p">{{ getPriorityDisplayName(p) }}</option>
+        }
       </select>
     </div>
 

@@ -17,6 +17,13 @@ export class TaskNewComponent implements OnInit {
   projectId!: number;
   priorities: Task['priorite'][] = ['LOW', 'MEDIUM', 'HIGH'];
 
+  // Mappings pour l'affichage
+  priorityDisplayNames: { [key: string]: string } = {
+    'LOW': 'Faible',
+    'MEDIUM': 'Moyenne',
+    'HIGH': 'Importante'
+  };
+
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
@@ -60,5 +67,10 @@ export class TaskNewComponent implements OnInit {
         }
       });
     }
+  }
+
+  // Method to get the display name for priority
+  getPriorityDisplayName(priority: string): string {
+    return this.priorityDisplayNames[priority] || priority;
   }
 }

@@ -36,6 +36,7 @@
 }
 
 .task-card {
+  position: relative; /* Needed for absolute positioning of the indicator */
   background-color: #fff;
   padding: 15px;
   border-radius: 5px;
@@ -46,6 +47,28 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-size: 0.9em;
   cursor: pointer;
+}
+
+.priority-indicator {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 8px; /* Width of the color bar */
+  height: 100%; /* Full height of the card */
+  border-top-right-radius: 5px; /* Match card's border-radius */
+  border-bottom-right-radius: 5px; /* Match card's border-radius */
+}
+
+.priority-high {
+  background-color: #dc3545; /* Red for high priority */
+}
+
+.priority-medium {
+  background-color: #ffc107; /* Yellow for medium priority */
+}
+
+.priority-low {
+  background-color: #28a745; /* Green for low priority */
 }
 
 .task-card:hover {

@@ -50,6 +50,11 @@
         <h2>À faire</h2>
         @for (task of todoTasks ; track task.id) {
           <div cdkDrag class="task-card" (click)="goToTaskDetail(task.id)">
+            <div class="priority-indicator" [ngClass]="{
+              'priority-high': task.priorite === 'HIGH',
+              'priority-medium': task.priorite === 'MEDIUM',
+              'priority-low': task.priorite === 'LOW'
+            }"></div>
             <h3>{{ task.nom }}</h3>
             <p>{{ task.description }}</p>
             <small>Échéance: {{ task.dateEcheance | date: 'dd/MM/yyyy' }}</small>
@@ -64,6 +69,11 @@
         <h2>En cours</h2>
         @for (task of inProgressTasks ; track task.id) {
           <div cdkDrag class="task-card" (click)="goToTaskDetail(task.id)">
+            <div class="priority-indicator" [ngClass]="{
+              'priority-high': task.priorite === 'HIGH',
+              'priority-medium': task.priorite === 'MEDIUM',
+              'priority-low': task.priorite === 'LOW'
+            }"></div>
             <h3>{{ task.nom }}</h3>
             <p>{{ task.description }}</p>
             <small>Échéance: {{ task.dateEcheance | date: 'dd/MM/yyyy' }}</small>
@@ -78,6 +88,11 @@
         <h2>Terminé</h2>
         @for (task of doneTasks ; track task.id) {
           <div cdkDrag class="task-card" (click)="goToTaskDetail(task.id)">
+            <div class="priority-indicator" [ngClass]="{
+              'priority-high': task.priorite === 'HIGH',
+              'priority-medium': task.priorite === 'MEDIUM',
+              'priority-low': task.priorite === 'LOW'
+            }"></div>
             <h3>{{ task.nom }}</h3>
             <p>{{ task.description }}</p>
             <small>Échéance: {{ task.dateEcheance | date: 'dd/MM/yyyy' }}</small>
