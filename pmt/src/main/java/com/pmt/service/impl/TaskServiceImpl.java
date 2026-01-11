@@ -84,7 +84,10 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Task create(TaskDTO dto) {
         if(dto.getNom() == null || dto.getNom().isBlank()) {
-            throw new ValidationException("La tâche doit avoir un nom");
+            throw new ValidationException("Le nom de la tâche est obligatoire.");
+        }
+        if(dto.getDescription() == null || dto.getDescription().isBlank()) {
+            throw new ValidationException("La description de la tâche est obligatoire.");
         }
         // controle les tache sans projet
         if (dto.getProjectId() == null) {
@@ -113,6 +116,12 @@ public class TaskServiceImpl implements TaskService {
     public TaskDTO update(TaskDTO task) {
         if (task.getId() == null) {
             throw new ValidationException("L'ID de la tâche est requis pour la mise à jour.");
+        }
+        if (task.getNom() == null || task.getNom() == "") {
+            throw new ValidationException("Le nom de la tâche est obligatoire.");
+        }
+        if (task.getDescription() == null || task.getDescription() == "") {
+            throw new ValidationException("La description de la tâche est obligatoire.");
         }
         Task existingTask = taskStore.findById(task.getId())
                 .orElseThrow(() -> new EntityNotFoundException("La tâche avec l'ID " + task.getId() + " n'existe pas."));

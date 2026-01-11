@@ -22,6 +22,8 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -132,10 +134,63 @@ class TaskServiceImplTest {
     }
 
     @Test
+    void testCreate_MissingName() {
+        taskDTO.setNom(null);
+
+        Exception exception = assertThrows(ValidationException.class, () -> {
+            taskService.create(taskDTO);
+        });
+
+        assertEquals("Le nom de la tâche est obligatoire.", exception.getMessage());
+        verify(projectStore, never()).findById(anyLong());
+        verify(taskStore, never()).save(any(Task.class));
+    }
+
+    @Test
+    void testCreate_MissingDescription() {
+        taskDTO.setDescription(null);
+
+        Exception exception = assertThrows(ValidationException.class, () -> {
+            taskService.create(taskDTO);
+        });
+
+        assertEquals("La description de la tâche est obligatoire.", exception.getMessage());
+        verify(projectStore, never()).findById(anyLong());
+        verify(taskStore, never()).save(any(Task.class));
+    }
+
+    @Test
+    void testCreate_MissingProjectId() {
+        taskDTO.setProjectId(null);
+
+        Exception exception = assertThrows(ValidationException.class, () -> {
+            taskService.create(taskDTO);
+        });
+
+        assertEquals("La tâche doit être associée à un projet.", exception.getMessage());
+        verify(projectStore, never()).findById(anyLong());
+        verify(taskStore, never()).save(any(Task.class));
+    }
+
+    @Test
+    void testUpdate_MissingName() {
+        TaskDTO updatedInfo = new TaskDTO();
+        updatedInfo.setId(101L);
+        updatedInfo.setNom(null);
+
+        Exception exception = assertThrows(ValidationException.class, () -> {
+            taskService.update(updatedInfo);
+        });
+
+        assertEquals("Le nom de la tâche est obligatoire.", exception.getMessage());
+    }
+
+    @Test
     void testUpdate_Success() {
         TaskDTO updatedInfo = new TaskDTO();
         updatedInfo.setId(101L);
         updatedInfo.setNom("Updated Name");
+        updatedInfo.setDescription("Updated Description");
         
         when(taskStore.findById(101L)).thenReturn(Optional.of(task));
         when(taskStore.save(any(Task.class))).thenAnswer(invocation -> invocation.getArgument(0));
@@ -152,6 +207,8 @@ class TaskServiceImplTest {
     void testUpdate_TaskNotFound() {
         TaskDTO updatedInfo = new TaskDTO();
         updatedInfo.setId(101L);
+        updatedInfo.setNom("Name");
+        updatedInfo.setDescription("Description");
 
         when(taskStore.findById(101L)).thenReturn(Optional.empty());
 

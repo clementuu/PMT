@@ -23,8 +23,6 @@ import com.pmt.store.TaskStore;
 import com.pmt.store.ProjectUserStore;
 import com.pmt.store.TaskAssignStore;
 
-import jakarta.persistence.EntityNotFoundException;
-
 @Service
 public class ProjectServiceImpl implements ProjectService {
     @Autowired
@@ -74,7 +72,7 @@ public class ProjectServiceImpl implements ProjectService {
             throw new ValidationException("L'ID du projet est requis pour la mise à jour.");
         }
         Project existingProject = projectStore.findById(project.getProject().getId())
-                .orElseThrow(() -> new EntityNotFoundException("Le projet avec l'ID " + project.getProject().getId() + " n'existe pas."));
+                .orElseThrow(() -> new ValidationException("Le projet avec l'ID " + project.getProject().getId() + " n'existe pas."));
 
         User user = userService.findById(project.getUserId());
 

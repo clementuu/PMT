@@ -1,8 +1,11 @@
 package com.pmt.service.impl;
 
+import com.pmt.dto.ProjectUpdate;
 import com.pmt.errors.ValidationException;
 import com.pmt.model.Project;
 import com.pmt.model.Task;
+import com.pmt.service.UserService;
+import com.pmt.store.HistoriqueStore;
 import com.pmt.store.ProjectStore;
 import com.pmt.store.ProjectUserStore;
 import com.pmt.store.TaskAssignStore;
@@ -20,6 +23,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -36,6 +41,10 @@ class ProjectServiceImplTest {
     private TaskAssignStore taskAssignStore;
     @Mock
     private ProjectUserStore projectUserStore;
+    @Mock
+    private UserService userService;
+    @Mock
+    private HistoriqueStore historiqueStore;
 
     private Project project;
     private Task task1;
@@ -137,6 +146,55 @@ class ProjectServiceImplTest {
 
         assertEquals("Le projet doit avoir une description", exception.getMessage());
         verify(projectStore, never()).save(any(Project.class));
+    }
+
+    @Test
+    void testUpdate_ProjectNotFound() {
+        Project updatedProjectDetails = new Project();
+        updatedProjectDetails.setId(99L); // Non-existent ID
+        updatedProjectDetails.setNom("New Name");
+        updatedProjectDetails.setDescription("New Description");
+
+        ProjectUpdate updatedDTO = new ProjectUpdate();
+        updatedDTO.setProject(updatedProjectDetails);
+        updatedDTO.setUserId(2L);
+        when(projectStore.findById(99L)).thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(ValidationException.class, () -> {
+            projectService.update(updatedDTO);
+        });
+
+        assertEquals("Le projet avec l'ID 99 n'existe pas.", exception.getMessage());
+        verify(projectStore).findById(99L);
+        verify(projectStore, never()).save(any(Project.class));
+    }
+
+    @Test
+    void testUpdate_Success() {
+        Project existingProject = new Project();
+        existingProject.setId(1L);
+        existingProject.setNom("Old Name");
+        existingProject.setDescription("Old Description");
+
+        Project newProject = new Project();
+        newProject.setId(1L);
+        newProject.setNom("New Name");
+        newProject.setDescription("New Description");
+
+
+        ProjectUpdate updatedProjectDetails = new ProjectUpdate();
+        updatedProjectDetails.setProject(newProject);
+
+        when(projectStore.findById(1L)).thenReturn(Optional.of(existingProject));
+        when(projectStore.save(any(Project.class))).thenReturn(newProject);
+
+        Project result = projectService.update(updatedProjectDetails);
+
+        assertNotNull(result);
+        assertEquals("New Name", result.getNom());
+        assertEquals("New Description", result.getDescription());
+        verify(projectStore).findById(1L);
+        verify(projectStore).save(existingProject); // Verify that the modified existingProject is saved
     }
 
     @Test
