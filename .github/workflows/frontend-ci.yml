@@ -1,0 +1,34 @@
+name: Frontend CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20' # Use a recent stable Node.js version
+        cache: 'npm'
+
+    - name: Install Frontend Dependencies
+      run: npm ci
+      working-directory: ihm
+
+    - name: Run Frontend Tests
+      run: npm test -- --no-watch --browsers=ChromeHeadless
+      working-directory: ihm
+
+    - name: Build Frontend
+      run: npm run build -- --configuration=production
+      working-directory: ihm
