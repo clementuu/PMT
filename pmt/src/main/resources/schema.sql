@@ -9,6 +9,7 @@ CREATE TABLE project (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(100),
     description TEXT,
+    date_debut DATE,
     date_fin DATE
 );
 

@@ -11,6 +11,7 @@
             </div>
           </div>
           <p>{{ project.description }}</p>
+          <small>Date de début: {{ project.dateDebut | date: 'dd/MM/yyyy' }}</small><br>
           <small>Date de fin: {{ project.dateFin | date: 'dd/MM/yyyy' }}</small>
       } @else if (isEditing) {
         <form [formGroup]="projectForm" (ngSubmit)="updateProject()">

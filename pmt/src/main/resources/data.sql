@@ -5,9 +5,9 @@ INSERT INTO user_app (nom, email, mdp) VALUES
 
 
 -- Projets
-INSERT INTO project (nom, description, date_fin) VALUES
-('Site Web Vitrine', 'Création d’un site web vitrine pour une PME.', '2025-09-30'),
-('Application Mobile', 'Développement d’une appli iOS/Android.', '2025-12-15');
+INSERT INTO project (nom, description, date_debut, date_fin) VALUES
+('Site Web Vitrine', 'Création d’un site web vitrine pour une PME.', '2025-01-30', '2025-09-30'),
+('Application Mobile', 'Développement d’une appli iOS/Android.', '2025-03-15', '2025-12-15');
 
 -- Rôles dans les projets
 INSERT INTO project_user (user_id, project_id, role) VALUES

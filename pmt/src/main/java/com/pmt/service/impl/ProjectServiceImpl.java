@@ -102,6 +102,10 @@ public class ProjectServiceImpl implements ProjectService {
             existingProject.setDescription(project.getProject().getDescription());
         }
 
+        if (project.getProject().getDateDebut() != null) {
+            existingProject.setDateDebut(project.getProject().getDateDebut());
+        }
+
         if (project.getProject().getDateFin() != null) {
             existingProject.setDateFin(project.getProject().getDateFin());
         }

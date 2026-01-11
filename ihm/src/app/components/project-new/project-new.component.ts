@@ -34,6 +34,7 @@ export class ProjectNewComponent implements OnInit {
     this.projectForm = this.fb.group({
       nom: ['', Validators.required],
       description: ['', Validators.required],
+      dateDebut: ['', Validators.required],
       dateFin: [''],
     });
   }
@@ -68,11 +69,14 @@ export class ProjectNewComponent implements OnInit {
       return;
     }
 
-    const { nom, description, dateFin } = this.projectForm.value;
+    console.log(this.projectForm.value);
+
+    const { nom, description, dateFin, dateDebut } = this.projectForm.value;
 
     const newProject: Partial<Project> = {
       nom,
       description,
+      dateDebut: new Date(dateDebut),
       dateFin: dateFin ? new Date(dateFin) : undefined,
     };
 

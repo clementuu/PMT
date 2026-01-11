@@ -21,6 +21,7 @@ public class Project {
     private Long id;
     private String nom;
     private String description;
+    private LocalDate dateDebut;
     private LocalDate dateFin;
     // Liste des tâches du projet
     @OneToMany(mappedBy = "project")
@@ -49,6 +50,12 @@ public class Project {
     public void setDescription(String description) {
         this.description = description;
     }
+    public LocalDate getDateDebut() {
+        return dateDebut;
+    }
+    public void setDateDebut(LocalDate dateDebut) {
+        this.dateDebut = dateDebut;
+    }
     public LocalDate getDateFin() {
         return dateFin;
     }
@@ -58,7 +65,6 @@ public class Project {
     public List<Task> getTasks() {
         return tasks;
     }
-
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
     }
