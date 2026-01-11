@@ -52,7 +52,7 @@
                 </div>
             </form>
         }
-        @if (task.id && currentUserRole !== 'OBSERVER') {
+        @if (task.id) {
             <app-task-assign [taskId]="task.id" [projectId]="task.projectId" [currentUserRole]="this.currentUserRole" (taskAssigned)="onTaskAssigned()"></app-task-assign>
             <app-historique [taskId]="task.id"></app-historique>
         }
