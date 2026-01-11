@@ -26,6 +26,7 @@ jobs:
     - name: Build with Maven
       run: |
         cd pmt
+        chmod +x ./mvnw # Add execute permission
         ./mvnw clean install -DskipTests
 
     - name: Run Backend Tests
