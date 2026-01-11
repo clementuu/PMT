@@ -5,7 +5,7 @@
       @if (!isEditing) {
           <div class="flex">
             <h1>{{ project.nom }}</h1>
-            @if (currentUserRole !== 'OBSERVER') {
+            @if (currentUserRole === 'ADMIN') {
               <div class="flex">
                 <button class="btn btn-secondary me-1" type="button" (click)="startEditing()"><i class="bi bi-pencil-square"></i> Modifier</button>
                 <button class="btn btn-danger" title="supprimer" type="button" (click)="deleteProject()"><i class="bi bi-trash"></i></button>
@@ -15,7 +15,7 @@
           <p>{{ project.description }}</p>
           <small>Date de début: {{ project.dateDebut | date: 'dd/MM/yyyy' }}</small><br>
           <small>Date de fin: {{ project.dateFin | date: 'dd/MM/yyyy' }}</small>
-      } @else if (isEditing && currentUserRole !== 'OBSERVER') {
+      } @else if (isEditing && currentUserRole === 'ADMIN') {
         <form [formGroup]="projectForm" (ngSubmit)="updateProject()">
           <div class="input-group">
             <label for="nom">Nom du projet:</label>
@@ -40,7 +40,7 @@
     <!-- Task Section -->
     <div class="flex mt-3 mb-2">
       <h3>Tâches</h3>
-      @if (currentUserRole !== 'OBSERVER') {
+      @if (currentUserRole === 'ADMIN' || currentUserRole === 'MEMBER') {
         <button class="btn btn-primary" type="button" (click)="goToNewTask()"><i class="bi bi-plus"></i> Nouvelle tâche</button>
       }
     </div>

@@ -73,12 +73,12 @@ export class UserProjectComponent implements OnChanges, OnInit {
   }
 
   addParticipant(participant: Partial<UserRole> | null = null): void {
-    const isObserver = this.currentUserRole === 'OBSERVER';
+    const isAdmin = this.currentUserRole === 'ADMIN';
 
     const participantForm = this.fb.group({
       id: [participant?.id],
-      userId: [{ value: participant?.userId || '', disabled: isObserver }, Validators.required],
-      role: [{ value: participant?.role || 'MEMBER', disabled: isObserver }, Validators.required]
+      userId: [{ value: participant?.userId || '', disabled: !isAdmin }, Validators.required],
+      role: [{ value: participant?.role || 'MEMBER', disabled: !isAdmin }, Validators.required]
     });
     this.participants.push(participantForm);
   }

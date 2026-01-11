@@ -51,6 +51,7 @@ describe('ProjectComponent', () => {
     id: 101,
     nom: 'Test Project',
     description: 'Project Description',
+    dateDebut: new Date('2024-01-31'),
     dateFin: new Date('2024-12-31'),
     tasks: [
       { id: 1, nom: 'Task 1', status: 'TODO', projectId: 101 } as Task,
