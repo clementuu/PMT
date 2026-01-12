@@ -4,20 +4,22 @@ Outil de gestion de projet collaboratif destiné aux équipes de développement 
 
 ## Table des matières
 
-- [Architecture](#-architecture)
-- [Structure du projet](#-structure-du-projet)
-- [Dépendances](#-dépendances)
+- [Architecture](#architecture)
+- [Structure du projet](#structure-du-projet)
+- [Dépendances](#dépendances)
   - [Backend](#backend)
   - [Frontend](#frontend)
-- [Commandes](#-commandes)
-- [API Endpoints](#-api-endpoints)
+- [Commandes](#commandes)
+- [API Endpoints](#api-endpoints)
   - [Authentification](#authentification)
   - [Projets](#projets)
   - [Tâches](#tâches)
   - [Utilisateurs](#utilisateurs)
   - [Historique](#historique)
-- [Composants Frontend](#-composants-frontend)
-- [Démarrage rapide](#-démarrage-rapide)
+- [Composants Frontend](#composants-frontend)
+- [Démarrage rapide](#démarrage-rapide)
+- [Users stories](#users-stories)
+- [Rapport de tests](#rapport-de-tests)
 
 ---
 
@@ -154,7 +156,7 @@ Liste des principaux composants Angular dans `ihm/src/app/components` :
 
 ---
 
-## Liste des users stories :
+## Users stories
 
     - En tant que visiteur, je veux pouvoir m'inscrire avec un nom d’utilisateur, une adresse email et un mot de passe afin d’avoir un compte sur la plateforme. 
 
@@ -179,3 +181,8 @@ Liste des principaux composants Angular dans `ihm/src/app/components` :
     - En tant qu’administrateur, membre ou observateur, je veux pouvoir recevoir des notifications par e-mail lorsqu'une tâche est assignée. 
     
     - En tant qu’administrateur, membre ou observateur, je veux pouvoir suivre l'historique des modifications apportées aux tâches.
+
+## Rapport de tests
+
+- Rapport des tests front : `./ihm/coverage/ihm/index.html`
+- Rapport des tests back : `./pmt/target/site/jacoco/index.html`
