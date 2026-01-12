@@ -23,6 +23,11 @@ import com.pmt.store.TaskStore;
 import com.pmt.store.ProjectUserStore;
 import com.pmt.store.TaskAssignStore;
 
+/**
+ * Implémentation du service pour la gestion des projets.
+ * Fournit les fonctionnalités de création, lecture, mise à jour et suppression (CRUD) des projets,
+ * ainsi que la gestion de leur historique et des entités liées (tâches, utilisateurs).
+ */
 @Service
 public class ProjectServiceImpl implements ProjectService {
     @Autowired
@@ -39,6 +44,10 @@ public class ProjectServiceImpl implements ProjectService {
     @Autowired
     UserService userService;
 
+    /**
+     * Récupère tous les projets.
+     * @return Une liste de tous les objets Project.
+     */
     @Override
     public List<Project> findAll() {
         List<Project> projects = new ArrayList<Project>();
@@ -47,12 +56,25 @@ public class ProjectServiceImpl implements ProjectService {
         return projects;
     }
 
+    /**
+     * Recherche un projet par son identifiant.
+     * @param id L'identifiant unique du projet.
+     * @return L'objet Project correspondant.
+     * @throws ValidationException si aucun projet n'est trouvé avec l'ID spécifié.
+     */
     @Override
     public Project findById(Long id) {
         return projectStore.findById(id)
             .orElseThrow(() -> new ValidationException("Projet non trouvé avec l'ID: " + id));
     }
 
+    /**
+     * Crée un nouveau projet.
+     * Effectue une validation minimale sur le nom et la description du projet.
+     * @param project L'objet Project à créer.
+     * @return L'objet Project créé et sauvegardé.
+     * @throws ValidationException si le nom ou la description du projet est vide.
+     */
     @Override
     public Project create(Project project) {
         if(project.getNom() == null || project.getNom().isBlank()) {
@@ -66,6 +88,13 @@ public class ProjectServiceImpl implements ProjectService {
         return projectStore.save(project);
     }
 
+    /**
+     * Met à jour un projet existant.
+     * Enregistre les modifications apportées au nom et à la description dans l'historique du projet.
+     * @param project L'objet ProjectUpdate contenant l'ID du projet et les nouvelles données.
+     * @return L'objet Project mis à jour.
+     * @throws ValidationException si l'ID du projet est manquant ou si le projet n'existe pas.
+     */
     @Override
     public Project update(ProjectUpdate project) {
         if (project.getProject().getId() == null) {
@@ -113,6 +142,12 @@ public class ProjectServiceImpl implements ProjectService {
         return projectStore.save(existingProject);
     }
 
+    /**
+     * Supprime un projet et toutes ses entités liées (tâches, assignations, associations utilisateurs-projets).
+     * Cette opération est transactionnelle.
+     * @param id L'identifiant unique du projet à supprimer.
+     * @throws ValidationException si l'ID du projet est null.
+     */
     @Override
     @Transactional
     public void deleteProject(Long id) {

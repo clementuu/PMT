@@ -11,21 +11,39 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
-// Classe représentant les utilisateurs
+/**
+ * Représente un utilisateur de l'application.
+ */
 @Entity
 @Table(name = "user_app")
 public class User {
+    /**
+     * Identifiant unique de l'utilisateur.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    /**
+     * Le nom de l'utilisateur.
+     */
     private String nom;
+    /**
+     * L'adresse email de l'utilisateur (unique).
+     */
     @Column(unique = true, nullable = false)
     private String email;
+    /**
+     * Le mot de passe de l'utilisateur.
+     */
     private String mdp;
-    // Liste des tâches assignées
+    /**
+     * Liste des tâches assignées à l'utilisateur.
+     */
     @ManyToMany
     private List<Task> tasks;
-    // Liste des projets
+    /**
+     * Liste des projets auxquels l'utilisateur est associé, avec son rôle.
+     */
     @OneToMany(mappedBy = "user")
     private List<ProjectUser> projectUsers;
 

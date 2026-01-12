@@ -21,17 +21,29 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 
+/**
+ * Contrôleur pour les opérations CRUD sur les projets.
+ */
 @RestController
 @RequestMapping("/project")
 public class ProjectController {
     @Autowired
     ProjectService projectService;
 
+    /**
+     * Récupère la liste de tous les projets.
+     * @return Une liste de projets.
+     */
     @GetMapping("")
     public List<Project> getAll() {
         return projectService.findAll();
     }
 
+    /**
+     * Récupère un projet par son ID.
+     * @param id L'ID du projet.
+     * @return Le projet correspondant.
+     */
     @GetMapping("{id}")
     public ResponseEntity<Project> getProject(@PathVariable Long id) {
         try {
@@ -42,6 +54,11 @@ public class ProjectController {
         }
     }
 
+    /**
+     * Crée un nouveau projet.
+     * @param project Le projet à créer.
+     * @return Le projet créé.
+     */
     @PostMapping("")
     public ResponseEntity<?> createProject(@RequestBody Project project) {
         try {
@@ -52,6 +69,11 @@ public class ProjectController {
         }
     }
 
+    /**
+     * Met à jour un projet existant.
+     * @param project Les informations de mise à jour du projet.
+     * @return Le projet mis à jour.
+     */
     @PutMapping("")
     public ResponseEntity<?> putProject(@RequestBody ProjectUpdate project) {
         try {
@@ -62,6 +84,11 @@ public class ProjectController {
         }
     }
 
+    /**
+     * Supprime un projet par son ID.
+     * @param id L'ID du projet à supprimer.
+     * @return Une réponse HTTP sans contenu.
+     */
     @DeleteMapping("{id}")
     public ResponseEntity<?> deleteProject(@PathVariable Long id) {
         try {

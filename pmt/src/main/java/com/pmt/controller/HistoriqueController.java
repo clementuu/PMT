@@ -14,15 +14,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-
-
-
+/**
+ * Contrôleur pour la gestion de l'historique des projets et des tâches.
+ */
 @RestController
 @RequestMapping("/historique")
 public class HistoriqueController {
     @Autowired
     HistoriqueService historiqueService;
     
+    /**
+     * Récupère l'historique d'un projet par son ID.
+     * @param id L'ID du projet.
+     * @return La liste des entrées d'historique pour le projet.
+     */
     @GetMapping("/project/{id}")
     public ResponseEntity<?> getProjetHistorique(@PathVariable Long id) {
         try {
@@ -33,6 +38,11 @@ public class HistoriqueController {
         }
     }
     
+    /**
+     * Récupère l'historique d'une tâche par son ID.
+     * @param id L'ID de la tâche.
+     * @return La liste des entrées d'historique pour la tâche.
+     */
     @GetMapping("/task/{id}")
     public ResponseEntity<?>getTaskHistorique(@PathVariable Long id) {
         try {

@@ -4,8 +4,17 @@ import com.pmt.model.Role;
 
 import java.util.List;
 
+/**
+ * DTO représentant les utilisateurs associés à un projet avec leurs rôles.
+ */
 public class UsersProject {
+    /**
+     * L'identifiant du projet.
+     */
     private Long projectId;
+    /**
+     * Liste des utilisateurs et de leurs rôles pour le projet.
+     */
     private List<UserRoleDTO> users; // List of userId and role
 
     public Long getProjectId() {
@@ -24,9 +33,21 @@ public class UsersProject {
         this.users = users;
     }
 
+    /**
+     * DTO représentant l'identifiant d'un utilisateur et son rôle au sein d'un projet.
+     */
     public static class UserRoleDTO {
+        /**
+         * Identifiant du UserProject (relation entre l'utilisateur et le projet).
+         */
         private Long id;
+        /**
+         * Identifiant de l'utilisateur.
+         */
         private Long userId;
+        /**
+         * Le rôle de l'utilisateur dans le projet.
+         */
         private Role role;
 
         public Long getId() {

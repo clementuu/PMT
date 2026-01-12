@@ -21,12 +21,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+/**
+ * Contrôleur pour les opérations CRUD sur les tâches.
+ */
 @RestController
 @RequestMapping("/task")
 public class TaskController {
     @Autowired
     TaskService taskService;
 
+    /**
+     * Récupère la liste de toutes les tâches.
+     * @return Une liste de tâches.
+     */
     @GetMapping("")  
     public ResponseEntity<?> getAll() {
         try {
@@ -37,6 +44,11 @@ public class TaskController {
         }
     }
 
+    /**
+     * Récupère une tâche par son ID.
+     * @param id L'ID de la tâche.
+     * @return La tâche correspondante.
+     */
     @GetMapping("{id}")
     public ResponseEntity<?> getTaskById(@PathVariable Long id) {
         try {
@@ -47,6 +59,11 @@ public class TaskController {
         }
     }
     
+    /**
+     * Crée une nouvelle tâche.
+     * @param dto Les données de la tâche à créer.
+     * @return La tâche créée.
+     */
     @PostMapping("")
     public ResponseEntity<?> createTask(@RequestBody TaskDTO dto) {
         try {
@@ -57,6 +74,11 @@ public class TaskController {
         }
     }
 
+    /**
+     * Met à jour une tâche existante.
+     * @param task Les données de la tâche à mettre à jour.
+     * @return La tâche mise à jour.
+     */
     @PutMapping("")
     public ResponseEntity<?> putTask(@RequestBody TaskDTO task) {
         try {
@@ -67,6 +89,11 @@ public class TaskController {
         }
     }
 
+    /**
+     * Supprime une tâche par son ID.
+     * @param id L'ID de la tâche à supprimer.
+     * @return Une réponse HTTP sans contenu.
+     */
     @DeleteMapping("{id}")
     public ResponseEntity<?> deleteTask(@PathVariable Long id) {
         try {

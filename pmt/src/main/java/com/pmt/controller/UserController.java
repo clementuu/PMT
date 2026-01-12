@@ -3,10 +3,10 @@ package com.pmt.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.pmt.dto.LoginRequest;
+import com.pmt.dto.LoginResponse;
 import com.pmt.errors.AuthException;
 import com.pmt.errors.ValidationException;
-import com.pmt.model.LoginRequest;
-import com.pmt.model.LoginResponse;
 import com.pmt.model.User;
 import com.pmt.service.UserService;
 
@@ -21,13 +21,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
+/**
+ * Contrôleur pour la gestion des utilisateurs et de l'authentification.
+ */
 @RestController
 @RequestMapping("/user")
 public class UserController {
     @Autowired
     UserService userService;
 
+    /**
+     * Récupère la liste de tous les utilisateurs.
+     * @return Une liste d'utilisateurs.
+     */
     @GetMapping("")
     public ResponseEntity<List<User>> getAllUser() {
         try {
@@ -38,6 +44,11 @@ public class UserController {
         }
     }
 
+    /**
+     * Récupère un utilisateur par son ID.
+     * @param id L'ID de l'utilisateur.
+     * @return L'utilisateur correspondant.
+     */
     @GetMapping("{id}")
     public ResponseEntity<User> getUser(@PathVariable Long id) {
         try {
@@ -48,6 +59,11 @@ public class UserController {
         }
     }
 
+    /**
+     * Crée un nouvel utilisateur (inscription).
+     * @param user L'utilisateur à créer.
+     * @return L'utilisateur créé.
+     */
     @PostMapping("")
     public ResponseEntity<?> createUser(@RequestBody User user) {
         try {
@@ -58,6 +74,11 @@ public class UserController {
         }
     }
 
+    /**
+     * Connecte un utilisateur.
+     * @param request Les informations de connexion (email, mot de passe).
+     * @return Une réponse indiquant le succès de la connexion et les informations de l'utilisateur.
+     */
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
         try {
@@ -68,6 +89,11 @@ public class UserController {
         }
     }
 
+    /**
+     * Récupère les utilisateurs associés à un projet spécifique.
+     * @param id L'ID du projet.
+     * @return Une liste d'utilisateurs.
+     */
     @GetMapping("/project/{id}")
     public ResponseEntity<?> getUsersByProjectId(@PathVariable Long id) {
         try {

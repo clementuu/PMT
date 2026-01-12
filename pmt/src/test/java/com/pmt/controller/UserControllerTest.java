@@ -2,9 +2,9 @@ package com.pmt.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pmt.config.TestBeansConfig;
+import com.pmt.dto.LoginRequest;
 import com.pmt.errors.AuthException;
 import com.pmt.errors.ValidationException;
-import com.pmt.model.LoginRequest;
 import com.pmt.model.User;
 import com.pmt.service.UserService;
 

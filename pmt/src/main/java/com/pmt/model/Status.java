@@ -1,8 +1,22 @@
 package com.pmt.model;
 
-// L'utilisation de enumType.ORDINAL peut poser problème si on souhaite modifier cette liste, bien réfléchir aux conséquences
+/**
+ * Représente les différents statuts de progression qu'une tâche peut avoir.
+ * Remarque importante : cette énumération est utilisée avec {@code @Enumerated(EnumType.ORDINAL)}
+ * dans une entité JPA, modifier l'ordre des éléments ou en insérer de nouveaux
+ * pourrait causer des problèmes d'intégrité des données dans la base de données existante.
+ */
 public enum Status {
-    TODO, // 0
-    IN_PROGRESS, // 1
-    DONE // 2
+    /**
+     * La tâche n'a pas encore commencé.
+     */
+    TODO,
+    /**
+     * La tâche est en cours de réalisation.
+     */
+    IN_PROGRESS,
+    /**
+     * La tâche est terminée.
+     */
+    DONE
 }

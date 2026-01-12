@@ -17,6 +17,11 @@ import com.pmt.store.ProjectStore;
 import com.pmt.store.ProjectUserStore;
 import com.pmt.store.UserStore;
 
+/**
+ * Implémentation du service pour la gestion des associations entre projets et utilisateurs.
+ * Permet d'ajouter des utilisateurs à des projets, de récupérer les projets d'un utilisateur
+ * ou les utilisateurs d'un projet, et de supprimer ces associations.
+ */
 @Service
 public class ProjectUserServiceImpl implements ProjectUserService {
     @Autowired
@@ -26,11 +31,22 @@ public class ProjectUserServiceImpl implements ProjectUserService {
     @Autowired
     UserStore userStore;
 
+    /**
+     * Récupère la liste de tous les projets auxquels un utilisateur est associé.
+     * @param userId L'identifiant unique de l'utilisateur.
+     * @return Une liste d'objets Project.
+     */
     @Override
     public List<Project> getProjectsByUserId(Long userId) {
         return projectUserStore.findAllProjectByUserId(userId);
     }
 
+    /**
+     * Ajoute un ou plusieurs utilisateurs à un projet spécifique avec un rôle défini.
+     * @param request L'objet UsersProject contenant l'ID du projet et une liste d'objets UserRoleDTO.
+     * @return Une liste des objets ProjectUser nouvellement créés.
+     * @throws ValidationException si le projet ou un utilisateur spécifié n'est pas trouvé.
+     */
     @Override
     public List<ProjectUser> addUsersToProject(UsersProject request) {
         Project project = projectStore.findById(request.getProjectId())
@@ -51,6 +67,11 @@ public class ProjectUserServiceImpl implements ProjectUserService {
         return addedProjectUsers;
     }
 
+    /**
+     * Récupère les détails de tous les utilisateurs associés à un projet donné.
+     * @param projectId L'identifiant unique du projet.
+     * @return Un objet UsersProject contenant l'ID du projet et une liste d'objets UserRoleDTO.
+     */
     @Override
     public UsersProject getUsersProjectByProjectId(Long projectId) {
         List<ProjectUser> projectUsers = projectUserStore.findByProjectId(projectId);
@@ -79,6 +100,10 @@ public class ProjectUserServiceImpl implements ProjectUserService {
         return usersProjectDTO;
     }
 
+    /**
+     * Supprime une association projet-utilisateur par son identifiant unique.
+     * @param id L'identifiant unique de l'association ProjectUser.
+     */
     public void deleteById(Long id) {
         projectUserStore.deleteById(id);
     }

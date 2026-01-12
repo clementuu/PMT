@@ -1,9 +1,24 @@
 package com.pmt.dto;
 
+/**
+ * DTO représentant l'assignation d'une tâche.
+ */
 public class Assigned {
+    /**
+     * Identifiant unique de l'assignation.
+     */
     private Long id;
+    /**
+     * Identifiant de l'utilisateur assigné.
+     */
     private Long userId;
+    /**
+     * Identifiant de la tâche assignée.
+     */
     private Long taskId;
+    /**
+     * Nom d'utilisateur de la personne assignée.
+     */
     private String username;
 
     public Assigned(Long id, Long userId, Long taskId, String nom) {

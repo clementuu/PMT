@@ -1,8 +1,22 @@
 package com.pmt.model;
 
-// Différents rôle des utilisateurs au sein d'un projet
+/**
+ * Représente les différents rôles qu'un utilisateur peut avoir au sein d'un projet.
+ * Remarque importante : cette énumération est utilisée avec {@code @Enumerated(EnumType.ORDINAL)}
+ * dans une entité JPA, modifier l'ordre des éléments ou en insérer de nouveaux
+ * pourrait causer des problèmes d'intégrité des données dans la base de données existante.
+ */
 public enum Role {
-    ADMIN, // 0
-    MEMBER, // 1
-    OBSERVER // 2
+    /**
+     * Administrateur du projet, avec tous les droits.
+     */
+    ADMIN,
+    /**
+     * Membre du projet, avec des droits de création et de modification.
+     */
+    MEMBER,
+    /**
+     * Observateur du projet, avec des droits de lecture seule.
+     */
+    OBSERVER
 }

@@ -1,8 +1,17 @@
-package com.pmt.model;
+package com.pmt.dto;
 
-// DTO requete login
+/**
+ * DTO représentant la requête de connexion d'un utilisateur.
+ * Utilisé pour transporter les informations d'identification de l'API.
+ */
 public class LoginRequest {
+    /**
+     * Adresse email de l'utilisateur pour la connexion.
+     */
     private String email;
+    /**
+     * Mot de passe de l'utilisateur pour la connexion.
+     */
     private String mdp;
     
     public String getEmail() {

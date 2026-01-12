@@ -19,12 +19,20 @@ import com.pmt.model.Project;
 import com.pmt.model.ProjectUser;
 import com.pmt.service.ProjectUserService;
 
+/**
+ * Contrôleur pour la gestion des utilisateurs au sein des projets.
+ */
 @RestController
 @RequestMapping("/project/user")
 public class ProjectUserController {
     @Autowired
     ProjectUserService projectUserService;
 
+    /**
+     * Récupère tous les projets associés à un utilisateur.
+     * @param userId L'ID de l'utilisateur.
+     * @return Une liste de projets.
+     */
     @GetMapping("{userId}")
     public ResponseEntity<List<Project>> getProjectsByUserId(@PathVariable Long userId) {
         try{
@@ -35,6 +43,11 @@ public class ProjectUserController {
         }
     }
 
+    /**
+     * Ajoute un ou plusieurs utilisateurs à un projet.
+     * @param request La requête contenant l'ID du projet et la liste des utilisateurs.
+     * @return La liste des associations créées.
+     */
     @PostMapping("")
     public ResponseEntity<?> addUsersToProject(@RequestBody UsersProject request) {
         try {
@@ -45,6 +58,11 @@ public class ProjectUserController {
         }
     }
 
+    /**
+     * Récupère la liste des utilisateurs d'un projet spécifique.
+     * @param projectId L'ID du projet.
+     * @return Un objet contenant les informations sur les utilisateurs du projet.
+     */
     @GetMapping("/list/{projectId}")
     public ResponseEntity<UsersProject> getUsersByProjectId(@PathVariable Long projectId) {
         try {
@@ -55,6 +73,11 @@ public class ProjectUserController {
         }
     }
 
+    /**
+     * Supprime l'association d'un utilisateur à un projet par l'ID de l'association.
+     * @param id L'ID de l'enregistrement ProjectUser.
+     * @return Une réponse HTTP sans contenu.
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable Long id) {
         try {

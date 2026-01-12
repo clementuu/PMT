@@ -24,6 +24,11 @@ import com.pmt.store.TaskStore;
 
 import jakarta.persistence.EntityNotFoundException;
 
+/**
+ * Implémentation du service pour la gestion des tâches.
+ * Fournit les fonctionnalités de création, lecture, mise à jour et suppression (CRUD) des tâches,
+ * y compris la gestion de leur association aux projets et leur historique.
+ */
 @Service
 public class TaskServiceImpl implements TaskService {
     @Autowired
@@ -38,6 +43,10 @@ public class TaskServiceImpl implements TaskService {
     @Autowired
     UserService userService;
 
+    /**
+     * Récupère la liste de toutes les tâches existantes sous forme de DTO.
+     * @return Une liste de TaskDTO.
+     */
     @Override
     public List<TaskDTO> findAll() {
         List<Task> tasks = new ArrayList<Task>();
@@ -63,6 +72,12 @@ public class TaskServiceImpl implements TaskService {
         return dtos;
     }
 
+    /**
+     * Recherche une tâche par son identifiant et la renvoie sous forme de DTO.
+     * @param id L'identifiant unique de la tâche.
+     * @return L'objet TaskDTO correspondant.
+     * @throws ValidationException si aucune tâche n'est trouvée avec l'ID spécifié.
+     */
     public TaskDTO findById(Long id) {
         Task task = taskStore.findById(id)
             .orElseThrow(() -> new ValidationException("Tâche non trouvé avec l'ID: " + id));
@@ -81,6 +96,13 @@ public class TaskServiceImpl implements TaskService {
         return dto;
     }
 
+    /**
+     * Crée une nouvelle tâche à partir d'un objet DTO.
+     * Effectue une validation sur les champs obligatoires et l'existence du projet associé.
+     * @param dto L'objet TaskDTO contenant les données de la tâche à créer.
+     * @return L'objet Task créé et sauvegardé.
+     * @throws ValidationException si des champs obligatoires sont manquants ou si le projet n'existe pas.
+     */
     @Override
     public Task create(TaskDTO dto) {
         if(dto.getNom() == null || dto.getNom().isBlank()) {
@@ -89,11 +111,11 @@ public class TaskServiceImpl implements TaskService {
         if(dto.getDescription() == null || dto.getDescription().isBlank()) {
             throw new ValidationException("La description de la tâche est obligatoire.");
         }
-        // controle les tache sans projet
+        // Vérifie si la tâche est associée à un projet
         if (dto.getProjectId() == null) {
             throw new ValidationException("La tâche doit être associée à un projet.");
         }
-        // récupère le projet
+        // Récupère le projet
         Optional<Project> projectOptional = projectStore.findById(dto.getProjectId());
         if (projectOptional.isEmpty()) {
             throw new ValidationException("Le projet spécifié n'existe pas.");
@@ -112,6 +134,14 @@ public class TaskServiceImpl implements TaskService {
         return taskStore.save(task);
     }
 
+    /**
+     * Met à jour une tâche existante à partir d'un objet DTO.
+     * Enregistre les modifications du nom et de la description dans l'historique de la tâche.
+     * @param task L'objet TaskDTO contenant l'ID de la tâche et les nouvelles données.
+     * @return L'objet TaskDTO mis à jour.
+     * @throws ValidationException si l'ID de la tâche est manquant ou si des champs obligatoires sont vides.
+     * @throws EntityNotFoundException si la tâche ou le projet associé n'existe pas.
+     */
     @Override
     public TaskDTO update(TaskDTO task) {
         if (task.getId() == null) {
@@ -129,7 +159,7 @@ public class TaskServiceImpl implements TaskService {
         User user = userService.findById(task.getUserId());
         
         TaskDTO taskDTO = new TaskDTO();
-        // Historique pour le nom
+        // Historique pour le nom de la tâche
         if (task.getNom() != null && !task.getNom().isBlank() && !task.getNom().equals(existingTask.getNom())) {
             Historique history = new Historique();
             history.setTaskId(existingTask.getId());
@@ -143,7 +173,7 @@ public class TaskServiceImpl implements TaskService {
             taskDTO.setNom(task.getNom());
         }
 
-        // Historique pour la description
+        // Historique pour la description de la tâche
         if (task.getDescription() != null && !task.getDescription().equals(existingTask.getDescription())) {
             Historique history = new Historique();
             history.setTaskId(existingTask.getId());
@@ -174,7 +204,7 @@ public class TaskServiceImpl implements TaskService {
             taskDTO.setStatus(task.getStatus());
         }
 
-        // récupère le projet
+        // Récupère et associe le projet
         if (task.getProjectId() != null && task.getProjectId() != null) {
             Project project = projectStore.findById(task.getProjectId())
                     .orElseThrow(() -> new ValidationException("Le projet spécifié pour la mise à jour n'existe pas."));
@@ -189,6 +219,12 @@ public class TaskServiceImpl implements TaskService {
         return taskDTO;
     }
 
+    /**
+     * Supprime une tâche par son identifiant unique.
+     * Supprime également toutes les assignations liées à cette tâche.
+     * @param taskId L'identifiant unique de la tâche à supprimer.
+     * @throws ValidationException si l'ID de la tâche est null.
+     */
     @Override
     public void deleteById(Long taskId) {
         if(taskId == null) {

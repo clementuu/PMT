@@ -12,22 +12,51 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
-// Classe représentant les projets
+/**
+ * Représente un projet au sein de l'application.
+ */
 @Entity
 @Table(name = "project")
 public class Project {
+    /**
+     * Identifiant unique du projet.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    /**
+     * Nom du projet.
+     */
     private String nom;
+
+    /**
+     * Description détaillée du projet.
+     */
     private String description;
+
+    /**
+     * Date de début du projet.
+     */
     private LocalDate dateDebut;
+
+    /**
+     * Date de fin prévue du projet (peut être nulle).
+     */
     private LocalDate dateFin;
-    // Liste des tâches du projet
+
+    /**
+     * Liste des tâches associées à ce projet.
+     * La relation est gérée par le champ "project" dans l'entité Task.
+     */
     @OneToMany(mappedBy = "project")
     @JsonManagedReference
     private List<Task> tasks;
-    // Liste des utilisateurs participant avec leur rôle associé
+
+    /**
+     * Liste des associations entre ce projet et les utilisateurs.
+     * La relation est gérée par le champ "project" dans l'entité ProjectUser.
+     */
     @OneToMany(mappedBy = "project")
     private List<ProjectUser> projectUsers;
 

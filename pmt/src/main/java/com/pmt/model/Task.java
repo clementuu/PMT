@@ -14,24 +14,49 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
-// Classe représentant les tâches
+/**
+ * Représente une tâche au sein d'un projet.
+ */
 @Entity
 @Table(name = "task")
 public class Task {
+    /**
+     * Identifiant unique de la tâche.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    /**
+     * Le nom de la tâche.
+     */
     private String nom;
+    /**
+     * La description de la tâche.
+     */
     private String description;
+    /**
+     * La date de fin de la tâche.
+     */
     private LocalDate dateFin;
+    /**
+     * La date d'échéance de la tâche.
+     */
     private LocalDate dateEcheance;
-    // Projet à laquelle la tâche est associée
+    /**
+     * Le projet auquel la tâche est associée.
+     */
     @ManyToOne
     @JoinColumn(name = "project_id", nullable = false)
     @JsonBackReference
     private Project project;
+    /**
+     * La priorité de la tâche (LOW, MEDIUM, HIGH).
+     */
     @Enumerated(EnumType.ORDINAL)
     private Priorite priorite;
+    /**
+     * Le statut actuel de la tâche (TODO, IN_PROGRESS, DONE).
+     */
     @Enumerated(EnumType.ORDINAL)
     private Status status;
 

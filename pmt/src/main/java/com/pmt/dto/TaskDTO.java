@@ -5,15 +5,45 @@ import java.time.LocalDate;
 import com.pmt.model.Priorite;
 import com.pmt.model.Status;
 
+/**
+ * DTO représentant une tâche.
+ */
 public class TaskDTO {
+    /**
+     * Identifiant unique de la tâche.
+     */
     private Long id;
+    /**
+     * Le nom de la tâche.
+     */
     private String nom;
+    /**
+     * La description de la tâche.
+     */
     private String description;
+    /**
+     * La date de fin de la tâche.
+     */
     private LocalDate dateFin;
+    /**
+     * La date d'échéance de la tâche.
+     */
     private LocalDate dateEcheance;
+    /**
+     * L'identifiant du projet auquel la tâche est associée.
+     */
     private Long projectId;
+    /**
+     * L'identifiant de l'utilisateur auquel la tâche est assignée.
+     */
     private Long userId;
+    /**
+     * La priorité de la tâche.
+     */
     private Priorite priorite;
+    /**
+     * Le statut de la tâche.
+     */
     private Status status;
 
     public TaskDTO() {};

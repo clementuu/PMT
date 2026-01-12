@@ -8,15 +8,27 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
+/**
+ * Représente l'assignation d'une tâche à un utilisateur.
+ */
 @Entity
 @Table(name="task_assign")
 public class TaskAssign {
+    /**
+     * Identifiant unique de l'assignation.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    /**
+     * La tâche associée à cette assignation.
+     */
     @ManyToOne
     @JoinColumn(name = "task_id", nullable = false)
     private Task task;
+    /**
+     * L'utilisateur assigné à cette tâche.
+     */
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;

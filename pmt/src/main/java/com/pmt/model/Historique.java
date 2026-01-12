@@ -12,28 +12,56 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
+/**
+ * Représente une entrée dans l'historique des modifications d'un projet ou d'une tâche.
+ */
 @Entity
 @Table(name="historique")
 public class Historique {
+    /**
+     * Identifiant unique de l'entrée d'historique.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
+    /**
+     * Utilisateur ayant effectué la modification.
+     */
     @ManyToOne
     private User user;
 
+    /**
+     * Identifiant du projet concerné par la modification (si applicable).
+     */
     @Column(name = "project_id")
     private Long projectId;
 
+    /**
+     * Identifiant de la tâche concernée par la modification (si applicable).
+     */
     @Column(name = "task_id")
     private Long taskId;
 
+    /**
+     * Date et heure de la modification.
+     */
     @Column(name = "date_m")
     private LocalDateTime dateM;
 
+    /**
+     * Nouvelle valeur après modification.
+     */
     private String newString;
+
+    /**
+     * Ancienne valeur avant modification.
+     */
     private String oldString;
 
+    /**
+     * Type de champ modifié (ex: Titre, Description).
+     */
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "type_m")
     private Type typeM;
