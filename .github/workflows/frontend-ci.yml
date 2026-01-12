@@ -85,6 +85,6 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./ihm
-          dockerfile: ./ihm/Dockerfile
+          file: ./ihm/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/pmt-frontend:latest
