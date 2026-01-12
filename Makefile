@@ -6,10 +6,18 @@ ihm:
 pmt:
 	cd pmt && mvn spring-boot:run
 
-.PHONY: ihmtest
-ihmtest:
+.PHONY: test-ihm
+test-ihm:
 	cd ihm && ng test --code-coverage
 
-.PHONY: pmttest
-pmttest:
+.PHONY: test-pmt
+test-pmt:
 	cd pmt && mvn test verify
+
+.PHONY: start
+start:
+	docker compose up -d
+
+.PHONY: stop
+stop:
+	docker compose down
