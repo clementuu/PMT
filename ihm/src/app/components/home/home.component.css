@@ -34,3 +34,8 @@ p {
 .auth-buttons {
   margin-top: 2.5rem;
 }
+
+.logo {
+  width: 250px;
+  margin-bottom: 20px;
+}

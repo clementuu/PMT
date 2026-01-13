@@ -12,6 +12,9 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
+/**
+ * Composant mock pour le composant TaskAssign.
+ */
 @Component({ selector: 'app-task-assign', template: '' })
 class MockTaskAssignComponent {
   @Input() taskId!: number;
@@ -19,16 +22,43 @@ class MockTaskAssignComponent {
   @Output() taskAssigned = new EventEmitter<void>();
 }
 
+/**
+ * Suite de tests pour le composant TaskComponent.
+ */
 describe('TaskComponent', () => {
+  /**
+   * Instance du composant TaskComponent.
+   */
   let component: TaskComponent;
+  /**
+   * Fixture du composant pour les tests.
+   */
   let fixture: ComponentFixture<TaskComponent>;
+  /**
+   * Route activée mockée.
+   */
   let mockActivatedRoute: any;
+  /**
+   * Service API mocké.
+   */
   let mockApiService: any;
+  /**
+   * Service d'authentification mocké.
+   */
   let mockAuthService: any;
+  /**
+   * Routeur mocké.
+   */
   let mockRouter: any;
 
+  /**
+   * Utilisateur mocké pour les tests.
+   */
   const mockUser: User = { id: 1, nom: 'Test User', email: 'test@example.com' };
 
+  /**
+   * Tâche mockée pour les tests.
+   */
   const mockTask: Task = {
     id: 1,
     nom: 'Test Task',
@@ -40,6 +70,9 @@ describe('TaskComponent', () => {
     projectId: 101,
   };
 
+  /**
+   * Configure l'environnement de test avant chaque test.
+   */
   beforeEach(async () => {
     mockActivatedRoute = {
       paramMap: of({ get: (key: string) => (key === 'id' ? '1' : null) })
@@ -84,21 +117,33 @@ describe('TaskComponent', () => {
     fixture.detectChanges();
   });
 
+  /**
+   * Vérifie si le composant est créé avec succès.
+   */
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
+  /**
+   * Teste si la tâche est chargée lors de l'initialisation du composant.
+   */
   it('should load task on ngOnInit', () => {
     expect(mockApiService.getTask).toHaveBeenCalledWith(1);
     expect(component.task).toEqual(mockTask);
   });
 
+  /**
+   * Teste si `loadTask` est appelé lorsque la tâche est assignée.
+   */
   it('should call loadTask on onTaskAssigned', () => {
     spyOn(component, 'loadTask').and.callThrough();
     component.onTaskAssigned();
     expect(component.loadTask).toHaveBeenCalled();
   });
 
+  /**
+   * Teste le démarrage du mode édition et le remplissage du formulaire.
+   */
   it('should start editing and populate the form', () => {
     component.task = mockTask;
     component.startEditing();
@@ -111,12 +156,18 @@ describe('TaskComponent', () => {
     expect(component.taskForm.value.status).toEqual(mockTask.status);
   });
 
+  /**
+   * Teste l'annulation du mode édition.
+   */
   it('should cancel editing', () => {
     component.isEditing = true;
     component.cancelEdit();
     expect(component.isEditing).toBeFalse();
   });
 
+  /**
+   * Teste la mise à jour d'une tâche.
+   */
   it('should update task', () => {
     component.task = mockTask;
     component.startEditing();
@@ -136,6 +187,9 @@ describe('TaskComponent', () => {
     expect(component.loadTask).toHaveBeenCalled();
   });
 
+  /**
+   * Teste la suppression d'une tâche et la navigation vers la page du projet.
+   */
   it('should delete task and navigate to project page', () => {
     component.task = mockTask;
     component.deleteTask();
@@ -144,12 +198,18 @@ describe('TaskComponent', () => {
     expect(mockRouter.navigate).toHaveBeenCalledWith([`/project/${mockTask.projectId}`]);
   });
 
+  /**
+   * Teste qu'une tâche n'est pas supprimée si la tâche est nulle.
+   */
   it('should not delete task if task is null', () => {
     component.task = null;
     component.deleteTask();
     expect(mockApiService.deleteTask).not.toHaveBeenCalled();
   });
 
+  /**
+   * Teste la fonction `getPriorityDisplayName` qui retourne le nom d'affichage correct de la priorité.
+   */
   it('should return correct priority display name', () => {
     expect(component.getPriorityDisplayName('LOW')).toBe('Faible');
     expect(component.getPriorityDisplayName('MEDIUM')).toBe('Moyenne');
@@ -157,6 +217,9 @@ describe('TaskComponent', () => {
     expect(component.getPriorityDisplayName('UNKNOWN')).toBe('UNKNOWN');
   });
 
+  /**
+   * Teste la fonction `getStatusDisplayName` qui retourne le nom d'affichage correct du statut.
+   */
   it('should return correct status display name', () => {
     expect(component.getStatusDisplayName('TODO')).toBe('À faire');
     expect(component.getStatusDisplayName('IN_PROGRESS')).toBe('En cours');

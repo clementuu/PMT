@@ -9,19 +9,40 @@ import { ApiService } from '../../services/api.service';
 import { User, Assigned } from '../../models/user.model';
 import { By } from '@angular/platform-browser';
 
+/**
+ * Suite de tests pour le composant TaskAssignComponent.
+ */
 describe('TaskAssignComponent', () => {
+  /**
+   * Instance du composant TaskAssignComponent.
+   */
   let component: TaskAssignComponent;
+  /**
+   * Fixture du composant pour les tests.
+   */
   let fixture: ComponentFixture<TaskAssignComponent>;
+  /**
+   * Service API mocké.
+   */
   let mockApiService: any;
 
+  /**
+   * Utilisateurs de projet mockés pour les tests.
+   */
   const mockProjectUsers: User[] = [
     { id: 1, nom: 'User A', email: 'a@example.com' },
     { id: 2, nom: 'User B', email: 'b@example.com' },
   ];
+  /**
+   * Utilisateurs assignés mockés pour les tests.
+   */
   const mockAssignedUsers: Assigned[] = [
     { id: 101, userId: 1, taskId: 1, username: 'User A' },
   ];
 
+  /**
+   * Configure l'environnement de test avant chaque test.
+   */
   beforeEach(async () => {
     mockApiService = {
       // Start with empty arrays to test population and error cases cleanly
@@ -32,7 +53,7 @@ describe('TaskAssignComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [TaskAssignComponent, FormsModule], // Ensure FormsModule is imported
+      imports: [TaskAssignComponent, FormsModule],
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
@@ -48,13 +69,17 @@ describe('TaskAssignComponent', () => {
     fixture.detectChanges();
   });
 
+  /**
+   * Vérifie si le composant est créé avec succès.
+   */
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  // --- Initialization Tests ---
+  /**
+   * Teste que `loadProjectUsers` et `loadAssignedUsers` sont appelés lors de l'initialisation du composant.
+   */
   it('should call loadProjectUsers and loadAssignedUsers on ngOnInit', fakeAsync(() => {
-    // Reset spies from beforeEach's ngOnInit call
     mockApiService.getUsersByProjectId.calls.reset();
     mockApiService.getAllAssigned.calls.reset();
 
@@ -66,15 +91,20 @@ describe('TaskAssignComponent', () => {
     expect(component.loadAssignedUsers).toHaveBeenCalled();
   }));
 
-  // --- loadProjectUsers Tests ---
+  /**
+   * Teste le chargement des utilisateurs du projet en cas de succès de l'appel API.
+   */
   it('should load project users on successful API call', fakeAsync(() => {
-    mockApiService.getUsersByProjectId.and.returnValue(of(mockProjectUsers)); // Set mock for this test
+    mockApiService.getUsersByProjectId.and.returnValue(of(mockProjectUsers));
     component.loadProjectUsers();
     tick();
     expect(mockApiService.getUsersByProjectId).toHaveBeenCalledWith(component.projectId);
     expect(component.users).toEqual(mockProjectUsers);
   }));
 
+  /**
+   * Teste l'enregistrement d'une erreur si l'appel API `loadProjectUsers` échoue.
+   */
   it('should log error if loadProjectUsers API fails', fakeAsync(() => {
     const errorResponse = new Error('Failed to fetch users');
     mockApiService.getUsersByProjectId.and.returnValue(throwError(() => errorResponse));
@@ -88,9 +118,11 @@ describe('TaskAssignComponent', () => {
     expect(component.users).toEqual([]);
   }));
 
-  // --- loadAssignedUsers Tests ---
+  /**
+   * Teste le chargement des utilisateurs assignés en cas de succès de l'appel API avec un `taskId`.
+   */
   it('should load assigned users on successful API call with taskId', fakeAsync(() => {
-    mockApiService.getAllAssigned.and.returnValue(of(mockAssignedUsers)); // Set mock for this test
+    mockApiService.getAllAssigned.and.returnValue(of(mockAssignedUsers));
     component.taskId = 10;
     component.loadAssignedUsers();
     tick();
@@ -98,15 +130,21 @@ describe('TaskAssignComponent', () => {
     expect(component.assigned).toEqual(mockAssignedUsers);
   }));
 
+  /**
+   * Teste que `getAllAssigned` n'est pas appelé si `taskId` n'est pas défini.
+   */
   it('should not call getAllAssigned if taskId is not set', fakeAsync(() => {
-    mockApiService.getAllAssigned.calls.reset(); // Clear previous calls from ngOnInit
-    component.taskId = undefined as any; // Explicitly set to undefined for test
-    component.loadAssignedUsers(); // Call the method
+    mockApiService.getAllAssigned.calls.reset();
+    component.taskId = undefined as any;
+    component.loadAssignedUsers();
     tick();
     expect(mockApiService.getAllAssigned).not.toHaveBeenCalled();
-    expect(component.assigned).toEqual([]); // Should remain empty
+    expect(component.assigned).toEqual([]);
   }));
 
+  /**
+   * Teste l'enregistrement d'une erreur si l'appel API `loadAssignedUsers` échoue.
+   */
   it('should log error if loadAssignedUsers API fails', fakeAsync(() => {
     component.taskId = 10;
     const errorResponse = new Error('Failed to get assigned users');
@@ -121,24 +159,29 @@ describe('TaskAssignComponent', () => {
     expect(component.assigned).toEqual([]);
   }));
 
-  // --- assignTask Tests ---
+  /**
+   * Teste l'assignation d'une tâche à un utilisateur en cas de succès de l'appel API.
+   */
   it('should assign task to user on successful API call', fakeAsync(() => {
     spyOn(component.taskAssigned, 'emit');
     spyOn(component, 'loadAssignedUsers');
     spyOn(component, 'loadProjectUsers');
-    component.selectedUserId = 2; // User B
-    const userIdToAssign = component.selectedUserId; // Capture the value before it's reset
+    component.selectedUserId = 2;
+    const userIdToAssign = component.selectedUserId;
 
     component.assignTask();
     tick();
 
     expect(mockApiService.assignTaskToUser).toHaveBeenCalledWith(component.taskId, userIdToAssign);
     expect(component.taskAssigned.emit).toHaveBeenCalled();
-    expect(component.selectedUserId).toBeUndefined(); // This assertion is correct and should pass now
+    expect(component.selectedUserId).toBeUndefined();
     expect(component.loadAssignedUsers).toHaveBeenCalled();
     expect(component.loadProjectUsers).toHaveBeenCalled();
   }));
 
+  /**
+   * Teste qu'une alerte est affichée et que l'API n'est pas appelée si aucun utilisateur n'est sélectionné pour l'assignation.
+   */
   it('should alert and not call API if no user is selected for assignment', () => {
     spyOn(window, 'alert');
     component.selectedUserId = undefined;
@@ -149,6 +192,9 @@ describe('TaskAssignComponent', () => {
     expect(mockApiService.assignTaskToUser).not.toHaveBeenCalled();
   });
 
+  /**
+   * Teste qu'une alerte est affichée et qu'une erreur est enregistrée si l'appel API `assignTask` échoue.
+   */
   it('should alert and log error if assignTask API fails', fakeAsync(() => {
     const errorResponse = new Error('Assignment failed');
     mockApiService.assignTaskToUser.and.returnValue(throwError(() => errorResponse));
@@ -164,6 +210,9 @@ describe('TaskAssignComponent', () => {
     expect(window.alert).toHaveBeenCalledWith('Failed to assign task: ' + errorResponse.message);
   }));
 
+  /**
+   * Teste si le bouton d'assignation est désactivé si aucun utilisateur n'est sélectionné.
+   */
   it('should disable assign button if no user is selected', fakeAsync(() => {
     component.selectedUserId = undefined;
     fixture.detectChanges();
@@ -177,12 +226,13 @@ describe('TaskAssignComponent', () => {
     expect(assignButton.disabled).toBe(false);
   }));
 
-
-  // --- unassignUser Tests ---
+  /**
+   * Teste la désassignation d'un utilisateur en cas de succès de l'appel API.
+   */
   it('should unassign user on successful API call', fakeAsync(() => {
     spyOn(component, 'loadAssignedUsers');
     spyOn(component, 'loadProjectUsers');
-    const assignedUserId = 101; // ID of Assigned object
+    const assignedUserId = 101;
 
     component.unassignUser(assignedUserId);
     tick();
@@ -192,6 +242,9 @@ describe('TaskAssignComponent', () => {
     expect(component.loadProjectUsers).toHaveBeenCalled();
   }));
 
+  /**
+   * Teste qu'une alerte est affichée et qu'une erreur est enregistrée si l'appel API `unassignUser` échoue.
+   */
   it('should alert and log error if unassignUser API fails', fakeAsync(() => {
     const errorResponse = new Error('Unassignment failed');
     mockApiService.unassignTaskFromUser.and.returnValue(throwError(() => errorResponse));
@@ -207,7 +260,9 @@ describe('TaskAssignComponent', () => {
     expect(window.alert).toHaveBeenCalledWith('Failed to unassign user: ' + errorResponse.message);
   }));
 
-  // --- Template Rendering Tests ---
+  /**
+   * Teste l'affichage du message "Aucun utilisateur assigné" lorsqu'aucun utilisateur n'est assigné.
+   */
   it('should display "Aucun utilisateur assigné" message when no users are assigned', () => {
     component.assigned = [];
     fixture.detectChanges();
@@ -216,6 +271,9 @@ describe('TaskAssignComponent', () => {
     expect(noUsersMessage.nativeElement.textContent).toContain('Aucun utilisateur assigné pour le moment.');
   });
 
+  /**
+   * Teste l'affichage des utilisateurs assignés dans le template.
+   */
   it('should display assigned users in the template', () => {
     component.assigned = mockAssignedUsers;
     fixture.detectChanges();
@@ -224,14 +282,16 @@ describe('TaskAssignComponent', () => {
     expect(assignedUserTags[0].nativeElement.textContent).toContain(mockAssignedUsers[0].username);
   });
 
+  /**
+   * Teste l'affichage des utilisateurs du projet dans la liste déroulante de sélection.
+   */
   it('should display project users in the select dropdown', fakeAsync(() => {
     component.users = mockProjectUsers;
     fixture.detectChanges();
-    tick(); // Ensure template updates
+    tick();
 
     const options = fixture.debugElement.queryAll(By.css('select option'));
-    // +1 for the disabled "Sélectionner un utilisateur" option
-    expect(options.length).toBe(mockProjectUsers.length + 1); 
+    expect(options.length).toBe(mockProjectUsers.length + 1);
     expect(options[1].nativeElement.textContent).toContain(mockProjectUsers[0].nom);
     expect(options[2].nativeElement.textContent).toContain(mockProjectUsers[1].nom);
   }));

@@ -12,18 +12,48 @@ import { ApiService } from '../../services/api.service';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../models/user.model';
 
+/**
+ * Suite de tests pour le composant SigninComponent.
+ */
 describe('SigninComponent', () => {
+  /**
+   * Instance du composant SigninComponent.
+   */
   let component: SigninComponent;
+  /**
+   * Fixture du composant pour les tests.
+   */
   let fixture: ComponentFixture<SigninComponent>;
+  /**
+   * Service API mocké.
+   */
   let mockApiService: any;
+  /**
+   * Service d'authentification mocké.
+   */
   let mockAuthService: any;
+  /**
+   * Instance du routeur.
+   */
   let router: Router;
 
+  /**
+   * Utilisateur mocké pour les tests.
+   */
   const mockUser: User = { id: 1, nom: 'Test User', email: 'test@example.com' };
+  /**
+   * Requête d'inscription mockée.
+   */
   const signinRequest = { nom: 'Test User', email: 'test@example.com', mdp: 'password123' };
+  /**
+   * Requête de connexion mockée.
+   */
   const loginRequest = { email: 'test@example.com', mdp: 'password123' };
 
 
+  /**
+   * Configure l'environnement de test avant chaque test.
+   */
   beforeEach(async () => {
     mockApiService = {
       postUser: jasmine.createSpy('postUser').and.returnValue(of(mockUser)),
@@ -52,11 +82,17 @@ describe('SigninComponent', () => {
     fixture.detectChanges();
   });
 
+  /**
+   * Vérifie si le composant est créé avec succès.
+   */
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
   // --- Form Validation Tests ---
+  /**
+   * Teste si le bouton de soumission est initialement désactivé lorsque le formulaire est invalide.
+   */
   it('should disable the submit button initially when form is invalid', fakeAsync(() => {
     tick(); // allow form initialization
     fixture.detectChanges();
@@ -64,20 +100,26 @@ describe('SigninComponent', () => {
     expect(submitButton.disabled).toBe(true, 'Button should be disabled initially');
   }));
 
+  /**
+   * Teste si le bouton de soumission est activé lorsque le formulaire est valide et que les mots de passe correspondent.
+   */
   it('should enable submit button when form is valid and passwords match', fakeAsync(() => {
     component.nom = signinRequest.nom;
     component.email = signinRequest.email;
-    component.password = signinRequest.mdp; // 11 chars > minlength 4
+    component.password = signinRequest.mdp;
     component.confirmPassword = signinRequest.mdp;
 
     fixture.detectChanges();
-    tick(); // process ngModel updates and validation
-    fixture.detectChanges(); // update disabled state
+    tick();
+    fixture.detectChanges();
 
     const submitButton = fixture.debugElement.query(By.css('button[type="submit"]')).nativeElement;
     expect(submitButton.disabled).toBe(false, 'Button should be enabled when form is valid');
   }));
 
+  /**
+   * Teste si le bouton de soumission est désactivé si les mots de passe ne correspondent pas.
+   */
   it('should disable submit button if passwords do not match', fakeAsync(() => {
     component.nom = signinRequest.nom;
     component.email = signinRequest.email;
@@ -92,6 +134,9 @@ describe('SigninComponent', () => {
     expect(submitButton.disabled).toBe(true, 'Button should be disabled if passwords mismatch');
   }));
 
+  /**
+   * Teste si le bouton de soumission est désactivé si l'e-mail est invalide.
+   */
   it('should disable submit button if email is invalid', fakeAsync(() => {
     component.nom = signinRequest.nom;
     component.email = 'invalid-email';
@@ -106,7 +151,9 @@ describe('SigninComponent', () => {
     expect(submitButton.disabled).toBe(true, 'Button should be disabled if email is invalid');
   }));
 
-  // --- onSubmit() Success Path ---
+  /**
+   * Teste si `postUser`, `postLogin`, `authService.login` sont appelés et la navigation se produit en cas d'inscription réussie.
+   */
   it('should call postUser, postLogin, authService.login and navigate on successful signin', fakeAsync(() => {
     component.nom = signinRequest.nom;
     component.email = signinRequest.email;
@@ -114,8 +161,8 @@ describe('SigninComponent', () => {
     component.confirmPassword = signinRequest.mdp;
 
     component.onSubmit();
-    tick(); // for postUser
-    tick(); // for postLogin
+    tick();
+    tick();
 
     expect(mockApiService.postUser).toHaveBeenCalledWith(signinRequest);
     expect(mockApiService.postLogin).toHaveBeenCalledWith(loginRequest);
@@ -124,7 +171,9 @@ describe('SigninComponent', () => {
     expect(component.signinError).toBeNull();
   }));
 
-  // --- onSubmit() Failure Paths ---
+  /**
+   * Teste si `signinError` est défini et la navigation ne se produit pas si `postUser` échoue.
+   */
   it('should set signinError and not navigate if postUser fails', fakeAsync(() => {
     mockApiService.postUser.and.returnValue(throwError(() => new Error('Registration failed')));
     component.nom = signinRequest.nom;
@@ -133,7 +182,7 @@ describe('SigninComponent', () => {
     component.confirmPassword = signinRequest.mdp;
 
     component.onSubmit();
-    tick(); // for postUser observable to complete
+    tick();
 
     expect(mockApiService.postUser).toHaveBeenCalled();
     expect(mockApiService.postLogin).not.toHaveBeenCalled();
@@ -142,6 +191,9 @@ describe('SigninComponent', () => {
     expect(component.signinError).toBe("Une erreur s'est produite.");
   }));
 
+  /**
+   * Teste si `signinError` est défini et navigue vers `/login` si `postUser` réussit mais `postLogin` échoue.
+   */
   it('should set signinError, navigate to /login if postUser succeeds but postLogin fails', fakeAsync(() => {
     mockApiService.postLogin.and.returnValue(throwError(() => new Error('Login failed')));
     component.nom = signinRequest.nom;
@@ -150,26 +202,29 @@ describe('SigninComponent', () => {
     component.confirmPassword = signinRequest.mdp;
 
     component.onSubmit();
-    tick(); // for postUser
-    tick(); // for postLogin
+    tick();
+    tick();
 
     expect(mockApiService.postUser).toHaveBeenCalled();
     expect(mockApiService.postLogin).toHaveBeenCalled();
     expect(mockAuthService.login).not.toHaveBeenCalled();
-    expect(router.navigate).not.toHaveBeenCalled(); 
+    expect(router.navigate).not.toHaveBeenCalled();
     expect(component.signinError).toBe("Une erreur s'est produite.");
   }));
 
+  /**
+   * Teste si `signinError` est défini et navigue vers `/login` si `postUser` réussit mais `postLogin` ne retourne aucun utilisateur.
+   */
   it('should set signinError, navigate to /login if postUser succeeds but postLogin returns no user', fakeAsync(() => {
-    mockApiService.postLogin.and.returnValue(of({ user: null })); // Simulate API returning no user
+    mockApiService.postLogin.and.returnValue(of({ user: null }));
     component.nom = signinRequest.nom;
     component.email = signinRequest.email;
     component.password = signinRequest.mdp;
     component.confirmPassword = signinRequest.mdp;
 
     component.onSubmit();
-    tick(); // for postUser
-    tick(); // for postLogin
+    tick();
+    tick();
 
     expect(mockApiService.postUser).toHaveBeenCalled();
     expect(mockApiService.postLogin).toHaveBeenCalled();
@@ -178,28 +233,27 @@ describe('SigninComponent', () => {
     expect(component.signinError).toBe("La connexion a échoué: utilisateur non retourné.");
   }));
 
-  // --- Error Message Display Tests ---
+  /**
+   * Teste si le message d'erreur `signinError` est affiché dans le template lorsqu'il est défini.
+   */
   it('should display signinError message in template when set', fakeAsync(() => {
     component.signinError = 'Test Signin Error';
     fixture.detectChanges();
-    tick(); // ensure template is updated
+    tick();
 
     const errorMessageElement = fixture.debugElement.query(By.css('.error-message'));
     expect(errorMessageElement).toBeTruthy();
     expect(errorMessageElement.nativeElement.textContent).toContain('Test Signin Error');
   }));
 
+  /**
+   * Teste si le message d'erreur `signinError` n'est pas affiché dans le template lorsqu'il est nul.
+   */
   it('should not display signinError message in template when null', () => {
     component.signinError = null;
     fixture.detectChanges();
 
     const errorMessageElement = fixture.debugElement.query(By.css('.error-message'));
-    // Check if there's any error message that specifically matches our error message display area.
-    // The previous error-message selectors were for input validation errors, not the component-wide error.
-    // Assuming the component-wide error message has specific styling or a distinct parent.
-    // Based on the HTML, it's just a div with class "error-message" directly under the form.
-    const allErrorMessages = fixture.debugElement.queryAll(By.css('.error-message'));
-    const componentWideError = allErrorMessages.find(el => el.nativeElement.textContent.includes('Test Signin Error'));
-    expect(componentWideError).toBeFalsy();
+    expect(errorMessageElement).toBeFalsy();
   });
 });

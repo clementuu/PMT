@@ -7,17 +7,38 @@ import { LoginRequest, LoginResponse, SigninRequest } from '../models/requests.m
 import { Assigned, User } from '../models/user.model';
 import { Project } from '../models/project.model';
 import { Task } from '../models/task.model';
-import { UserProject, UsersProject } from '../models/userProject.model';
+import { UsersProject } from '../models/userProject.model';
 import { Historique } from '../models/historique.model';
 import { ProjectUpdatePayload } from '../models/project-update.model';
 
+/**
+ * Suite de tests pour le service ApiService.
+ */
 describe('ApiService', () => {
+  /**
+   * Instance du service ApiService.
+   */
   let service: ApiService;
+  /**
+   * Contrôleur pour tester les requêtes HTTP.
+   */
   let httpTestingController: HttpTestingController;
+  /**
+   * Client HTTP.
+   */
   let httpClient: HttpClient;
+  /**
+   * Message d'erreur API par défaut.
+   */
   const ErrorApi: String = "Une erreur inconnue s'est produite"
+  /**
+   * URL de base de l'API.
+   */
   const apiUrl = "http://localhost:8080";
 
+  /**
+   * Configure l'environnement de test avant chaque test.
+   */
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
@@ -30,15 +51,23 @@ describe('ApiService', () => {
     spyOn(console, 'error').and.stub(); // Mock console.error
   });
 
+  /**
+   * Vérifie qu'il n'y a pas de requêtes HTTP en attente après chaque test.
+   */
   afterEach(() => {
-    httpTestingController.verify(); // Ensure that no outstanding requests are in flight.
+    httpTestingController.verify();
   });
 
+  /**
+   * Teste si le service est créé avec succès.
+   */
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  // --- postLogin ---
+  /**
+   * Tests pour la méthode `postLogin`.
+   */
   it('postLogin should send a POST request and return LoginResponse', () => {
     const mockLoginRequest: LoginRequest = { email: 'test@example.com', mdp: 'password' };
     const mockLoginResponse: LoginResponse = { success: true, user: { id: 1, nom: 'Test', email: 'test@example.com' } };
@@ -55,13 +84,13 @@ describe('ApiService', () => {
 
   it('postLogin should handle errors', () => {
     const mockLoginRequest: LoginRequest = { email: 'test@example.com', mdp: 'password' };
-    const mockError = new HttpErrorResponse({ status: 401, statusText: 'Unauthorized', error: { message: ErrorApi } }); // Changed error to object
+    const mockError = new HttpErrorResponse({ status: 401, statusText: 'Unauthorized', error: { message: ErrorApi } });
 
     service.postLogin(mockLoginRequest).subscribe({
       next: () => fail('should have failed with the 401 error'),
       error: (error: ApiError) => {
         expect(error.status).toEqual(401);
-        expect(error.message).toEqual(ErrorApi); // Assert against error.message
+        expect(error.message).toEqual(ErrorApi);
         expect(window.alert).toHaveBeenCalledWith(`Erreur API: ${ErrorApi}`);
       }
     });
@@ -70,7 +99,9 @@ describe('ApiService', () => {
     req.error(new ErrorEvent('Network error'), mockError);
   });
 
-  // --- postUser ---
+  /**
+   * Tests pour la méthode `postUser`.
+   */
   it('postUser should send a POST request and return User', () => {
     const mockSigninRequest: SigninRequest = { nom: 'New User', email: 'new@example.com', mdp: 'newpassword' };
     const mockUser: User = { id: 2, nom: 'New User', email: 'new@example.com' };
@@ -87,7 +118,7 @@ describe('ApiService', () => {
 
   it('postUser should handle errors', () => {
     const mockSigninRequest: SigninRequest = { nom: 'New User', email: 'new@example.com', mdp: 'newpassword' };
-    const mockError = new HttpErrorResponse({ status: 400, statusText: 'Bad Request', error: { message: ErrorApi } }); // Changed error to object
+    const mockError = new HttpErrorResponse({ status: 400, statusText: 'Bad Request', error: { message: ErrorApi } });
 
     service.postUser(mockSigninRequest).subscribe({
       next: () => fail('should have failed with the 400 error'),
@@ -99,12 +130,14 @@ describe('ApiService', () => {
     });
 
     const req = httpTestingController.expectOne(`${apiUrl}/user`);
-    expect(req.request.method).toEqual('POST'); // This line was missing from the old string in the previous turn
-    expect(req.request.body).toEqual(mockSigninRequest); // This line was missing from the old string in the previous turn
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual(mockSigninRequest);
     req.error(new ErrorEvent('Network error'), mockError);
   });
 
-  // --- getAllUsers ---
+  /**
+   * Tests pour la méthode `getAllUsers`.
+   */
   it('getAllUsers should send a GET request and return User[]', () => {
     const mockUsers: User[] = [{ id: 1, nom: 'U1', email: 'u1@e.com' }];
 
@@ -132,7 +165,9 @@ describe('ApiService', () => {
     req.error(new ErrorEvent('Network error'), mockError);
   });
 
-  // --- createProject ---
+  /**
+   * Tests pour la méthode `createProject`.
+   */
   it('createProject should send a POST request and return Project', () => {
     const mockProjectRequest: Partial<Project> = { nom: 'New Project', description: 'Desc' };
     const mockProjectResponse: Project = { id: 1, nom: 'New Project', description: 'Desc', dateDebut: new Date('2024-01-31'), dateFin: new Date('2024-12-31'), tasks: [] };
@@ -164,7 +199,9 @@ describe('ApiService', () => {
     req.error(new ErrorEvent('Network error'), mockError);
   });
 
-  // --- getProjectsByUserId ---
+  /**
+   * Tests pour la méthode `getProjectsByUserId`.
+   */
   it('getProjectsByUserId should send a GET request and return Project[]', () => {
     const userId = 1;
     const mockProjects: Project[] = [{ id: 1, nom: 'P1', description: 'D1', dateDebut: new Date('2024-01-31'), dateFin: new Date('2024-12-31'), tasks: [] }];
@@ -195,7 +232,9 @@ describe('ApiService', () => {
     req.error(new ErrorEvent('Network error'), mockError);
   });
 
-  // --- getProjectById ---
+  /**
+   * Tests pour la méthode `getProjectById`.
+   */
   it('getProjectById should send a GET request and return Project', () => {
     const projectId = 1;
     const mockProject: Project = { id: 1, nom: 'P1', description: 'D1', dateDebut: new Date('2024-01-31'), dateFin: new Date('2024-12-31'), tasks: [] };
@@ -209,7 +248,9 @@ describe('ApiService', () => {
     req.flush(mockProject);
   });
 
-  // --- updateProject ---
+  /**
+   * Tests pour la méthode `updateProject`.
+   */
   it('updateProject should send a PUT request and return Project', () => {
     const mockPayload: ProjectUpdatePayload = { project: { id: 1, nom: 'Updated', description: 'Upd', dateDebut: new Date('2024-01-31'), dateFin: new Date('2024-12-31'), tasks:[] }, userId: 1 };
     const mockProjectResponse: Project = { id: 1, nom: 'Updated', description: 'Upd', dateDebut: new Date('2024-01-31'), dateFin: new Date('2024-12-31'), tasks: [] };
@@ -241,7 +282,9 @@ describe('ApiService', () => {
     req.error(new ErrorEvent('Network error'), mockError);
   });
 
-  // --- deleteProject ---
+  /**
+   * Tests pour la méthode `deleteProject`.
+   */
   it('deleteProject should send a DELETE request', () => {
     const projectId = 1;
 
@@ -269,7 +312,9 @@ describe('ApiService', () => {
     req.error(new ErrorEvent('Network error'), mockError);
   });
 
-  // --- getTask ---
+  /**
+   * Tests pour la méthode `getTask`.
+   */
   it('getTask should send a GET request and return Task', () => {
     const taskId = 1;
     const mockTask: Task = { id: 1, nom: 'T1', description: 'D1', status: 'TODO', priorite: 'LOW', projectId: 1, dateFin: new Date('2024-12-31'), dateEcheance: new Date() };
@@ -300,7 +345,9 @@ describe('ApiService', () => {
     req.error(new ErrorEvent('Network error'), mockError);
   });
 
-  // --- createTask ---
+  /**
+   * Tests pour la méthode `createTask`.
+   */
   it('createTask should send a POST request and return Task', () => {
     const mockTaskRequest: Partial<Task> = { nom: 'New Task', projectId: 1 };
     const mockTaskResponse: Task = { id: 2, nom: 'New Task', description: '', status: 'TODO', priorite: 'LOW', projectId: 1, dateFin: new Date('2024-12-31'), dateEcheance: new Date() };
@@ -332,7 +379,9 @@ describe('ApiService', () => {
     req.error(new ErrorEvent('Network error'), mockError);
   });
 
-  // --- updateTask ---
+  /**
+   * Tests pour la méthode `updateTask`.
+   */
   it('updateTask should send a PUT request and return Task', () => {
     const mockTaskRequest: Task = { id: 1, nom: 'Updated Task', description: 'Desc', status: 'DONE', priorite: 'HIGH', projectId: 1, dateFin: new Date('2024-12-31'), dateEcheance: new Date() };
     const mockTaskResponse: Task = { id: 1, nom: 'Updated Task', description: 'Desc', status: 'DONE', priorite: 'HIGH', projectId: 1, dateFin: new Date('2024-12-31'), dateEcheance: new Date() };
@@ -364,7 +413,9 @@ describe('ApiService', () => {
     req.error(new ErrorEvent('Network error'), mockError);
   });
 
-  // --- deleteTask ---
+  /**
+   * Tests pour la méthode `deleteTask`.
+   */
   it('deleteTask should send a DELETE request', () => {
     const taskId = 1;
 
@@ -392,7 +443,9 @@ describe('ApiService', () => {
     req.error(new ErrorEvent('Network error'), mockError);
   });
 
-  // --- postUsersProject ---
+  /**
+   * Tests pour la méthode `postUsersProject`.
+   */
   it('postUsersProject should send a POST request and return UsersProject', () => {
     const mockUsersProjectData: UsersProject = { projectId: 1, users: [{ id: 1, userId: 1, role: 'ADMIN' }] };
     const mockResponse: UsersProject = { ...mockUsersProjectData };
@@ -424,7 +477,9 @@ describe('ApiService', () => {
     req.error(new ErrorEvent('Network error'), mockError);
   });
 
-  // --- getUsersProject ---
+  /**
+   * Tests pour la méthode `getUsersProject`.
+   */
   it('getUsersProject should send a GET request and return UsersProject', () => {
     const projectId = 1;
     const mockResponse: UsersProject = { projectId: 1, users: [{ id: 1, userId: 1, role: 'ADMIN' }] };
@@ -455,7 +510,9 @@ describe('ApiService', () => {
     req.error(new ErrorEvent('Network error'), mockError);
   });
 
-  // --- deleteUserProject ---
+  /**
+   * Tests pour la méthode `deleteUserProject`.
+   */
   it('deleteUserProject should send a DELETE request', () => {
     const userProjectId = 1;
 
@@ -483,7 +540,9 @@ describe('ApiService', () => {
     req.error(new ErrorEvent('Network error'), mockError);
   });
 
-  // --- assignTaskToUser ---
+  /**
+   * Tests pour la méthode `assignTaskToUser`.
+   */
   it('assignTaskToUser should send a POST request', () => {
     const taskId = 1;
     const userId = 2;
@@ -514,7 +573,9 @@ describe('ApiService', () => {
     req.error(new ErrorEvent('Network error'), mockError);
   });
 
-  // --- getAllAssigned ---
+  /**
+   * Tests pour la méthode `getAllAssigned`.
+   */
   it('getAllAssigned should send a GET request and return Assigned[]', () => {
     const taskId = 1;
     const mockAssigned: Assigned[] = [{ id: 1, userId: 1, taskId: 1, username: 'U1' }];
@@ -544,7 +605,9 @@ describe('ApiService', () => {
     req.error(new ErrorEvent('Network error'), mockError);
   });
 
-  // --- unassignTaskFromUser ---
+  /**
+   * Tests pour la méthode `unassignTaskFromUser`.
+   */
   it('unassignTaskFromUser should send a DELETE request', () => {
     const assignId = 1;
 
@@ -572,7 +635,9 @@ describe('ApiService', () => {
     req.error(new ErrorEvent('Network error'), mockError);
   });
 
-  // --- getUsersByProjectId ---
+  /**
+   * Tests pour la méthode `getUsersByProjectId`.
+   */
   it('getUsersByProjectId should send a GET request and return User[]', () => {
     const projectId = 1;
     const mockUsers: User[] = [{ id: 1, nom: 'PUser1', email: 'puser1@e.com' }];
@@ -602,7 +667,9 @@ describe('ApiService', () => {
     req.error(new ErrorEvent('Network error'), mockError);
   });
 
-  // --- getHistoriqueForProject ---
+  /**
+   * Tests pour la méthode `getHistoriqueForProject`.
+   */
   it('getHistoriqueForProject should send a GET request and return Historique[]', () => {
     const projectId = 1;
     const mockHistorique: Historique[] = [{ id: 1, oldString: 'Old', newString: 'New', dateM: new Date(), user: { id: 1, nom: 'U1', email: 'u1@e.com' }, typeM: 0 }];
@@ -632,7 +699,9 @@ describe('ApiService', () => {
     req.error(new ErrorEvent('Network error'), mockError);
   });
 
-  // --- getHistoriqueForTask ---
+  /**
+   * Tests pour la méthode `getHistoriqueForTask`.
+   */
   it('getHistoriqueForTask should send a GET request and return Historique[]', () => {
     const taskId = 1;
     const mockHistorique: Historique[] = [{ id: 1, oldString: 'Old', newString: 'New', dateM: new Date(), user: { id: 1, nom: 'U1', email: 'u1@e.com' }, typeM: 0 }];
@@ -662,7 +731,9 @@ describe('ApiService', () => {
     req.error(new ErrorEvent('Network error'), mockError);
   });
 
-  // --- catchError handler ---
+  /**
+   * Tests pour le gestionnaire d'erreurs `catchError`.
+   */
   it('catchError should handle HttpErrorResponse with no specific error details', () => {
     const httpError = new HttpErrorResponse({
       status: 500,

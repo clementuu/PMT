@@ -6,6 +6,11 @@ import { UserRole, UsersProject } from '../../models/userProject.model';
 import { ApiService } from '../../services/api.service';
 import { AuthService } from '../../services/auth.service';
 
+/**
+ * Composant de gestion des utilisateurs associés à un projet.
+ * Permet d'ajouter, de modifier et de supprimer des participants à un projet
+ * avec leurs rôles respectifs.
+ */
 @Component({
   selector: 'app-user-project',
   standalone: true,
@@ -14,21 +19,47 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./user-project.component.css']
 })
 export class UserProjectComponent implements OnChanges, OnInit {
+  /**
+   * Liste de tous les utilisateurs disponibles pour l'assignation.
+   */
   @Input() allUsers: User[] = [];
+  /**
+   * Rôles disponibles pour les participants du projet.
+   */
   @Input() availableRoles: string[] = ['ADMIN', 'MEMBER', 'OBSERVER'];
+  /**
+   * L'ID du projet dont les participants sont gérés.
+   */
   @Input() projectId: number = 0;
+  /**
+   * Le rôle de l'utilisateur actuel dans le projet.
+   */
   @Input() currentUserRole: string | null = null;
+  /**
+   * Indique si le composant est en mode édition (pour un projet existant).
+   */
   @Input() editing: boolean = false;
 
+  /**
+   * Formulaire réactif pour ajouter et gérer les participants.
+   */
   addParticipantForm: FormGroup;
   private authService = inject(AuthService);
 
+  /**
+   * Mapping des noms de rôle pour un affichage convivial.
+   */
   roleDisplayNames: { [key: string]: string } = {
     'ADMIN': 'Administrateur',
     'MEMBER': 'Membre',
     'OBSERVER': 'Observateur',
   };
 
+  /**
+   * Constructeur du UserProjectComponent.
+   * @param fb Le FormBuilder pour créer le formulaire réactif.
+   * @param apiService Le service API pour interagir avec le backend.
+   */
   constructor(
     private fb: FormBuilder, 
     private apiService: ApiService
@@ -38,6 +69,11 @@ export class UserProjectComponent implements OnChanges, OnInit {
     });
   }
 
+  /**
+   * Méthode du cycle de vie ngOnInit.
+   * Si le composant n'est pas en mode édition (création de projet),
+   * ajoute l'utilisateur actuel comme ADMIN par défaut.
+   */
   ngOnInit(): void {
     // If in creation mode, pre-fill with the current user as ADMIN.
     if (!this.editing) {
@@ -48,6 +84,11 @@ export class UserProjectComponent implements OnChanges, OnInit {
     }
   }
 
+  /**
+   * Gère les changements sur les propriétés d'entrée (projectId, editing).
+   * Appelle `loadParticipants` si projectId ou editing change.
+   * @param changes Objet SimpleChanges contenant les changements des propriétés.
+   */
   ngOnChanges(changes: SimpleChanges): void {
     // If the projectId or editing status changes, fetch the data.
     if (changes['projectId'] || changes['editing']) {
@@ -55,6 +96,10 @@ export class UserProjectComponent implements OnChanges, OnInit {
     }
   }
 
+  /**
+   * Charge les participants du projet depuis le backend et construit le formulaire.
+   * Cette méthode est publique pour être appelée depuis le parent.
+   */
   public loadParticipants(): void { // Renamed from fetchAndBuildForm and made public
     // Only fetch if we are in 'editing' mode (i.e., the project exists) and have a valid ID.
     if (this.editing && this.projectId > 0) {
@@ -68,10 +113,17 @@ export class UserProjectComponent implements OnChanges, OnInit {
     }
   }
 
+  /**
+   * Accesseur pour le FormArray 'participants'.
+   */
   get participants(): FormArray {
     return this.addParticipantForm.get('participants') as FormArray;
   }
 
+  /**
+   * Ajoute un nouveau participant au formulaire.
+   * @param participant Les données du participant à ajouter (userId, role), facultatif.
+   */
   addParticipant(participant: Partial<UserRole> | null = null): void {
     const isAdmin = this.currentUserRole === 'ADMIN';
 
@@ -83,6 +135,11 @@ export class UserProjectComponent implements OnChanges, OnInit {
     this.participants.push(participantForm);
   }
 
+  /**
+   * Supprime un participant du formulaire.
+   * Si le participant existe déjà en base de données (possède un ID), il est également supprimé via l'API.
+   * @param index L'index du participant à supprimer dans le FormArray.
+   */
   removeParticipant(index: number): void {
     const participantControl = this.participants.at(index);
     const userRoleId = participantControl.value.id;
@@ -99,6 +156,10 @@ export class UserProjectComponent implements OnChanges, OnInit {
     }
   }
 
+  /**
+   * Soumet les modifications des participants au backend.
+   * Utilisé pour la création ou la mise à jour des associations utilisateurs-projets.
+   */
   onSubmit(): void {
     if (!this.addParticipantForm.valid) {
       return;
@@ -120,6 +181,11 @@ export class UserProjectComponent implements OnChanges, OnInit {
     });
   }
 
+  /**
+   * Retourne le nom d'affichage convivial pour un rôle donné.
+   * @param role Le rôle à afficher.
+   * @returns Le nom d'affichage du rôle.
+   */
   getRoleDisplayName(role: string): string {
     return this.roleDisplayNames[role] || role;
   }

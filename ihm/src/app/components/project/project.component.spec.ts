@@ -17,6 +17,9 @@ import { Historique } from '../../models/historique.model';
 import { ProjectUpdatePayload } from '../../models/project-update.model';
 
 // Mock child components
+/**
+ * Composant mock pour le composant Historique.
+ */
 @Component({ selector: 'app-historique', template: '' })
 class MockHistoriqueComponent {
   @Input() projectId?: number;
@@ -25,6 +28,9 @@ class MockHistoriqueComponent {
   loadHistory = jasmine.createSpy('loadHistory');
 }
 
+/**
+ * Composant mock pour le composant UserProject.
+ */
 @Component({ selector: 'app-user-project', template: '' })
 class MockUserProjectComponent {
   @Input() allUsers: User[] = [];
@@ -34,19 +40,46 @@ class MockUserProjectComponent {
   loadParticipants = jasmine.createSpy('loadParticipants');
 }
 
+/**
+ * Suite de tests pour le composant ProjectComponent.
+ */
 describe('ProjectComponent', () => {
+  /**
+   * Instance du composant ProjectComponent.
+   */
   let component: ProjectComponent;
+  /**
+   * Fixture du composant pour les tests.
+   */
   let fixture: ComponentFixture<ProjectComponent>;
+  /**
+   * Route activée mockée.
+   */
   let mockActivatedRoute: any;
+  /**
+   * Service API mocké.
+   */
   let mockApiService: any;
+  /**
+   * Service d'authentification mocké.
+   */
   let mockAuthService: any;
+  /**
+   * Routeur mocké.
+   */
   let mockRouter: any;
+  /**
+   * Constructeur de formulaire.
+   */
   let formBuilder: FormBuilder;
 
-  let mockHistoriqueComponentInstance: MockHistoriqueComponent;
-  let mockUserProjectComponentInstance: MockUserProjectComponent;
-
+  /**
+   * Utilisateur mocké pour les tests.
+   */
   const mockUser: User = { id: 1, nom: 'Test User', email: 'test@example.com' };
+  /**
+   * Projet mocké pour les tests.
+   */
   const mockProject: Project = {
     id: 101,
     nom: 'Test Project',
@@ -59,11 +92,17 @@ describe('ProjectComponent', () => {
       { id: 3, nom: 'Task 3', status: 'DONE', projectId: 101 } as Task,
     ],
   };
+  /**
+   * Liste de tous les utilisateurs mockés.
+   */
   const mockAllUsers: User[] = [
     { id: 1, nom: 'User A', email: 'a@example.com' },
     { id: 2, nom: 'User B', email: 'b@example.com' },
   ];
 
+  /**
+   * Configure l'environnement de test avant chaque test.
+   */
   beforeEach(async () => {
     mockActivatedRoute = {
       snapshot: {
@@ -111,10 +150,16 @@ describe('ProjectComponent', () => {
     fixture.detectChanges(); // Initial change detection
   });
 
+  /**
+   * Vérifie si le composant est créé avec succès.
+   */
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
+  /**
+   * Teste que les données du projet sont chargées lors de l'initialisation du composant.
+   */
   it('should load project data on ngOnInit', fakeAsync(() => {
     component.ngOnInit(); // Explicitly call ngOnInit after mocks are set
     tick(); // Simulate passage of time for async operations
@@ -129,6 +174,9 @@ describe('ProjectComponent', () => {
     expect(component.allUsers).toEqual(mockAllUsers);
   }));
 
+  /**
+   * Teste le démarrage du mode édition et le patch du formulaire avec les données du projet.
+   */
   it('should start editing and patch the form with project data', () => {
     component.project = mockProject;
     component.startEditing();
@@ -137,12 +185,18 @@ describe('ProjectComponent', () => {
     expect(component.projectForm.value.description).toEqual(mockProject.description);
   });
 
+  /**
+   * Teste l'annulation du mode édition.
+   */
   it('should cancel editing', () => {
     component.isEditing = true;
     component.cancelEdit();
     expect(component.isEditing).toBeFalse();
   });
 
+  /**
+   * Teste la mise à jour du projet et le rechargement des données en cas de succès.
+   */
   it('should update project and reload data on success', fakeAsync(() => {
     component.project = mockProject;
     component.isEditing = true;
@@ -159,6 +213,9 @@ describe('ProjectComponent', () => {
     expect(component['loadProjectData']).toHaveBeenCalledWith(mockProject.id); // Check private method call
   }));
 
+  /**
+   * Teste qu'un projet n'est pas mis à jour si l'utilisateur n'est pas connecté.
+   */
   it('should not update project if user is not logged in', () => {
     mockAuthService.user = null;
     component.project = mockProject;
@@ -172,6 +229,9 @@ describe('ProjectComponent', () => {
     expect(window.alert).toHaveBeenCalledWith('Vous devez être connecté pour mettre à jour un projet.');
   });
 
+  /**
+   * Teste qu'un projet n'est pas mis à jour si le formulaire est invalide.
+   */
   it('should not update project if form is invalid', () => {
     component.project = mockProject;
     component.isEditing = true;
@@ -184,6 +244,9 @@ describe('ProjectComponent', () => {
     expect(window.alert).toHaveBeenCalledWith('Le formulaire est invalide.');
   });
 
+  /**
+   * Teste la suppression d'un projet et la navigation vers le tableau de bord après confirmation.
+   */
   it('should delete project and navigate to dashboard on confirmation', fakeAsync(() => {
     component.project = mockProject;
     spyOn(window, 'confirm').and.returnValue(true);
@@ -198,6 +261,9 @@ describe('ProjectComponent', () => {
     expect(mockRouter.navigate).toHaveBeenCalledWith(['/dashboard']);
   }));
 
+  /**
+   * Teste qu'un projet n'est pas supprimé si la suppression n'est pas confirmée.
+   */
   it('should not delete project if not confirmed', fakeAsync(() => {
     component.project = mockProject;
     spyOn(window, 'confirm').and.returnValue(false);
@@ -212,17 +278,26 @@ describe('ProjectComponent', () => {
     expect(mockRouter.navigate).not.toHaveBeenCalled();
   }));
 
+  /**
+   * Teste la navigation vers les détails d'une tâche.
+   */
   it('should navigate to task detail', () => {
     component.goToTaskDetail(123);
     expect(mockRouter.navigate).toHaveBeenCalledWith(['/task', 123]);
   });
 
+  /**
+   * Teste la navigation vers la création d'une nouvelle tâche.
+   */
   it('should navigate to new task creation', () => {
     component.project = mockProject;
     component.goToNewTask();
     expect(mockRouter.navigate).toHaveBeenCalledWith([`/project/${mockProject.id}/new-task`]);
   });
 
+  /**
+   * Teste la gestion du glisser-déposer d'une tâche vers un conteneur différent (changement de statut).
+   */
   it('should handle task drag and drop to a different container (status change)', fakeAsync(() => {
     component.project = mockProject;
     component.todoTasks = [{ id: 1, nom: 'Task 1', status: 'TODO', projectId: 101 } as Task];
@@ -249,6 +324,9 @@ describe('ProjectComponent', () => {
     expect(mockApiService.updateTask).toHaveBeenCalled();
   }));
 
+  /**
+   * Teste la gestion du glisser-déposer d'une tâche dans le même conteneur.
+   */
   it('should handle task drag and drop within the same container', () => {
     component.todoTasks = [
       { id: 1, nom: 'Task 1', status: 'TODO', projectId: 101 } as Task,

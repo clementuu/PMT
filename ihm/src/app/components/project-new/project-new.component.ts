@@ -10,6 +10,10 @@ import { AuthService } from '../../services/auth.service';
 import { UserProjectComponent } from '../user-project/user-project.component';
 import { UserRole } from '../../models/userProject.model';
 
+/**
+ * Composant pour la création d'un nouveau projet.
+ * Permet aux utilisateurs de définir les détails du projet et d'ajouter des participants avec des rôles.
+ */
 @Component({
   selector: 'app-project-new',
   standalone: true,
@@ -18,13 +22,35 @@ import { UserRole } from '../../models/userProject.model';
   styleUrl: './project-new.component.css',
 })
 export class ProjectNewComponent implements OnInit {
+  /**
+   * Formulaire réactif pour la création d'un nouveau projet.
+   */
   projectForm: FormGroup;
+  /**
+   * Liste de tous les utilisateurs disponibles pour être ajoutés au projet.
+   */
   allUsers: User[] = [];
+  /**
+   * Rôles disponibles pour l'assignation aux membres du projet.
+   */
   availableRoles: string[] = ['ADMIN', 'MEMBER', 'OBSERVER'];
   
+  /**
+   * Liste des participants (avec leurs rôles) à sauvegarder avec le projet.
+   */
   participantsToSave: UserRole[] = [];
+  /**
+   * Liste initiale des participants, utilisée pour pré-remplir la liste des participants (ex: l'admin créateur).
+   */
   initialParticipantList: UserRole[] = [];
 
+  /**
+   * Constructeur du ProjectNewComponent.
+   * @param fb Le FormBuilder pour créer le formulaire réactif.
+   * @param apiService Le service API pour interagir avec le backend.
+   * @param router Le service Router pour la navigation après la création du projet.
+   * @param authService Le service d'authentification pour obtenir l'utilisateur courant.
+   */
   constructor(
     private fb: FormBuilder,
     private apiService: ApiService,
@@ -39,6 +65,10 @@ export class ProjectNewComponent implements OnInit {
     });
   }
 
+  /**
+   * Méthode du cycle de vie ngOnInit.
+   * Charge tous les utilisateurs et pré-remplit la liste des participants avec l'utilisateur actuel en tant qu'administrateur.
+   */
   ngOnInit(): void {
     this.apiService.getAllUsers().subscribe({
       next: (users) => {
@@ -55,10 +85,19 @@ export class ProjectNewComponent implements OnInit {
     });
   }
 
+  /**
+   * Met à jour la liste des participants à sauvegarder.
+   * @param participants La nouvelle liste de participants avec leurs rôles.
+   */
   setParticipants(participants: UserRole[]): void {
     this.participantsToSave = participants;
   }
 
+  /**
+   * Gère la soumission du formulaire de création de projet.
+   * Valide le formulaire, crée le projet et assigne les participants.
+   * Redirige vers le tableau de bord en cas de succès.
+   */
   onSubmit(): void {
     if (this.projectForm.invalid) {
       alert('Veuillez remplir les champs du projet.');
