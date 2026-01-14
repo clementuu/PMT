@@ -14,6 +14,10 @@ test-ihm:
 test-pmt:
 	cd pmt && mvn test verify
 
+.PHONY: build
+build:
+	docker compose build
+
 .PHONY: start
 start:
 	docker compose up -d

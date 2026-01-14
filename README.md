@@ -45,22 +45,14 @@ Le projet est divisé en deux modules principaux :
 
 ### Backend
 
-Les dépendances majeures du backend (`pmt/pom.xml`) sont :
-
--   **Spring Boot Starter Web**: Pour la création d'applications web et d'API REST.
--   **Spring Boot Starter Data JPA**: Pour la persistance des données avec Java Persistence API.
--   **Spring Boot Starter Actuator**: Pour le monitoring et la gestion de l'application.
--   **H2 Database**: Base de données en mémoire pour l'environnement de développement.
--   **SpringDoc OpenAPI**: Pour la génération automatique de la documentation de l'API.
+-   **JDK** v21+
+-   **mvn** v3.9+
 
 ### Frontend
 
-Les dépendances majeures du frontend (`ihm/package.json`) sont :
-
--   **Angular**: Framework principal pour la construction de l'interface utilisateur.
--   **RxJS**: Pour la programmation réactive.
--   **Bootstrap**: Pour le style et les composants responsives.
--   **Express**: Pour le rendu côté serveur (SSR).
+-   **Node.js** v22.18+
+-   **npm** v10.9+
+-   **Angular CLI** v20.3+
 
 ---
 
@@ -74,6 +66,7 @@ Un `Makefile` est disponible à la racine pour simplifier la gestion du projet.
 | `make pmt`      | Lance l'API backend Spring Boot.                                            |
 | `make test-ihm` | Exécute les tests unitaires du frontend et génère un rapport de couverture. |
 | `make test-pmt` | Exécute les tests unitaires et d'intégration du backend.                    |
+| `make build`    | Build des services conteneurisés avec Docker Compose.                       |
 | `make start`    | Démarre les services conteneurisés avec Docker Compose.                     |
 | `make stop`     | Eteint les services conteneurisés avec Docker Compose.                      |
 
@@ -182,7 +175,17 @@ Liste des principaux composants Angular dans `ihm/src/app/components` :
     
     - En tant qu’administrateur, membre ou observateur, je veux pouvoir suivre l'historique des modifications apportées aux tâches.
 
+---
+
 ## Rapport de tests
 
 - Rapport des tests front : `./ihm/coverage/ihm/index.html`
 - Rapport des tests back : `./pmt/target/site/jacoco/index.html`
+
+---
+
+## Evolutions possibles
+
+- Utiliser une vraie base MySQL containerisée pour la persistance des données
+- Sécuriser le back
+- Gestion de session via jwt
