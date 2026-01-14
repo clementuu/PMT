@@ -19,6 +19,7 @@ Outil de gestion de projet collaboratif destiné aux équipes de développement 
   - [Historique](#historique)
 - [Composants Frontend](#composants-frontend)
 - [Démarrage rapide](#démarrage-rapide)
+- [Déploiement](#déploiement)
 - [Users stories](#users-stories)
 - [Rapport de tests](#rapport-de-tests)
 - [Evolutions possibles](#evolutions-possibles)
@@ -154,6 +155,12 @@ Liste des principaux composants Angular dans `ihm/src/app/components` :
 3.  **Accéder à l'application**
     -   Frontend: `http://localhost:4200`
     -   Backend API Docs: `http://localhost:8080/swagger-ui.html`
+
+---
+
+## Déploiement
+
+Le déploiement (push des images sur dockerhub) est automatisé via le pipeline CI/CD.
 
 ---
 
