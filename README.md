@@ -10,6 +10,7 @@ Outil de gestion de projet collaboratif destiné aux équipes de développement 
   - [Backend](#backend)
   - [Frontend](#frontend)
 - [Commandes](#commandes)
+- [Schéma base de données](#schéma-base-de-données)
 - [API Endpoints](#api-endpoints)
   - [Authentification](#authentification)
   - [Projets](#projets)
@@ -20,6 +21,7 @@ Outil de gestion de projet collaboratif destiné aux équipes de développement 
 - [Démarrage rapide](#démarrage-rapide)
 - [Users stories](#users-stories)
 - [Rapport de tests](#rapport-de-tests)
+- [Evolutions possibles](#evolutions-possibles)
 
 ---
 
@@ -69,6 +71,12 @@ Un `Makefile` est disponible à la racine pour simplifier la gestion du projet.
 | `make build`    | Build des services conteneurisés avec Docker Compose.                       |
 | `make start`    | Démarre les services conteneurisés avec Docker Compose.                     |
 | `make stop`     | Eteint les services conteneurisés avec Docker Compose.                      |
+
+---
+
+## Schéma base de données
+
+<img src="Database Diagram.jpg">
 
 ---
 
