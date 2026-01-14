@@ -23,6 +23,7 @@ Outil de gestion de projet collaboratif destiné aux équipes de développement 
 - [Users stories](#users-stories)
 - [Rapport de tests](#rapport-de-tests)
 - [Evolutions possibles](#evolutions-possibles)
+- [Repository](#repository)
 
 ---
 
@@ -204,3 +205,9 @@ Le déploiement (push des images sur dockerhub) est automatisé via le pipeline 
 - Utiliser une vraie base MySQL containerisée pour la persistance des données
 - Sécuriser le back
 - Gestion de session via jwt
+
+---
+
+## Repository
+
+https://github.com/clementuu/PMT
