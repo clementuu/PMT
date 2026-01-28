@@ -268,7 +268,7 @@ export class ProjectComponent implements OnInit, AfterViewInit {
         event.currentIndex,
       );
 
-      const taskToSend = { ...task, projectId: this.project!.id }; // Use projectId instead of project object
+      const taskToSend = { ...task, projectId: this.project!.id, userId: this.authService.user?.id }; // Use projectId instead of project object
 
       this.apiService.updateTask(taskToSend).subscribe({
         next: () => {},
