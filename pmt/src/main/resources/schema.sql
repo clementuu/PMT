@@ -1,11 +1,11 @@
-CREATE TABLE user_app (
+CREATE TABLE IF NOT EXISTS user_app (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(100),
     email VARCHAR(100),
     mdp VARCHAR(255)
 );
 
-CREATE TABLE project (
+CREATE TABLE IF NOT EXISTS project (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(100),
     description TEXT,
@@ -13,7 +13,7 @@ CREATE TABLE project (
     date_fin DATE
 );
 
-CREATE TABLE task (
+CREATE TABLE IF NOT EXISTS task (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(100),
     description TEXT,
@@ -25,7 +25,7 @@ CREATE TABLE task (
     FOREIGN KEY (project_id) REFERENCES project(id)
 );
 
-CREATE TABLE project_user (
+CREATE TABLE IF NOT EXISTS project_user (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
     project_id INT,
@@ -34,7 +34,7 @@ CREATE TABLE project_user (
     FOREIGN KEY (project_id) REFERENCES project(id)
 );
 
-CREATE TABLE task_assign (
+CREATE TABLE IF NOT EXISTS task_assign (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
     task_id INT,
@@ -42,7 +42,7 @@ CREATE TABLE task_assign (
     FOREIGN KEY (task_id) REFERENCES task(id)
 );
 
-CREATE TABLE historique (
+CREATE TABLE IF NOT EXISTS historique (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
     task_id INT DEFAULT NULL,

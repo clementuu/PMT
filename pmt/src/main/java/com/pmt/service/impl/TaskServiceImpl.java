@@ -144,6 +144,7 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     public TaskDTO update(TaskDTO task) {
+        System.out.println(task.getNom());
         if (task.getId() == null) {
             throw new ValidationException("L'ID de la tâche est requis pour la mise à jour.");
         }

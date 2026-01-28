@@ -40,8 +40,8 @@ Outil de gestion de projet collaboratif destiné aux équipes de développement 
 
 Le projet est divisé en deux modules principaux :
 
--   `./ihm` : Contient l'application frontend développée avec Angular.
--   `./pmt` : Contient l'application backend (API REST) développée avec Spring Boot.
+- `./ihm` : Contient l'application frontend développée avec Angular.
+- `./pmt` : Contient l'application backend (API REST) développée avec Spring Boot.
 
 ---
 
@@ -49,14 +49,14 @@ Le projet est divisé en deux modules principaux :
 
 ### Backend
 
--   **JDK** v21+
--   **mvn** v3.9+
+- **JDK** v21+
+- **mvn** v3.9+
 
 ### Frontend
 
--   **Node.js** v22.18+
--   **npm** v10.9+
--   **Angular CLI** v20.3+
+- **Node.js** v22.18+
+- **npm** v10.9+
+- **Angular CLI** v20.3+
 
 ---
 
@@ -78,7 +78,7 @@ Un `Makefile` est disponible à la racine pour simplifier la gestion du projet.
 
 ## Schéma base de données
 
-<img src="Database Diagram.jpg">
+![Schéma des tables de la base de données](Database%20Diagram.jpg)
 
 ---
 
@@ -86,42 +86,42 @@ Un `Makefile` est disponible à la racine pour simplifier la gestion du projet.
 
 ### Authentification
 
--   `POST /user/login`: Connecte un utilisateur.
+- `POST /user/login`: Connecte un utilisateur.
 
 ### Projets
 
--   `GET /project`: Récupère tous les projets.
--   `GET /project/{id}`: Récupère un projet par son ID.
--   `POST /project`: Crée un nouveau projet.
--   `PUT /project`: Met à jour un projet existant.
--   `DELETE /project/{id}`: Supprime un projet.
--   `GET /project/user/{userId}`: Récupère les projets d'un utilisateur.
--   `POST /project/user`: Ajoute des utilisateurs à un projet.
--   `GET /project/user/list/{projectId}`: Liste les utilisateurs d'un projet.
--   `DELETE /project/user/{id}`: Retire un utilisateur d'un projet.
+- `GET /project`: Récupère tous les projets.
+- `GET /project/{id}`: Récupère un projet par son ID.
+- `POST /project`: Crée un nouveau projet.
+- `PUT /project`: Met à jour un projet existant.
+- `DELETE /project/{id}`: Supprime un projet.
+- `GET /project/user/{userId}`: Récupère les projets d'un utilisateur.
+- `POST /project/user`: Ajoute des utilisateurs à un projet.
+- `GET /project/user/list/{projectId}`: Liste les utilisateurs d'un projet.
+- `DELETE /project/user/{id}`: Retire un utilisateur d'un projet.
 
 ### Tâches
 
--   `GET /task`: Récupère toutes les tâches.
--   `GET /task/{id}`: Récupère une tâche par son ID.
--   `POST /task`: Crée une nouvelle tâche.
--   `PUT /task`: Met à jour une tâche existante.
--   `DELETE /task/{id}`: Supprime une tâche.
--   `POST /assign/{taskId}/{userId}`: Assigne une tâche à un utilisateur.
--   `GET /assign/{taskId}`: Récupère les utilisateurs assignés à une tâche.
--   `DELETE /assign/{id}`: Désassigne un utilisateur d'une tâche.
+- `GET /task`: Récupère toutes les tâches.
+- `GET /task/{id}`: Récupère une tâche par son ID.
+- `POST /task`: Crée une nouvelle tâche.
+- `PUT /task`: Met à jour une tâche existante.
+- `DELETE /task/{id}`: Supprime une tâche.
+- `POST /assign/{taskId}/{userId}`: Assigne une tâche à un utilisateur.
+- `GET /assign/{taskId}`: Récupère les utilisateurs assignés à une tâche.
+- `DELETE /assign/{id}`: Désassigne un utilisateur d'une tâche.
 
 ### Utilisateurs
 
--   `GET /user`: Récupère tous les utilisateurs.
--   `GET /user/{id}`: Récupère un utilisateur par son ID.
--   `POST /user`: Crée un nouvel utilisateur.
--   `GET /user/project/{id}`: Récupère les utilisateurs d'un projet.
+- `GET /user`: Récupère tous les utilisateurs.
+- `GET /user/{id}`: Récupère un utilisateur par son ID.
+- `POST /user`: Crée un nouvel utilisateur.
+- `GET /user/project/{id}`: Récupère les utilisateurs d'un projet.
 
 ### Historique
 
--   `GET /historique/project/{id}`: Récupère l'historique d'un projet.
--   `GET /historique/task/{id}`: Récupère l'historique d'une tâche.
+- `GET /historique/project/{id}`: Récupère l'historique d'un projet.
+- `GET /historique/task/{id}`: Récupère l'historique d'une tâche.
 
 ---
 
@@ -129,33 +129,35 @@ Un `Makefile` est disponible à la racine pour simplifier la gestion du projet.
 
 Liste des principaux composants Angular dans `ihm/src/app/components` :
 
--   **dashboard**: Tableau de bord principal.
--   **header**: En-tête de l'application.
--   **historique**: Affiche l'historique des modifications.
--   **home**: Page d'accueil.
--   **login**: Formulaire de connexion.
--   **not-found**: Page affichée pour les routes inexistantes.
--   **project**: Vue détaillée d'un projet.
--   **project-list**: Liste des projets.
--   **project-new**: Formulaire de création de projet.
--   **signin**: Formulaire d'inscription.
--   **task**: Vue détaillée d'une tâche.
--   **task-assign**: Composant pour assigner des tâches.
--   **task-new**: Formulaire de création de tâche.
--   **user-project**: Gestion des utilisateurs d'un projet.
+- **dashboard**: Tableau de bord principal.
+- **header**: En-tête de l'application.
+- **historique**: Affiche l'historique des modifications.
+- **home**: Page d'accueil.
+- **login**: Formulaire de connexion.
+- **not-found**: Page affichée pour les routes inexistantes.
+- **project**: Vue détaillée d'un projet.
+- **project-list**: Liste des projets.
+- **project-new**: Formulaire de création de projet.
+- **signin**: Formulaire d'inscription.
+- **task**: Vue détaillée d'une tâche.
+- **task-assign**: Composant pour assigner des tâches.
+- **task-new**: Formulaire de création de tâche.
+- **user-project**: Gestion des utilisateurs d'un projet.
 
 ---
 
 ## Démarrage rapide
 
-1.  **Cloner le dépôt**
-2.  **Lancer l'environnement avec Docker**
+1. **Cloner le dépôt**
+2. **Lancer l'environnement avec Docker**
+
     ```sh
     make start
     ```
-3.  **Accéder à l'application**
-    -   Frontend: `http://localhost:4200`
-    -   Backend API Docs: `http://localhost:8080/swagger-ui.html`
+
+3. **Accéder à l'application**
+    - Frontend: `http://localhost:4200`
+    - Backend API Docs: `http://localhost:8080/swagger-ui.html`
 
 ---
 
@@ -167,6 +169,7 @@ Le déploiement (push des images sur dockerhub) est automatisé via le pipeline 
 
 ## Users stories
 
+```text
     - En tant que visiteur, je veux pouvoir m'inscrire avec un nom d’utilisateur, une adresse email et un mot de passe afin d’avoir un compte sur la plateforme. 
 
     - En tant qu’inscrit, je veux pouvoir me connecter à la plateforme avec mon adresse e-mail et mon mot de passe afin de pouvoir accéder à mon espace. 
@@ -190,6 +193,7 @@ Le déploiement (push des images sur dockerhub) est automatisé via le pipeline 
     - En tant qu’administrateur, membre ou observateur, je veux pouvoir recevoir des notifications par e-mail lorsqu'une tâche est assignée. 
     
     - En tant qu’administrateur, membre ou observateur, je veux pouvoir suivre l'historique des modifications apportées aux tâches.
+```
 
 ---
 
@@ -210,4 +214,4 @@ Le déploiement (push des images sur dockerhub) est automatisé via le pipeline 
 
 ## Repository
 
-https://github.com/clementuu/PMT
+<https://github.com/clementuu/PMT>
